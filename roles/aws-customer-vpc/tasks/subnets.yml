@@ -1,0 +1,96 @@
+- ec2_vpc_subnet:
+    state: present
+    vpc_id: "{{ vpcid }}"
+    region: "{{ aws_customer_vpc_region }}"
+    cidr: "{{ clusteraz1_cidr  }}"
+    resource_tags:
+      Name: "Cluster-net AZ1"
+  register: clusteraz1
+- ec2_vpc_subnet:
+    state: present
+    vpc_id: "{{ vpcid }}"
+    region: "{{ aws_customer_vpc_region }}"
+    cidr: "{{ clusteraz2_cidr  }}"
+    resource_tags:
+      Name: "Cluster-net AZ2"
+  register: clusteraz2
+- ec2_vpc_subnet:
+    state: present
+    vpc_id: "{{ vpcid }}"
+    region: "{{ aws_customer_vpc_region }}"
+    cidr: "{{ clusteraz3_cidr  }}"
+    resource_tags:
+      Name: "Cluster-net AZ3"
+  register: clusteraz3
+- ec2_vpc_subnet:
+    state: present
+    vpc_id: "{{ vpcid }}"
+    region: "{{ aws_customer_vpc_region }}"
+    cidr: "{{ customeraz1_cidr  }}"
+    resource_tags:
+      Name: "Customer-net AZ1"
+  register: customeraz1
+- ec2_vpc_subnet:
+    state: present
+    vpc_id: "{{ vpcid }}"
+    region: "{{ aws_customer_vpc_region }}"
+    cidr: "{{ customeraz2_cidr  }}"
+    resource_tags:
+      Name: "Customer-net AZ2"
+  register: customeraz2
+- ec2_vpc_subnet:
+    state: present
+    vpc_id: "{{ vpcid }}"
+    region: "{{ aws_customer_vpc_region }}"
+    cidr: "{{ customeraz3_cidr  }}"
+    resource_tags:
+      Name: "Customer-net AZ3"
+  register: customeraz3
+- ec2_vpc_subnet:
+    state: present
+    vpc_id: "{{ vpcid }}"
+    region: "{{ aws_customer_vpc_region }}"
+    cidr: "{{ managementaz1_cidr  }}"
+    resource_tags:
+      Name: "Management-net AZ1"
+  register: managementaz1
+- ec2_vpc_subnet:
+    state: present
+    vpc_id: "{{ vpcid }}"
+    region: "{{ aws_customer_vpc_region }}"
+    cidr: "{{ managementaz2_cidr  }}"
+    resource_tags:
+      Name: "Management-net AZ2"
+  register: managementaz2
+- ec2_vpc_subnet:
+    state: present
+    vpc_id: "{{ vpcid }}"
+    region: "{{ aws_customer_vpc_region }}"
+    cidr: "{{ managementaz3_cidr  }}"
+    resource_tags:
+      Name: "Management-net AZ3"
+  register: managementaz3
+- ec2_vpc_subnet:
+    state: present
+    vpc_id: "{{ vpcid }}"
+    region: "{{ aws_customer_vpc_region }}"
+    cidr: "{{ publicaz1_cidr  }}"
+    resource_tags:
+      Name: "Public-net AZ1"
+  register: publicaz1
+- ec2_vpc_subnet:
+    state: present
+    vpc_id: "{{ vpcid }}"
+    region: "{{ aws_customer_vpc_region }}"
+    cidr: "{{ publicaz2_cidr  }}"
+    resource_tags:
+      Name: "Public-net AZ2"
+  register: publicaz2
+- ec2_vpc_subnet:
+    state: present
+    vpc_id: "{{ vpcid }}"
+    region: "{{ aws_customer_vpc_region }}"
+    cidr: "{{ publicaz3_cidr  }}"
+    resource_tags:
+      Name: "Public-net AZ3"
+  register: publicaz3

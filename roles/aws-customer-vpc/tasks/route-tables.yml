@@ -1,0 +1,49 @@
+---
+- ec2_vpc_route_table:
+    vpc_id: "{{ vpcid  }}"
+    region: "{{ aws_customer_vpc_region  }}"
+    tags:
+      Name: Customer
+    subnets:
+      - "{{ customeraz1.subnet.id }}"
+      - "{{ customeraz2.subnet.id }}"
+      - "{{ customeraz3.subnet.id }}"
+  register: customer_route_table
+
+- ec2_vpc_route_table:
+    vpc_id: "{{ vpcid  }}"
+    region: "{{ aws_customer_vpc_region  }}"
+    tags:
+      Name: Public
+    subnets:
+      - "{{ publicaz1.subnet.id }}"
+      - "{{ publicaz2.subnet.id }}"
+      - "{{ publicaz3.subnet.id }}"
+  register: public_route_table
+
+- ec2_vpc_route_table:
+    vpc_id: "{{ vpcid  }}"
+    region: "{{ aws_customer_vpc_region  }}"
+    tags:
+      Name: Management AZ1
+    subnets:
+      - "{{ managementaz1.subnet.id }}"
+  register: managementaz1_route_table
+
+- ec2_vpc_route_table:
+    vpc_id: "{{ vpcid  }}"
+    region: "{{ aws_customer_vpc_region  }}"
+    tags:
+      Name: Management AZ2
+    subnets:
+      - "{{ managementaz2.subnet.id }}"
+  register: managementaz2_route_table
+
+- ec2_vpc_route_table:
+    vpc_id: "{{ vpcid  }}"
+    region: "{{ aws_customer_vpc_region  }}"
+    tags:
+      Name: Management AZ3
+    subnets:
+      - "{{ managementaz3.subnet.id }}"
+  register: managementaz3_route_table

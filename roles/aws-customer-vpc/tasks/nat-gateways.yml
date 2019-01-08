@@ -1,0 +1,18 @@
+- ec2_vpc_nat_gateway:
+    state: present
+    subnet_id: "{{ publicaz1.subnet.id }}"
+    wait: yes
+    region: "{{ aws_customer_vpc_region }}"
+  register: az1_nat_gateway
+- ec2_vpc_nat_gateway:
+    state: present
+    subnet_id: "{{ publicaz2.subnet.id }}"
+    wait: yes
+    region: "{{ aws_customer_vpc_region }}"
+  register: az2_nat_gateway
+- ec2_vpc_nat_gateway:
+    state: present
+    subnet_id: "{{ publicaz3.subnet.id }}"
+    wait: yes
+    region: "{{ aws_customer_vpc_region }}"
+  register: az3_nat_gateway
