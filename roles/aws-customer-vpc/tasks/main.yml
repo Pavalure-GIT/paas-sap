@@ -19,9 +19,9 @@
      Name: "{{ aws_customer_vpc_env_name }} Internet Gateway"
   register: igw
 
-#- include_tasks: nat-gateways.yml
+- include_tasks: nat-gateways.yml
 
-#- include_tasks: security-groups.yml
+- include_tasks: security-groups.yml
 
 - include_tasks: route-tables.yml
 
