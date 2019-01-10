@@ -7,7 +7,7 @@
         name: aws-customer-vpc
       vars:
         aws_customer_vpc_cidr: 172.17.112.0/21, 172.16.0.0/20, 172.16.16.0/22, 172.16.20.0/23
-        aws_customer_vpc_env_name: "AlexTest"
+        aws_customer_vpc_env_name: "examplevpc"
         aws_customer_vpc_region: us-east-1
         publicaz1_cidr: 172.16.16.128/25
         publicaz2_cidr: 172.16.16.0/25
@@ -22,3 +22,5 @@
         clusteraz2_cidr: 172.16.19.0/24
         clusteraz3_cidr: 172.16.20.0/24
         aws_customer_vpc_management_cidr: 10.2.0.0/22
+        aws_customer_vpc_shortname: exa.aws.paas4sap.svcs.entsvcs.com
+        aws_customer_vpc_longname: example.dxc.paas4sap.svcs.entsvcs.com
