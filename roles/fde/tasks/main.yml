@@ -143,11 +143,18 @@
 
 - name: copy forwarders.conf
   copy:
-    src: files/azure-forwarders.conf
+    src: files/forwarders.conf
     dest: /etc/named.d/forwarders.conf
     owner: root
     group: named
     mode: 0755
+  become: yes
+
+- name: modify forwarders.conf
+  lineinfile:
+    path: /etc/named.d/forwarders.conf
+    regexp: '^        forwarder_ip'
+    line: '        {{ forwarder_ip }}'
   become: yes
 
 - name: enable on startup
