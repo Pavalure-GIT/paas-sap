@@ -1,0 +1,23 @@
+---
+- name: Test FDE - Azure
+  hosts: fde
+  tasks:
+    - name: Call role
+      include_role:
+        name: fde
+      vars:
+        customer_subnet_cidr: "172.16.32.0/22"
+        customer_management_subnet_cidr: "172.17.32.0/22"
+        lama_ip: "10.4.0.41"
+        customer_lan: "172.16.32.0/22"
+        management_lan: "172.17.32.0/22"
+        dns_ip_dev: "10.4.0.5"
+        dns_ip_test: "10.2.0.5"
+        management_zone: "tst.example.com"
+        customer_zone: "test-customer.example.com"
+        reverse_zone: "172.in-addr.arpa"
+        management_forwarders: "80.20.3.1; 6.80.232.2; 87.56.3.2;"
+        customer_forwarders: "32.32.32.0; 6.80.232.2; 89.76.23.1;"
+        reverse_forwarders: "40.3.32.1; 80.20.3.1; 6.80.232.2;"
+        fde_customer_domain: "test-customer.example.com"
+        fde_ip: "10.2.2.2"
