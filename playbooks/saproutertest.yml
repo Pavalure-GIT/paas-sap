@@ -1,0 +1,10 @@
+---
+- name: Test AWS Customer Creation
+  hosts: saprouter
+  tasks:
+    - name: Create VPC
+      include_role:
+        name: saprouter
+      vars: 
+        management_subnet_cidr: 10.6.0.0/24  
+        azure_region: West US

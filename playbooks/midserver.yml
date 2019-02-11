@@ -1,0 +1,14 @@
+# MidServer YML
+
+- name: midserver
+  hosts: midserver
+  tasks:
+    - name: cli installation of midserver
+      include_role:
+        name: midserver
+    - name: Set authorized key taken from file
+      authorized_key:
+        user: ec2-user
+        state: present
+        key: "{{ lookup('file', '/home/adamlockhart/carlkanzabedian.key') }}"
+ 

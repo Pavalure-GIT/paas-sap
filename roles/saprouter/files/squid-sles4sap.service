@@ -1,0 +1,17 @@
+# /usr/lib/systemd/system/squid.service
+[Unit]
+Description=Squid caching proxy for SLES4SAP
+Documentation=man:squid(8)
+After=network.target named.service nss-lookup.service
+
+[Service]
+Type=forking
+ExecStartPre=/usr/lib64/squid/initialize_cache_if_needed-sles4sap.sh
+ExecStart=/usr/sbin/squid -F $SQUID_START_OPTIONS  -f /etc/squid/squid-sles4sap.conf
+ExecReload=/usr/sbin/squid -F $SQUID_START_OPTIONS -f /etc/squid/squid-sles4sap.conf -k reconfigure
+ExecStop=/usr/sbin/squid -F -f /etc/squid/squid-sles4sap.conf -k shutdown
+LimitNOFILE=4096
+PIDFile=/run/squid-sles4sap.pid
+
+[Install]
+WantedBy=multi-user.target
