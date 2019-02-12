@@ -1,0 +1,20 @@
+- name: Create Management Route Table
+  azure_rm_routetable:
+    name: "ManagementRouteTable"
+    resource_group: "{{ azure_resource_group }}"
+    disable_bgp_route_propagation: no
+    state: present
+
+- name: Create Public Route Table
+  azure_rm_routetable:
+    name: "PublicRouteTable"
+    resource_group: "{{ azure_resource_group }}"
+    disable_bgp_route_propagation: no
+    state: present
+
+- name: Create Customer Route Table
+  azure_rm_routetable:
+    name: "CustomerRouteTable"
+    resource_group: "{{ azure_resource_group }}"
+    disable_bgp_route_propagation: no
+    state: present

@@ -1,0 +1,50 @@
+---
+- name: Create Resource Group
+  azure_rm_resourcegroup:
+    name: "{{ azure_resource_group }}"
+    location: "{{ azure_region }}"
+    state: present
+
+- name: Create Virtual Network
+  azure_rm_virtualnetwork: 
+    resource_group: "{{ azure_resource_group }}"
+    name: "{{ azure_env_name }}"
+    address_prefixes_cidr: "{{ azure_vpc_address_space }}"
+    state: present
+
+- name: Update Virtual Network
+  azure_rm_virtualnetwork: 
+    resource_group: "{{ azure_resource_group }}"
+    name: "{{ azure_env_name }}"
+    address_prefixes_cidr: "{{ azure_vpc_address_space2 }}"
+    state: present
+
+- include_tasks: route-tables.yml
+- include_tasks: subnets.yml
+
+- name: Create asg's and nsg's
+  azure_rm_deployment:
+    state: present
+    resource_group: "{{ azure_resource_group }}"
+    location: "{{ azure_region }}"
+    template: "{{ lookup('file', 'asg-nsg-config.json' ) }}"
+ 
+- name: Create DNS Zone
+  azure_rm_dnszone:
+    state: present
+    resource_group: "{{ azure_resource_group }}"
+    name: "{{ dns_name_space }}"
+
+- name: Create Customer DNS
+  azure_rm_dnszone:
+    state: present
+    resource_group: "{{ azure_resource_group }}"
+    name: "{{ dns_customer_name }}"
+  when: "{{ dr_compartment }} == false"
+
+- name: Create Managment DNS
+  azure_rm_dnszone:
+    state: present
+    resource_group: "{{ azure_resource_group }}"
+    name: "{{ dns_management_name }}"
+  when: "{{ dr_compartment }} == false"

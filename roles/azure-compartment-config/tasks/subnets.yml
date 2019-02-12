@@ -1,0 +1,39 @@
+
+- name: Add Management subnet to VPC
+  azure_rm_subnet:
+    resource_group: "{{ azure_resource_group }}"
+    name: "Management"
+    address_prefix_cidr: "{{ management_subnet }}"
+    virtual_network_name: "{{ azure_env_name }}"
+    route_table: "ManagementRouteTable"
+    state: present
+
+- name: Add Publc subnet to VPC
+  azure_rm_subnet:
+    resource_group: "{{ azure_resource_group }}"
+    name: "Public"
+    address_prefix_cidr: "{{ public_subnet }}"
+    virtual_network_name: "{{ azure_env_name }}"
+    route_table: "PublicRouteTable"
+    state: present
+
+- name: Add Customer subnet to VPC
+  azure_rm_subnet:
+    resource_group: "{{ azure_resource_group }}"
+    name: "Customer"
+    address_prefix_cidr: "{{ customer_subnet }}"
+    virtual_network_name: "{{ azure_env_name }}"
+    route_table: "CustomerRouteTable"
+    state: present
+
+- name: Add Network Gateway to VPC
+  azure_rm_subnet:
+    resource_group: "{{ azure_resource_group }}"
+    name: "GatewaySubnet"
+    address_prefix_cidr: "{{ gateway_subnet }}"
+    virtual_network_name: "{{ azure_env_name }}"
+    state: present
+
+
+
+
