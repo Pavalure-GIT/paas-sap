@@ -1,0 +1,12 @@
+---
+- name: get st2 token
+  shell: "st2 auth -t -p '{{ st2_password }}' {{ st2_user }}"
+  register: st2_token_result
+  no_log: true
+  failed_when: "'ERROR' in st2_token_result.stdout"
+  changed_when: False
+
+- name: extract st2 token
+  set_fact:
+    st2_token: "{{ st2_token_result.stdout }}"
+

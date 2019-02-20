@@ -1,0 +1,15 @@
+---
+st2_spp_pack__state: present
+st2_spp_pack__pack_name: spp
+
+st2_spp_pack__env_path: /root/e4s/env
+st2_spp_pack__secrets_file: /root/e4s/secret/spp-pack.secrets
+
+st2_spp_pack__sns_aws_region: eu-central-1
+st2_spp_pack__sns_topic_arn: arn:aws:sns:eu-central-1:000987835229:spp-automation
+
+st2_spp_pack__vault_aws_access_key_path: secret/e4s/poc/automation/aws/access_key
+st2_spp_pack__vault_aws_secret_key_path: secret/e4s/poc/automation/aws/secret_key
+
+st2_spp_pack__ansible_playbook_path: /usr/share/e4s/ansible
+st2_spp_pack__ansible_galaxy_requirements: requirements.yml

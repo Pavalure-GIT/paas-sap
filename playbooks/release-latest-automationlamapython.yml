@@ -1,0 +1,37 @@
+---
+- hosts: AutomationEngine
+  tasks:
+
+    - name: Check unar is installed
+      yum:
+        name: unar
+        state: present
+
+    - name: Check wget is installed
+      yum:
+        name: wget
+        state: present
+
+    - name: Download AutomationLamaPython repository from Nexus
+      shell: |
+        wget --user="{{ nexus_username  }}" --password="{{ nexus_password }}" http://nexus.solutionplace.svcs.hpe.com:8081/nexus/service/local/repositories/spp/content/artifacts/automationlamapython/latest/automationlamapython-latest.rar -P /tmp
+      args:
+        warn: false
+    
+    - name: Unrar AutomationLamaPython package to /tmp
+      shell: unar /tmp/automationlamapython-latest.rar -o /tmp
+
+    - include_role:
+        name: release-automationlamapython
+      vars:
+        sourcePath: /tmp/automationlamapython-latest
+
+    - name: Remove rar file
+      file:
+        state: absent
+        path: /tmp/automationlamapython-latest.rar
+
+    - name: Remove automationlamapython-latest directory
+      file:
+        state: absent
+        path: /tmp/automationlamapython-latest

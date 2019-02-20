@@ -1,0 +1,4 @@
+---
+st2_secrets_file__state: present
+
+st2_secrets_file__path: /root/e4s/secret/spp-pack.secrets

@@ -1,0 +1,40 @@
+---
+- name: ECS Docker Push
+  hosts: localhost
+  tasks:
+    - name: Get Docker Token and Save to File
+      shell: aws ecr get-login --region "{{ region }}" > /tmp/ecs_token
+
+    - name: Trim Token
+      shell: cat /tmp/ecs_token |awk '{print $1 " " $2 " " $3 " " $4 " " $5 " " $6 " " $9}' > /tmp/ecs_token2
+
+    - name: Login with Token
+      shell: source /tmp/ecs_token2
+
+    - name: Remove token from /tmp
+      file:
+        state: absent
+        path: /tmp/ecs_token
+
+    - name: Remove token2 from /tmp
+      file:
+        state: absent
+        path: /tmp/ecs_token2
+
+    - name: Docker push to ECS
+      shell: docker push "{{ repository }}"
+
+    - name: shell
+      shell: |
+        fail= false
+        out=$(aws ecs describe-services --cluster {{ cluster }} --services {{ service }} |grep runningCount |awk 'NR==1{print $2}')
+        aws ecs update-service --service {{ service }} --desired-count 0 --cluster {{ cluster }}
+        while [ $out == 1 ]
+        do
+          out=$(aws ecs describe-services --cluster {{ cluster }} --services {{ service }} |grep runningCount |awk 'NR==1{print $2}')
+        done
+        echo "it is 0"
+        aws ecs update-service --service {{ service }} --desired-count 1 --cluster {{ cluster }}
+      async: 40
+      poll: 1
+

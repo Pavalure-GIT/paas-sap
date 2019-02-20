@@ -1,0 +1,28 @@
+- name: Remove sppOLD directory
+  file:
+    state: absent
+    path: /opt/stackstorm/virtualenvs/sppOLD
+  become: true
+
+- name: Copy current virtualenv to sppOLD as a backup
+  shell: cp -R /opt/stackstorm/virtualenvs/spp /opt/stackstorm/virtualenvs/sppOLD
+  become: true
+
+- name: Uninstall e4s-sap pacakge from virtualenv
+  pip:
+    name: e4s-sap
+    virtualenv: /opt/stackstorm/virtualenvs/spp
+    state: absent
+  become: true
+
+- name: Pip Install
+  pip:
+    name: git+file://"{{  sourcePath  }}"
+    virtualenv: /opt/stackstorm/virtualenvs/spp
+  become: true
+
+- name: Install Requirements from AutomationAnsible
+  pip:
+    requirements: /usr/share/e4s/ansible/spp-requirements.txt
+    virtualenv: /opt/stackstorm/virtualenvs/spp
+  become: true

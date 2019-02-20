@@ -1,0 +1,37 @@
+#This relies on the following files paths existing
+#/usr/share/e4s/ansibleOLD
+#/usr/share/e4s/ansible
+#Improve this by adding when statments to the tasks to only run if files/folders exist/do not exist
+
+---
+- hosts: AutomationEngine
+  tasks:
+
+    - name: Check unar is installed
+      yum:
+        name: unar
+        state: present
+
+    - name: Check wget is installed
+      yum:
+        name: wget
+        state: present
+
+    - name: Download AutomationAnsible repository from Nexus
+      shell: |
+        wget --user="{{ nexus_username  }}" --password="{{ nexus_password }}" http://nexus.solutionplace.svcs.hpe.com:8081/nexus/service/local/repositories/spp/content/artifacts/automationansible/latest/automationansible-latest.rar -P /tmp
+      args:
+        warn: false
+    
+    - name: Unrar AutomationAnsible package to /tmp
+      shell: unar /tmp/automationansible-latest.rar -o /tmp
+
+    - include_role:
+        name: release-automationansible
+      vars:
+        sourcePath: /tmp/automationansible-latest
+
+    - name: Remove rar
+      file:
+        state: absent
+        path: /tmp/automationansible-latest.rar

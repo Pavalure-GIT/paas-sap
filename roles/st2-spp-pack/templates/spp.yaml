@@ -1,0 +1,7 @@
+env_path: {{ st2_spp_pack__env_path }}
+secrets_file: {{ st2_spp_pack__secrets_file }}
+sns_aws_region: {{ st2_spp_pack__sns_aws_region }}
+sns_topic_arn: {{ st2_spp_pack__sns_topic_arn }}
+vault_url: {{ st2_spp_pack__vault_url }}
+vault_aws_access_key_path: {{ st2_spp_pack__vault_aws_access_key_path }}
+vault_aws_secret_key_path: {{ st2_spp_pack__vault_aws_secret_key_path }}

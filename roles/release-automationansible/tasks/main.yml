@@ -1,0 +1,29 @@
+---
+- name: Delete old ansible repository backup
+  shell: rm -R /usr/share/e4s/ansibleOLD
+  args:
+    warn: false
+  become: true
+
+- name: Move current ansible repository to ansibleOLD to create a backup
+  shell: mv /usr/share/e4s/ansible /usr/share/e4s/ansibleOLD
+  become: true
+
+- name: Move new repository to /usr/share/e4s/ansible
+  shell: mv "{{ sourcePath  }}" /usr/share/e4s/ansible
+  become: true
+
+- name: Install Requirements from AutomationAnsible
+  pip:
+    requirements: /usr/share/e4s/ansible/spp-requirements.txt
+    virtualenv: /opt/stackstorm/virtualenvs/spp
+  become: true
+
+- name: Install Ansible Galaxy Roles
+  shell: |
+        source /opt/stackstorm/virtualenvs/spp/bin/activate
+        ansible-galaxy install -r requirements.yml
+  args:
+    chdir: /usr/share/e4s/ansible
+  become: true
+  ignore_errors: true

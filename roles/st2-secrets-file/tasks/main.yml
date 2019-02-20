@@ -1,0 +1,26 @@
+---
+
+- name: create the target dir
+  file:
+    path: "{{ st2_secrets_file__path | dirname }}"
+    owner: root
+    group: root
+    mode: 0400
+    state: directory
+    recurse: yes
+  when: st2_secrets_file__state == 'present'
+
+- name: install the secrets file
+  template:
+    src: secrets.template
+    dest: "{{ st2_secrets_file__path }}"
+    owner: root
+    group: root
+    mode: 0400
+  when: st2_secrets_file__state == 'present'
+
+- name: uninstall the secrets file
+  file:
+    path: "{{ st2_secrets_file__path }}"
+    state: absent
+  when: st2_secrets_file__state == 'absent'

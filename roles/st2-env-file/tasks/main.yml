@@ -1,0 +1,26 @@
+---
+
+- name: create the target dir
+  file:
+    path: "{{st2_env_file__env_path}}"
+    owner: root
+    group: root
+    mode: 0400
+    state: directory
+    recurse: yes
+  when: st2_env_file__state == 'present'
+
+- name: install the env file
+  template:
+    src: ansible.env
+    dest: "{{st2_env_file__env_path}}/ansible.env"
+    owner: root
+    group: root
+    mode: 0400
+  when: st2_env_file__state == 'present'
+
+- name: uninstall the env file
+  file:
+    path: "{{st2_env_file__env_path}}/ansible.env"
+    state: absent
+  when: st2_env_file__state == 'absent'

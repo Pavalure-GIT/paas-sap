@@ -1,0 +1,51 @@
+---
+
+# Note: This role uses ssh to the vsts repo, and so expects a correctly configured ssh config
+# to exist. The role "vsts-ssh" can be used to set this up.
+# Also, a valid ST2 auth token (st2_spp_pack__st2_token) is required. See role "st2-token" for details.
+
+- name: install pack from git
+  shell: "export ST2_AUTH_TOKEN={{ st2_spp_pack__st2_token }} && st2 pack install {{ st2_spp_pack__pack_repo_url }}"
+  args:
+    executable: /bin/bash
+  when: st2_spp_pack__state == 'present'
+  no_log: true
+
+- name: uninstall spp pack
+  shell: "export ST2_AUTH_TOKEN={{ st2_spp_pack__st2_token }} && st2 pack remove {{ st2_spp_pack__pack_name }}"
+  args:
+    executable: /bin/bash
+  when: st2_spp_pack__state == 'absent'
+  no_log: true
+
+- name: install the config file
+  template:
+    src: spp.yaml
+    dest: /opt/stackstorm/configs/{{ st2_spp_pack__pack_name }}.yaml
+    owner: st2
+    group: st2
+    mode: 0660
+  when: st2_spp_pack__state == 'present'
+
+- name: install ansible-galaxy dependencies
+  shell: |
+    source /opt/stackstorm/virtualenvs/{{ st2_spp_pack__pack_name }}/bin/activate
+    cd {{ st2_spp_pack__ansible_playbook_path }}
+    ansible-galaxy install -r {{ st2_spp_pack__ansible_galaxy_requirements }}
+  args:
+    executable: /bin/bash
+  ignore_errors: true
+  when: st2_spp_pack__state == 'present'
+
+- name: uninstall the config file
+  file:
+    path: /opt/stackstorm/configs/{{ st2_spp_pack__pack_name }}.yaml
+    state: absent
+  when: st2_spp_pack__state == 'absent'
+
+- name: register the config file
+  shell: "export ST2_AUTH_TOKEN={{ st2_spp_pack__st2_token }} && st2ctl reload --register-configs"
+  args:
+    executable: /bin/bash
+  when: st2_spp_pack__state == 'present'
+  no_log: true

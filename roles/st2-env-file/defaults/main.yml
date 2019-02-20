@@ -1,0 +1,13 @@
+---
+st2_env_file__state: present
+
+st2_env_file__env_path: /root/e4s/env
+
+st2_env_file__vault_verify_ssl: true
+st2_env_file__vault_role_id: ''
+st2_env_file__vault_secret_id: ''
+
+st2_env_file__azure_subscription_id: ''
+st2_env_file__azure_client_id: ''
+st2_env_file__azure_secret: ''
+st2_env_file__azure_tenant: ''

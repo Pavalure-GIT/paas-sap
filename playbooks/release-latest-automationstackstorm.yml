@@ -1,0 +1,86 @@
+---
+- name: Release AutomationStackstorm.git and Update Pack
+  hosts: AutomationEngine
+  become: yes
+  vars:
+    st2_spp_pack__state: present
+    st2_spp_pack__pack_repo_url: file:///root/automationstackstorm.git/
+    #st2_spp_pack__pack_name: spp
+    #st2_spp_pack__sns_aws_region: eu-central-1
+    #st2_spp_pack__sns_topic_arn: arn:aws:sns:eu-central-1:000987835229:spp-automation
+    #st2_spp_pack__vault_aws_access_key_path: secret/e4s/poc/automation/aws/access_key
+    #st2_spp_pack__vault_aws_secret_key_path: secret/e4s/poc/automation/aws/secret_key
+    #st2_env_file__state: present
+    st2_env_file__env_path: /root/e4s/env
+    st2_env_file__vault_url: 'http://172.116.20.24:8200'
+    #st2_env_file__vault_verify_ssl: true
+    #st2_env_file__azure_subscription_id: ''
+    #st2_env_file__azure_client_id: ''
+    #st2_env_file__azure_secret: ''
+    #st2_env_file__azure_tenant: ''
+    st2_secrets_file__path: /root/e4s/secret/spp-pack.secrets
+    #st2_secrets_file__vault_role_id: ''
+    #st2_secrets_file__vault_secret_id: ''
+  tasks:
+    - name: Check unar is installed
+      yum:
+        name: unar
+        state: present
+
+    - name: Check wget is installed
+      yum:
+        name: wget
+        state: present
+
+    - name: Download AutomationServices repository from Nexus
+      shell: |
+        wget --user="{{ nexus_username  }}" --password="{{ nexus_password }}" http://nexus.solutionplace.svcs.hpe.com:8081/nexus/service/local/repositories/spp/content/artifacts/automationstackstorm.git/latest/automationstackstorm.git-latest.rar -P /tmp
+      args:
+        warn: false
+
+    - name: Unrar AutomationServices package to /tmp
+      shell: unar /tmp/automationstackstorm.git-latest.rar -o /tmp
+
+    - name: Move Directory
+      shell: mv /tmp/automationstackstorm.git-latest /root/automationstackstorm.git
+      become: true
+
+    - name: Checkout Master to reattach head
+      shell: git checkout -b current
+      args:
+        chdir: /root/automationstackstorm.git/
+      become: true
+
+    - name: check st2 is present
+      include_role: name=st2-installed
+
+    - name: setup VSTS SSH configuration
+      include_role: name=vsts-ssh
+      when: st2_spp_pack__state == 'present'
+
+    - name: setup env file
+      include_role: name=st2-env-file
+
+    - name: setup secrets file
+      include_role: name=st2-secrets-file
+
+    - name: acquire ST2 auth token
+      include_role: name=st2-token
+
+    - include_role: name=st2-spp-pack
+      vars:
+        - st2_spp_pack__env_path: "{{ st2_env_file__env_path }}"
+        - st2_spp_pack__st2_token: "{{ st2_token }}"
+        - st2_spp_pack__vault_url: "{{ st2_env_file__vault_url }}"
+        - st2_spp_pack__secrets_file: "{{ st2_secrets_file__path }}"
+
+    - name: Remove directory
+      file:
+        state: absent
+        path: /root/automationstackstorm.git
+      become: true
+
+    - name: Remove rar
+      file:
+        state: absent
+        path: /tmp/automationstackstorm.git-latest.rar

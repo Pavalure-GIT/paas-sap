@@ -1,0 +1,8 @@
+---
+- name: check st2 is installed
+  command: st2 --version
+  register: st2_version
+  changed_when: False
+  failed_when: "'No command' in st2_version.stderr"
+  check_mode: no
+

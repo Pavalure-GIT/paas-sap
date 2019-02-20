@@ -1,0 +1,20 @@
+- name: Move Directory
+  shell: mv "{{ sourcePath }}" /root/automationstackstorm.git
+  become: true
+
+- name: Checkout Master to reattach head
+  shell: git checkout -b current
+  args:
+    chdir: /root/automationstackstorm.git/
+  become: true
+
+- name: Install pack
+  shell: "export ST2_AUTH_TOKEN=`st2 auth -t -p {{ st2_pack__admin_password}} {{ st2_pack__admin_user }}` && st2 pack install {{ st2_pack__ref }}"
+  args:
+    creates: "/opt/stackstorm/packs/{{ st2_pack__name }}"
+
+- name: Remove directory
+  file:
+    state: absent
+    path: /root/automationstackstorm.git
+  become: true
