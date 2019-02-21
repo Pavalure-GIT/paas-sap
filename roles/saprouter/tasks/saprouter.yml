@@ -1,0 +1,51 @@
+- file:
+    path: /media
+    state: directory
+
+- file:
+    path: /media/SAP
+    state: directory
+
+- file:
+    path: /media/SAP/WILEYM
+    state: directory
+
+- file:
+    path: /media/SAP/ROUTER
+    state: directory
+
+#- get_url:
+#    url: https://s3.amazonaws.com/aws-cli/awscli-bundle.zip
+#    dest: /tmp/awscli-bundle.zip
+#  environment:
+#    http_proxy: "http://{{ proxy_domain }}:8080"
+#    https_proxy: "http://{{ proxy_domain }}:8080"
+#
+#- unarchive:
+#    src: /tmp/awscli-bundle.zip
+#    dest: /tmp/awscli-bundle
+#    remote_src: yes
+#
+#- shell: ./tmp/awscli-bundle/install -b ~/bin/aws
+
+- aws_s3:
+    bucket: p4s-binaries
+    object: /INSTALL_UPGRADE/SAP/ROUTER/
+    dest: /media/ROUTER
+    mode: get
+
+- aws_s3:
+    bucket: p4s-binaries
+    object: /INSTALL_UPGRADE/SAP/WILYEM/
+    dest: /media/WILYEM
+    mode: get
+
+- aws_s3:
+    bucket: p4s-binaries
+    object: /INSTALL_UPGRADE/TOOLS
+    mode: get
+
+- file:
+    path: /media/*
+    mode: 0775
+
