@@ -1,0 +1,139 @@
+# Automating Squid
+
+- name: pull zypper
+  zypper_repository:
+    repo: https://download.opensuse.org/repositories/server:proxy/SLE_12_SP3/server:proxy.repo
+  ignore_errors: yes
+  
+- name: install squid
+  zypper:
+    name: squid
+    state: present
+    disable_gpg_check: yes
+  
+- name: start squid
+  service:
+    name: squid
+    state: started
+  
+- name: delete squid.conf
+  file:   
+    path: /etc/squid/squid.conf
+    state: absent
+  
+- name: copy squid.conf
+  copy:
+    src: files/squid.conf
+    dest: /etc/squid/squid.conf 
+    owner: root
+    group: root
+    mode: 0644
+  
+# the lines below will search for what is specified in regexp and replace it with the content of 'line' and pull the management_subnet_cidr from playbook
+
+- name: modify squid.conf
+  lineinfile:
+    path: /etc/squid/squid.conf
+    regexp: '^acl localnet src management_lan'
+    line: 'acl localnet src {{ management_subnet_cidr }}'
+  
+- name: restart squid
+  service:
+    name: squid
+    state: restarted
+  
+# the following lines start the setup of the 2nd proxy for squid
+
+- name: install pint
+  zypper:
+    name: python-susepubliccloudinfo
+    state: present
+    disable_gpg_check: yes
+  
+# this creates the sles4sap-hosts file   
+
+- lineinfile:
+    path: /etc/squid/sles4sap-hosts
+    line: '# SLES4SAP SMT server for {{ azure_region }}'
+    create: yes
+   
+- name: run echo
+  shell: pint microsoft servers --smt --region="$AzureRegion" --json | perl -ne 'if(s/.*"ip"\s*:\s*"([^"]+).*/$1/){print;exit}'  
+  register: pint_output
+  environment: 
+    AzureRegion: "{{ azure_region }}" 
+ 
+- lineinfile:
+    path: /etc/squid/sles4sap-hosts
+    line: '{{ pint_output.stdout }} smt-azure.susecloud.net smt-azure'
+  
+- name: copy squid-sles4sap.conf
+  copy:
+    src: files/squid-sles4sap.conf
+    dest: /etc/squid/squid-sles4sap.conf
+    owner: root
+    group: root
+    mode: 0644
+  
+# the lines below will search for what is specified in regexp and replace it with the content of 'line' and pull the management_subnet_cidr from playbook
+
+- name: modify squid-sles4sap.conf
+  lineinfile:
+    path: /etc/squid/squid-sles4sap.conf
+    regexp: '^acl localnet src management_lan'
+    line: 'acl localnet src {{ management_subnet_cidr }}'
+ 
+# this creates the second proxy service
+
+- name: copy squid service to create second proxy service
+  shell: systemctl cat squid.service >/etc/systemd/system/squid-sles4sap.service
+  
+- name: copy squid-sles4sap.service
+  copy:
+    src: files/squid-sles4sap.service
+    dest: /etc/systemd/system/squid-sles4sap.service
+    owner: root
+    group: root
+    mode: 0644
+  
+- name: Create Cache Location
+  file:
+    path: /var/cache/squid-sles4sap
+    state: directory
+    mode: 750
+    owner: squid
+    group: root
+  
+- name: Copy squid/initialize_cache_if_needed.sh
+  copy:
+    src: /usr/lib64/squid/initialize_cache_if_needed.sh
+    dest: /usr/lib64/squid/initialize_cache_if_needed-sles4sap.sh
+    remote_src: yes
+  
+# this will update the permissions, without this, squid will fail to start
+
+- name: Update permissions on initialize_cache_if_needed-sles4sap.sh
+  file:
+    path: /usr/lib64/squid/initialize_cache_if_needed-sles4sap.sh
+    owner: root
+    group: root
+    mode: 0755
+  
+- name: Update parameters in initialize_cache_if_needed.sh - CACHE_DIR
+  lineinfile:
+    path: /usr/lib64/squid/initialize_cache_if_needed-sles4sap.sh
+    state: present
+    regexp: '^CACHE_DIR='
+    line: 'CACHE_DIR=$($DIR/cache_dir.sed < /etc/squid/squid-sles4sap.conf)'
+  
+- name: Update parameters in initialize_cache_if_needed.sh - exec
+  lineinfile:
+    path: /usr/lib64/squid/initialize_cache_if_needed-sles4sap.sh
+    state: present
+    regexp: '^    exec /usr/sbin/squid -z -F -N -S -f /etc/squid/squid.conf'
+    line: '    exec /usr/sbin/squid -z -F -N -S -f /etc/squid/squid-sles4sap.conf'
+  
+- name: start squid-sles4sap
+  service:
+    name: squid-sles4sap
+    state: started
