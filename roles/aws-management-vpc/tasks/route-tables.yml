@@ -44,79 +44,79 @@
     subnets:
       - "{{ subnet.id }}" tools_private_subnet
     routes:
-      - destination: 10.208.0.0/26
+      - dest: 10.208.0.0/26
         gateway_id: "{{ igw.gateway_id }}" - actually local
-      - destination: 10.4.0.0/22 
+      - dest: 10.4.0.0/22 
         gateway_id: local
-      - destination: 0.0.0.0/0
+      - dest: 0.0.0.0/0
         gateway_id: nat-067df46a2dd838183
-      - destination: 10.2.0.0/22
+      - dest: 10.2.0.0/22
         gateway_id: pcx-aa23e7c2
-      - destination: 10.165.0.0/22
+      - dest: 10.165.0.0/22
         gateway_id: pcx-6123e709
-      - destination: 15.143.137.0/24
+      - dest: 15.143.137.0/24
         gateway_id: vgw-0227d16b
-      - destination: 20.148.116.202/32
+      - dest: 20.148.116.202/32
         gateway_id: vgw-0227d16b
-      - destination: 100.64.0.0/20
+      - dest: 100.64.0.0/20
         gateway_id: vgw-0227d16b
-      - destination: 100.64.0.0/16
+      - dest: 100.64.0.0/16
         gateway_id: vgw-0227d16b
-      - destination: 100.64.16.0/24
+      - dest: 100.64.16.0/24
         gateway_id: vgw-0227d16b
-      - destination: 100.64.16.0/22
+      - dest: 100.64.16.0/22
         gateway_id: vgw-0227d16b
-      - destination: 100.64.20.0/23
+      - dest: 100.64.20.0/23
         gateway_id: vgw-0227d16b
       - destation: 100.65.0.0/16
         gateway_id: vgw-0227d16b
-      - destination: 100.65.16.0/21
+      - dest: 100.65.16.0/21
         gateway_id: vgw-0227d16b
-      - destination: 100.65.24.0/21
+      - dest: 100.65.24.0/21
         gateway_id: vgw-0227d16b
-      - destination: 100.65.32.0/21
+      - dest: 100.65.32.0/21
         gateway_id: vgw-0227d16b
-      - destination: 100.79.0.0/28
+      - dest: 100.79.0.0/28
         gateway_id: vgw-0227d16b
-      - destination: 100.79.0.0/27
+      - dest: 100.79.0.0/27
         gateway_id: vgw-0227d16b
-      - destination: 138.35.0.0/16
+      - dest: 138.35.0.0/16
         gateway_id: vgw-0227d16b
-      - destination: 155.61.0.0/16
+      - dest: 155.61.0.0/16
         gateway_id: vgw-0227d16b
-      - destination: 172.16.0.0/20
+      - dest: 172.16.0.0/20
         gateway_id: vgw-0227d16b
-      - destination: 172.16.0.0/16
+      - dest: 172.16.0.0/16
         gateway_id: vgw-0227d16b
-      - destination: 172.16.16.0/22
+      - dest: 172.16.16.0/22
         gateway_id: vgw-0227d16b
       - destionation: 172.16.20.0/23
         gateway_id: vgw-0227d16b
-      - destination: 172.17.0.0/21
+      - dest: 172.17.0.0/21
         gateway_id: vgw-0227d16b
       - destionation: 172.17.0.0/16
         gateway_id: vgw-0227d16b
-      - destination: 172.17.16.0/23
+      - dest: 172.17.16.0/23
         gateway_id: vgw-0227d16b
-      - destination: 172.17.64.0/21
+      - dest: 172.17.64.0/21
         gateway_id: vgw-0227d16b
-      - destination: 172.17.72.0/21
+      - dest: 172.17.72.0/21
         gateway_id: vgw-0227d16b
-      - destination: 172.17.80.0/21
+      - dest: 172.17.80.0/21
         gateway_id: vgw-0227d16b
-      - destination: 172.17.88.0/21
+      - dest: 172.17.88.0/21
         gateway_id: vgw-0227d16b
-      - destination: 172.17.96.0/21
+      - dest: 172.17.96.0/21
         gateway_id: vgw-0227d16b
-      - destination: 172.17.96.0/21
+      - dest: 172.17.96.0/21
         gateway_id: vgw-0227d16b
-      - destination: 172.17.104.0/21
+      - dest: 172.17.104.0/21
         gateway_id: vgw-0227d16b
-      - destination: 172.17.112.0/21
+      - dest: 172.17.112.0/21
         gateway_id: vgw-0227d16b
-      - destination: 172.31.0.0/28
+      - dest: 172.31.0.0/28
         gateway_id: vgw-0227d16b
-      - destination: 172.31.0.0/27
+      - dest: 172.31.0.0/27
 
 - ec2_vpc_route_table:
     vpc_id: "{{ management_network.vpc.id  }}"
@@ -147,3 +147,44 @@
       - dest: 100.65.16.0/21
         gateway_id: vgw-0227d16b
       - dest: 100.65.24.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 100.65.32.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 100.79.0.0/28
+        gateway_id: vgw-0227d16b
+      - dest: 100.79.0.0/27
+        gateway_id: vgw-0227d16b
+      - dest: 138.35.0.0/16
+        gateway_id: vgw-0227d16b
+      - dest: 155.61.0.0/16
+        gateway_id: vgw-0227d16b
+      - dest: 172.16.0.0/20
+        gateway_id: vgw-0227d16b
+      - dest: 172.16.0.0/16
+        gateway_id: vgw-0227d16b
+      - dest: 172.16.16.0/22
+        gateway_id: vgw-0227d16b
+      - dest: 172.16.16.0/23
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.0.0/16
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.16.0/23
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.64.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.72.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.80.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.88.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.96.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.104.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.112.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 172.31.0.0/28
+        gateway_id: vgw-0227d16b
+      - dest: 172.31.0.0/27
+        gateway_id: vgw-0227d16b
