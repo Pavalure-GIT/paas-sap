@@ -68,7 +68,7 @@
         gateway_id: vgw-0227d16b
       - dest: 100.64.20.0/23
         gateway_id: vgw-0227d16b
-      - destation: 100.65.0.0/16
+      - dest: 100.65.0.0/16
         gateway_id: vgw-0227d16b
       - dest: 100.65.16.0/21
         gateway_id: vgw-0227d16b
@@ -90,11 +90,11 @@
         gateway_id: vgw-0227d16b
       - dest: 172.16.16.0/22
         gateway_id: vgw-0227d16b
-      - destionation: 172.16.20.0/23
+      - dest: 172.16.20.0/23
         gateway_id: vgw-0227d16b
       - dest: 172.17.0.0/21
         gateway_id: vgw-0227d16b
-      - destionation: 172.17.0.0/16
+      - dest: 172.17.0.0/16
         gateway_id: vgw-0227d16b
       - dest: 172.17.16.0/23
         gateway_id: vgw-0227d16b
