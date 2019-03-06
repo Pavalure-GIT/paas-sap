@@ -4,22 +4,19 @@
     name: "{{ aws_customer_vpc_env_name }}"
     cidr_block: "{{ aws_customer_vpc_cidr }}"
     region: "{{ aws_customer_vpc_region }}"
-  register: vpc
-
-- set_fact:
-    vpcid: "{{ vpc.vpc.id  }}"
+  register: customer_network
 
 - include_tasks: subnets.yml
 
 - ec2_vpc_igw:
-   vpc_id: "{{ vpcid }}"
+   vpc_id: "{{ customer_network.vpc.id }}"
    region: "{{ aws_customer_vpc_region }}"
    state: "present"
    tags:
      Name: "{{ aws_customer_vpc_env_name }} Internet Gateway"
   register: igw
 
-- include_tasks: nat-gateways.yml
+#- include_tasks: nat-gateways.yml
 
 - include_tasks: security-groups.yml
 

@@ -1,6 +1,6 @@
 ---
 - ec2_vpc_route_table:
-    vpc_id: "{{ vpcid  }}"
+    vpc_id: "{{ customer_network.vpc.id  }}"
     region: "{{ aws_customer_vpc_region  }}"
     tags:
       Name: Customer
@@ -11,7 +11,7 @@
   register: customer_route_table
 
 - ec2_vpc_route_table:
-    vpc_id: "{{ vpcid  }}"
+    vpc_id: "{{ customer_network.vpc.id  }}"
     region: "{{ aws_customer_vpc_region  }}"
     tags:
       Name: Public
@@ -22,7 +22,7 @@
   register: public_route_table
 
 - ec2_vpc_route_table:
-    vpc_id: "{{ vpcid  }}"
+    vpc_id: "{{ customer_network.vpc.id  }}"
     region: "{{ aws_customer_vpc_region  }}"
     tags:
       Name: Management AZ1
@@ -31,7 +31,7 @@
   register: managementaz1_route_table
 
 - ec2_vpc_route_table:
-    vpc_id: "{{ vpcid  }}"
+    vpc_id: "{{ customer_network.vpc.id  }}"
     region: "{{ aws_customer_vpc_region  }}"
     tags:
       Name: Management AZ2
@@ -40,7 +40,7 @@
   register: managementaz2_route_table
 
 - ec2_vpc_route_table:
-    vpc_id: "{{ vpcid  }}"
+    vpc_id: "{{ customer_network.vpc.id  }}"
     region: "{{ aws_customer_vpc_region  }}"
     tags:
       Name: Management AZ3
