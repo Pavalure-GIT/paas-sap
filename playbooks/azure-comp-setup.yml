@@ -17,4 +17,4 @@
         dr_compartment: no
         dns_name_space: "124.in-addr.arpa"
         dns_customer_name: "proto-customer.dxc.paas4sap.svcs.entsvcs.com"
-        dns_management_name: "proto.azure.paas4sap.svcs.entsvcs"
+        dns_management_name: "proto.azure.paas4sap.svcs.entsvcs" 
