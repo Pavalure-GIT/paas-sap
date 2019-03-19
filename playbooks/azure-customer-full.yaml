@@ -1,0 +1,69 @@
+- name: Azure Compartment Configuration
+  hosts: localhost
+  tasks:
+    - name: Create Infastructure
+      include_role: 
+        name: azure-compartment-config
+      
+- name: Provision Component VMs
+  hosts: localhost
+  tasks:
+    - name: Provision SAP Router
+      include_role:
+        name: azure-vm
+      vars:
+        azure_vm_name: "SAPRouter"
+        azure_vm_resource_group: "{{ resource_group }}"
+        azue_vm_vnet: "{{ virtual_network_name }}" 
+        azure_vm_size: "Standard_B4ms"
+        azure_vm_image_offer: "SLES-Standard"
+        azure_vm_publisher: "SUSE"
+        azure_vm_sku: "12-SP3"
+        azure_vm_public_ssh: "{{vm_public_keys}}"
+        azure_vm_nic1: "Public"
+        azure_vm_nic2: "Management" #Must use quotes to define empty"
+
+    - name: Provison MidServerA
+      include_role:
+        name: azure-vm
+      vars:
+        azure_vm_name: "MidServerA"
+        azure_vm_resource_group: "{{ resource_group }}"
+        azue_vm_vnet: "{{ virtual_network_name }}" 
+        azure_vm_size: "Standard_B2s"
+        azure_vm_image_offer: "RHEL"
+        azure_vm_publisher: "RedHat"
+        azure_vm_sku: "7-RAW"
+        azure_vm_public_ssh: "{{ vm_public_keys }}"
+        azure_vm_nic1: "Management"
+        azure_vm_nic2: "" #Must use quotes to define empty
+
+    - name: Provison MidServerB
+      include_role:
+        name: azure-vm  
+      vars:
+        azure_vm_name: "MidServerB"
+        azure_vm_resource_group: "{{ resource_group }}"
+        azue_vm_vnet: "{{ virtual_network_name }}" 
+        azure_vm_size: "Standard_B2s"
+        azure_vm_image_offer: "RHEL"
+        azure_vm_publisher: "RedHat"
+        azure_vm_sku: "7-RAW"
+        azure_vm_public_ssh: "{{ vm_public_keys }}"
+        azure_vm_nic1: "Management"
+        azure_vm_nic2: "" #Must use quotes to define empty
+ 
+    - name: Provision FDE
+      include_role:
+        name: azure-vm  
+      vars:
+        azure_vm_name: "FDE"
+        azure_vm_resource_group: "{{ resource_group }}"
+        azue_vm_vnet: "{{ virtual_network_name }}" 
+        azure_vm_size: "Standard_DS2v2"
+        azure_vm_image_offer: "SLES-Standard"
+        azure_vm_publisher: "SUSE"
+        azure_vm_sku: "12-SP3"
+        azure_vm_public_ssh: "{{ vm_public_keys }}"
+        azure_vm_nic1: "Customer"
+        azure_vm_nic2: "Management" #Must use quotes to define empty

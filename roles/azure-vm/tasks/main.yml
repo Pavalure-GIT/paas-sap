@@ -1,0 +1,64 @@
+- name: Create Nic1
+  azure_rm_networkinterface:
+    name: "{{ azure_vm_name }}-nic1"
+    resource_group: "{{azure_vm_resource_group}}"
+    virtual_network: "{{azue_vm_vnet}}"
+    subnet_name: "{{azure_vm_nic1}}"
+    state: present
+  register: nic1
+
+- name: Create Nic2
+  azure_rm_networkinterface:
+    name: "{{ azure_vm_name }}-nic2"
+    resource_group: "{{azure_vm_resource_group}}"
+    virtual_network: "{{azue_vm_vnet}}"
+    subnet_name: "{{azure_vm_nic2}}"
+    state: present
+  when: (azure_vm_nic2 != "" )
+  register: nic2
+
+- name: Provision virtual machine with 1 nic
+  azure_rm_virtualmachine:
+    name: "{{ azure_vm_name }}"
+    resource_group: "{{azure_vm_resource_group}}"
+    vm_size: "Standard_B1s" ##ToChangeBack"{{azure_vm_size}}"
+    network_interface_names: 
+    - "{{nic1.state.name}}"
+    image:
+      offer: "{{azure_vm_image_offer}}"
+      publisher: "{{azure_vm_publisher}}"
+      sku: "{{azure_vm_sku}}"
+      version: latest
+    admin_username: "{{ username }}"
+    ssh_password_enabled: false  
+    ssh_public_keys:
+      - path: /home/{{ username }}/.ssh/authorized_keys
+        key_data: "{{azure_vm_public_ssh}}"
+    state: present
+  when: nic2.state is not defined
+     
+- name: Provision virtual machine with 2 nics 
+  azure_rm_virtualmachine:
+    name: "{{ azure_vm_name }}"
+    resource_group: "{{azure_vm_resource_group}}"
+    vm_size: "Standard_B1s" ##ToChangeBack"{{azure_vm_size}}"
+    network_interface_names: 
+    - "{{nic1.state.name}}"
+    - "{{nic2.state.name}}"
+    image:
+      offer: "{{azure_vm_image_offer}}"
+      publisher: "{{azure_vm_publisher}}"
+      sku: "{{azure_vm_sku}}"
+      version: latest
+    admin_username: "{{ username }}"
+    ssh_password_enabled: false  
+    ssh_public_keys:
+      - path: /home/{{ username }}/.ssh/authorized_keys
+        key_data: "{{azure_vm_public_ssh}}"
+    state: present
+  when: nic2.state is defined
+
+- include_tasks: dns-entries.yml
+
+
+
