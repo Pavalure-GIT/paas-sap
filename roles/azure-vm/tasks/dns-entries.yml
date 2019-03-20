@@ -1,0 +1,25 @@
+- set_fact:      
+      dns_prefix: "{{ ( azure_vm_name == 'SAPRouter') | ternary( 'proxy',azure_vm_name ) }}" 
+
+- name: Add nic1 to DNS
+  azure_rm_dnsrecordset:
+    state: present
+    resource_group: "{{resource_group}}" 
+    relative_name: "{{dns_prefix}}" 
+    zone_name: "{{dns_name[azure_vm_nic1]}}"
+    record_type: "A" 
+    time_to_live: 300
+    records: 
+      - entry: "{{nic1.state.ip_configuration.private_ip_address}}"
+
+- name: add nic2 to DNS
+  azure_rm_dnsrecordset:
+    state: present
+    resource_group:  "{{resource_group}}" 
+    relative_name: "{{dns_prefix}}" 
+    zone_name: "{{dns_name[azure_vm_nic2]}}"
+    record_type: "A"
+    time_to_live: 300
+    records: 
+      - entry: "{{nic2.state.ip_configuration.private_ip_address}}"
+  when: nic2.state is defined
