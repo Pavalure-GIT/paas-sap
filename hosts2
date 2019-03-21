@@ -1,10 +1,8 @@
-[saprouter]
-10.6.0.4
 [winrm]
-52.29.181.45
+35.156.27.144
 [winrm:vars]
 ansible_user=Administrator
-ansible_password=2brDExNPf3.EFE(@G!@lO!;9lrvC;b)x
+ansible_password=SAT7iZOz$DSLuHM.fF=%Y5bqjGd3M9YH
 ansible_connection=winrm
 ansible_winrm_transport=basic
 ansible_port=5985
