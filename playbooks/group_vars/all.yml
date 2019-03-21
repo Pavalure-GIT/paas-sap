@@ -7,13 +7,11 @@ public_subnet: "100.64.16.0/25"
 customer_subnet: "100.64.0.0/22"
 management_subnet: "100.65.24.0/23"
 gateway_subnet: "100.79.0.0/28"
-dr_compartment: no
-#dns_name_Public: "124.in-addr.arpa"
-#dns_name_Customer: "proto-customer.dxc.paas4sap.svcs.entsvcs.com"
-#dns_name_Management: "proto.azure.paas4sap.svcs.entsvcs"
 dns_name:
   Public: "124.in-addr.arpa"
   Customer: "proto-customer.dxc.paas4sap.svcs.entsvcs.com"
   Management: "proto.azure.paas4sap.svcs.entsvcs"
 vm_public_keys: "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAgKPo2E32TDYoeSsSJgqEVlShiApVwlcGh5b0PRbb8KVZ0jukdZTV/0Bx0dioTtQ+gLPqF46GS7kChzQH2h8Vtq52unbRDOzyxEa6O1ZT7QMIfPD088k1rm5quqXxsr/r3Id3IcqaxbHgv1N8A1upYqUIfVZ04fVfNjZsqKW3aZ9BxtrFf2jM1jKlTk0OJFFZkGDgPpe3EnbFPWgS/gRsIThTIgu6Ia7DHCQnHErxSjzkl8wf/ZLwrpcgbDyR+Bk3h6YUxx7SsRmshP+e9zm92vwLs0tgjJIvxkqdHB4EyTrMc2fOxtVi9hGj5vr3JY5UGCep1M6YR7V47nkUWAcKLw== AzureDevDR"
 username: "ec2-user"
+dr_compartment: no
+ha_compartment: no
