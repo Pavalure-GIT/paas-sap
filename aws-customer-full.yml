@@ -1,0 +1,172 @@
+---
+- name: Create Infrastructure
+  hosts: localhost
+  tasks:
+    - name: Create VPC, Subnets, NAT Gateways, Route Tables, Security Groups and Route53 Zones
+      include_role:
+        name: aws-customer-infrastructure
+      vars:
+        aws_customer_vpc_cidr: 172.17.64.0/21, 172.16.0.0/20, 172.16.16.0/22, 172.16.20.0/23
+        aws_customer_vpc_env_name: "Dev-TBS"
+        aws_customer_vpc_region: us-east-1
+        publicaz1_cidr: 172.16.16.0/25
+        publicaz2_cidr: 172.16.16.128/25
+        publicaz3_cidr: 172.16.17.0/25
+        managementaz1_cidr: 172.17.64.0/23
+        managementaz2_cidr: 172.17.66.0/23
+        managementaz3_cidr: 172.17.68.0/23
+        customeraz1_cidr: 172.16.0.0/22
+        customeraz2_cidr: 172.16.4.0/22
+        customeraz3_cidr: 172.16.8.0/22
+        clusteraz1_cidr: 172.16.18.0/24
+        clusteraz2_cidr: 172.16.19.0/24
+        clusteraz3_cidr: 172.16.20.0/24
+        aws_customer_vpc_management_cidr: 10.4.0.0/22
+        aws_customer_vpc_shortname: dv2.aws.paas4sap.svcs.entsvcs.com
+        aws_customer_vpc_longname: devs4tbs.thebodyshop.com
+
+- name: Provision Component Machines
+  hosts: localhost
+  tasks:
+    - name: Provision FDE ec2 VM
+      include_role:
+        name: aws-ec2-vm
+      vars:
+        aws_ec2_vm_Name: FDE
+        aws_ec2_vm_region: us-east-1
+        aws_ec2_vm_key_name: 064692377866DevCustomerCompartment
+        aws_ec2_vm_instance_type: c5.large
+        aws_ec2_vm_image: ami-3c062943
+        aws_ec2_vm_eth1_groups: "{{ mgmt_net_all.group_id }}"
+        aws_ec2_vm_eth1_subnet: "{{ managementaz1.subnet.id }}"
+        aws_ec2_vm_eth0_groups: "{{ cust_net_all.group_id }}"
+        aws_ec2_vm_eth0_subnet: "{{ customeraz1.subnet.id }}"
+
+    - debug:
+        msg: "Private IP FDE: {{ eth1.interface.private_ip_address }}"
+        
+    - route53:
+        state: present
+        zone: dv2.aws.paas4sap.svcs.entsvcs.com
+        record: fde.dv2.aws.paas4sap.svcs.entsvcs.com
+        type: A
+        private_zone: yes
+        ttl: 300
+        value: "{{ eth1.interface.private_ip_address }}"
+        wait: yes
+    
+    - route53:
+        state: present
+        zone: devs4tbs.thebodyshop.com
+        record: fde.devs4tbs.thebodyshop.com
+        type: A
+        private_zone: yes
+        ttl: 300
+        value: "{{ eth0.interface.private_ip_address }}"
+        wait: yes
+        
+    - route53:
+        state: present
+        zone: in-addr.arpa
+        hosted_zone_id: "{{ reverse_zone.zone_id }}"
+        record: "{{ eth0.interface.private_ip_address | ipaddr('revdns') }}"
+        type: PTR
+        private_zone: yes
+        ttl: 300
+        value: fde.devs4tbs.thebodyshop.com
+        wait: yes
+
+    - name: Provision SAP Router ec2 VM
+      include_role:
+        name: aws-ec2-vm
+      vars:
+        aws_ec2_vm_Name: SAPRouter
+        aws_ec2_vm_region: us-east-1
+        aws_ec2_vm_key_name: 064692377866DevCustomerCompartment
+        aws_ec2_vm_instance_type: t2.xlarge
+        aws_ec2_vm_image: ami-3c062943
+        aws_ec2_vm_eth1_groups: "{{ mgmt_net_all.group_id }}"
+        aws_ec2_vm_eth1_subnet: "{{ managementaz1.subnet.id }}"
+        aws_ec2_vm_eth0_groups: "{{ pub_net_all.group_id }}"
+        aws_ec2_vm_eth0_subnet: "{{ publicaz1.subnet.id }}"
+
+    - debug:
+        msg: "Private IP SAPRouter: {{ eth1.interface.private_ip_address }}"
+        
+    - route53:
+        state: present
+        zone: dv2.aws.paas4sap.svcs.entsvcs.com
+        record: proxy.dv2.aws.paas4sap.svcs.entsvcs.com
+        type: A
+        private_zone: yes
+        ttl: 300
+        value: "{{ eth1.interface.private_ip_address }}"
+        wait: yes
+    
+    - route53:
+        state: present
+        zone: devs4tbs.thebodyshop.com
+        record: proxy.devs4tbs.thebodyshop.com
+        type: A
+        private_zone: yes
+        ttl: 300
+        value: "{{ eth0.interface.private_ip_address }}"
+        wait: yes
+        
+    - route53:
+        state: present
+        zone: in-addr.arpa
+        hosted_zone_id: "{{ reverse_zone.zone_id }}"
+        record: "{{ eth0.interface.private_ip_address | ipaddr('revdns') }}"
+        type: PTR
+        private_zone: yes
+        ttl: 300
+        value: proxy.devs4tbs.thebodyshop.com
+        wait: yes
+        
+#- name: CSR Spoke Creation
+#  hosts: localhost
+#  tasks:
+#        
+#- name: Configure FDE Server
+#  hosts: FDE
+#  tasks:
+#    - name: Call role
+#      include_role:
+#        name: fde
+#      vars:
+#        #The customer and management subnet CIDR ranges should cover multiple AZ's if deploying on AWS, for example 172.17.104.0/21 would cover multiple AZs
+#        customer_subnet_cidr: "172.16.32.0/22"
+#        customer_management_subnet_cidr: "172.17.32.0/22"
+#        #This is the IP of the LaMa instance for the associated management compartment
+#        lama_ip: "10.4.0.41"
+#        #Customer Lan (all AZ's) of customer
+#        customer_lan: "172.16.0.0/12"
+#        #Customer Lan (all AZ's) of customer
+#        management_lan: "172.17.0.0/12"
+#        #IPs of Dev/Test DNS Forwarders
+#        dns_ip_dev: "10.4.0.5"
+#        dns_ip_test: "10.2.0.5"
+#        #DNS Zones for mangement, customer and reverse DNS
+#        management_zone: "tst.example.com"
+#        customer_zone: "test-customer.example.com"
+#        reverse_zone: "172.in-addr.arpa"
+#        #Forwarder IPs for each zone, for Azure these are taken from the nameserver addresses for each zone. For AWS it is by default the x.x.x.2 of the CIDR, e.g. 172.17.104.2
+#        management_forwarders: "80.20.3.1; 6.80.232.2; 87.56.3.2;"
+#        customer_forwarders: "32.32.32.0; 6.80.232.2; 89.76.23.1;"
+#        reverse_forwarders: "40.3.32.1; 80.20.3.1; 6.80.232.2;"
+#        #Forwarder IP, if Azure then 168.63.129.16, if AWS then first IP in management range, e.g. 172.17.0.2
+#        forwarder_ip: "168.63.129.16"
+#        #FDE customer domain is the customer domain
+#        fde_customer_domain: "test-customer.example.com"
+#        #Management IP of the FDE itself
+#        fde_ip: "10.2.2.2"
+##   
+#- name: Configure SAP Router Server
+#  hosts: SAPRouter
+#  tasks:
+#    - name: Call SAP Router Role
+#      include_role:
+#        name: saprouter
+#      vars: 
+#       management_subnet_cidr: 10.6.0.0/24 
