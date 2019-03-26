@@ -1,0 +1,44 @@
+- zypper_repository:
+    repo: 'https://download.opensuse.org/repositories/server:proxy/SLE_12_SP3/server:proxy.repo'
+#  environment:
+#    http_proxy: "http://{{ proxy_domain }}:8080"
+#    https_proxy: "http://{{ proxy_domain }}:8080"
+#    no_proxy: "localhost, 127.0.0.1"
+  ignore_errors: yes
+
+- name: install squid
+  zypper:
+    name: squid
+    state: present
+    disable_gpg_check: yes
+
+- name: copy squid.conf
+  copy:
+    src: files/squid.conf
+    dest: /etc/squid/squid.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: modify squid.conf - customer_lan
+  lineinfile:
+    path: /etc/squid/squid.conf
+    regexp: '^acl localnet src customer_lan'
+    line: 'acl localnet src {{ customer_subnet_cidr }}'
+
+- name: modify squid.conf - customer_management_lan
+  lineinfile:
+    path: /etc/squid/squid.conf
+    regexp: '^acl localnet src customer_management_lan'
+    line: 'acl localnet src {{ customer_management_subnet_cidr }}'
+
+- name: modify squid.conf - lama_lan
+  lineinfile:
+    path: /etc/squid/squid.conf
+    regexp: '^acl localnet src lama_lan'
+    line: 'acl localnet src {{ lama_ip }}'
+
+- name: restart squid
+  service:
+    name: squid
+    state: restarted
