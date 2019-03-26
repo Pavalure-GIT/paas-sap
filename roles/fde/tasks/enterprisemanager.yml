@@ -1,13 +1,16 @@
-- group:
+- name: Create sapsys User Group
+  group:
     name: sapsys
     system: yes
     state: present
 
-- user:
+- name: Create sapadm User Group
+  user:
     name: sapadm
     group: sapsys
 
-- file:
+- name: Create Directory Structure for Wilyem
+  file:
     path: "{{ item }}"
     state: directory
   with_items:
@@ -15,46 +18,77 @@
     - /media/SAP
     - /media/SAP/WILYEM
 
-- zypper:
+- name: Zypper install Python Pip
+  zypper:
     name: python-pip
     state: present
     disable_gpg_check: yes
 
-- pip:
+- name: Install botocore
+  pip:
     name: botocore
 
-- pip:
+- name: Install boto3
+  pip:
     name: boto3
 
-- aws_s3:
+- name: Pull WILYEM from Media Bucket (1/3)
+  aws_s3:
     bucket: p4s-binaries
     object: /INSTALL_UPGRADE/SAP/WILYEM/ISAGNTJ5STD02_0-70003142.ZIP
     dest: /media/SAP/WILYEM/ISAGNTJ5STD02_0-70003142.ZIP
     mode: get
-    aws_access_key: "{{ aws_media_access_key }}"
-    aws_secret_key: "{{ aws_media_secret_key }}"
 
-- aws_s3:
+- name: Pull WILYEM from Media Bucket (2/3)
+  aws_s3:
     bucket: p4s-binaries
     object: /INSTALL_UPGRADE/SAP/WILYEM/WILYISEM02_0-70003060.ZIP
     dest: /media/SAP/WILYEM/WILYISEM02_0-70003060.ZIP
     mode: get
-    aws_access_key: "{{ aws_media_access_key }}"
-    aws_secret_key: "{{ aws_media_secret_key }}"
 
-- aws_s3:
+- name: Pull WILYEM from Media Bucket (3/3)
+  aws_s3:
     bucket: p4s-binaries
     object: /INSTALL_UPGRADE/SAP/WILYEM/WILYISMM02_0-70003054.ZIP
     dest: /media/SAP/WILYEM/WILYISMM02_0-70003054.ZIP
     mode: get
-    aws_access_key: "{{ aws_media_access_key }}"
-    aws_secret_key: "{{ aws_media_secret_key }}"
 
-- zypper:
+- name: Pull Hostagent from Meida Bucket
+  aws_s3:
+    bucket: p4s-binaries
+    object: /INSTALL_UPGRADE/TOOLS/SAPHOSTAGENT37_37-20009394.SAR
+    dest: /media/SAP/SAPHOSTAGENT37_37-20009394.SAR
+    mode: get
+
+- name: Pull SAPCAR from Meida Bucket
+  aws_s3:
+    bucket: p4s-binaries
+    object: /INSTALL_UPGRADE/TOOLS/SAPCAR_816-80000935.EXE
+    dest: /media/SAP/SAPCAR_816-80000935.EXE
+    mode: get
+
+- name: Add Execute permissions to SAPCAR
+  file:
+    path: /media/SAP/SAPCAR_816-80000935.EXE
+    mode: 0755
+
+- name: Create directory for SAP Hostagent
+  file:
+    path: /media/SAP/SAPHOSTAGENT37_37-20009394
+    state: directory
+
+- name: Run command to extract Hostagent
+  command: "/media/SAP/SAPCAR_816-80000935.EXE -xvf /media/SAP/SAPHOSTAGENT37_37-20009394.SAR"
+  args:
+    chdir: /media/SAP/SAPHOSTAGENT37_37-20009394
+
+- name: Install Java
+  zypper:
     name: java-1_8_0-ibm
     state: present
 
-- file:
+- name: Create directory structure for Enterpise Manager
+  file:
     path: "{{ item }}" 
     state: directory
   with_items:
@@ -63,7 +97,8 @@
     - /usr/sap/ccms
     - /usr/sap/ccms/apmintroscope
 
-- file:
+- name: Change permissions on Enterpise Manager directory structure
+  file:
     path: "{{ item }}"
     owner: sapadm
     group: sapsys
@@ -71,50 +106,101 @@
     - /usr/sap/ccms
     - /usr/sap/ccms/apmintroscope
 
-- file:
+- name: Change Owner on WILYEM directory
+  file:
     path: /media/SAP/WILYEM
     owner: sapadm
     group: sapsys
 
-- file:
+- name: Create WILY extracted directory
+  file:
     path: /media/WILY_10_5/extracted
     state: directory
 
-- unarchive:
+- name: Unarchive WILYEM
+  unarchive:
     src: /media/SAP/WILYEM/WILYISEM02_0-70003060.ZIP
     dest: /media/WILY_10_5/extracted/
     remote_src: yes
 
-- file:
+- name: Change owner of extracted WILYEM
+  file:
     path: /media/WILY_10_5/extracted
     owner: sapadm
     group: sapsys
     recurse: yes
 
-- file:
+- name: Change permissions of WILYEM install file
+  file:
     path: /media/WILY_10_5/extracted/introscope10.5.2.27linuxAMD64SAP.bin
     mode: 0755
 
-- lineinfile:
+- name: Accept license
+  lineinfile:
     path: /media/WILY_10_5/extracted/ca-eula.txt
     regexp: '^CA-EULA=reject'
     line: 'CA-EULA=accept'
 
-- command: /media/WILY_10_5/extracted/introscope10.5.2.27linuxAMD64SAP.bin -Djava.awt.headless=true
+- name: Install WILYEM
+  command: /media/WILY_10_5/extracted/introscope10.5.2.27linuxAMD64SAP.bin -Djava.awt.headless=true
   become_user: sapadm
   args:
     creates: /usr/sap/ccms/apmintroscope/install/Introscope_10.5.2.27_InstallLog.log
 
-- unarchive:
+- name: Extract additional modules
+  unarchive:
     src: /media/SAP/WILYEM/WILYISMM02_0-70003054.ZIP
     dest: /usr/sap/ccms/apmintroscope
     remote_src: yes
   become_user: sapadm
   
-- file:
+- name: Change owner on WILYEM directory
+  file:
     path: /usr/sap/ccms/apmintroscope
     owner: sapadm
     group: sapsys
         
-- command: /usr/sap/ccms/apmintroscope/bin/EMCtrl.sh start
+- name: Start EM
+  command: /usr/sap/ccms/apmintroscope/bin/EMCtrl.sh start
   become_user: sapadm
+  args:
+    chdir: /usr/sap/ccms/apmintroscope/bin/
+
+- name: Modify EM properties
+  lineinfile:
+    path: /usr/sap/ccms/apmintroscope/config/IntroscopeEnterpriseManager.properties
+    regexp: '^#introscope.enterprisemanager.name='
+    line: 'introscope.enterprisemanager.name={{ fde_virualhostname }}'
+
+- name: Add EM Service
+  copy:
+    src: files/EMC.service
+    dest: /etc/systemd/system/EMC.service
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Enable EM Service
+  systemd:
+    name: EMC.service
+    state: started
+    enabled: yes
+ 
+- name: Start EM Service
+  service:
+    name: EMC.service
+    state: started
+
+- name: Add Auto Start EM
+  lineinfile:
+    path: /etc/init.d/after.local
+    insertafter: EOF
+    line: "{{ item }}"
+  with_items:
+    - cd /usr/sap/ccms/apmintroscope/bin/
+    - sudo -u sapadm ./EMCtrl.sh start
+
+- name: Install SAP Hostagent
+  command: ./saphostexec -install
+  args:
+    chdir: /media/SAP/SAPHOSTAGENT37_37-20009394
