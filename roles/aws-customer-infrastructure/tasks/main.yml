@@ -21,5 +21,9 @@
 - include_tasks: security-groups.yml
 
 - include_tasks: route-tables.yml
+  when: not single_az
+  
+- include_tasks: route-tables-single.yml
+  when: single_az
 
 - include_tasks: route53.yml

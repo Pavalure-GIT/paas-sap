@@ -16,6 +16,7 @@
     resource_tags:
       Name: "Cluster-net AZ2"
   register: clusteraz2
+  when: not single_az
 - ec2_vpc_subnet:
     state: present
     vpc_id: "{{ customer_network.vpc.id }}"
@@ -25,6 +26,7 @@
     resource_tags:
       Name: "Cluster-net AZ3"
   register: clusteraz3
+  when: not single_az
 - ec2_vpc_subnet:
     state: present
     vpc_id: "{{ customer_network.vpc.id }}"
@@ -43,6 +45,7 @@
     resource_tags:
       Name: "Customer-net AZ2"
   register: customeraz2
+  when: not single_az
 - ec2_vpc_subnet:
     state: present
     vpc_id: "{{ customer_network.vpc.id }}"
@@ -52,6 +55,7 @@
     resource_tags:
       Name: "Customer-net AZ3"
   register: customeraz3
+  when: not single_az
 - ec2_vpc_subnet:
     state: present
     vpc_id: "{{ customer_network.vpc.id }}"
@@ -70,6 +74,7 @@
     resource_tags:
       Name: "Management-net AZ2"
   register: managementaz2
+  when: not single_az
 - ec2_vpc_subnet:
     state: present
     vpc_id: "{{ customer_network.vpc.id }}"
@@ -79,6 +84,7 @@
     resource_tags:
       Name: "Management-net AZ3"
   register: managementaz3
+  when: not single_az
 - ec2_vpc_subnet:
     state: present
     vpc_id: "{{ customer_network.vpc.id }}"
@@ -97,6 +103,7 @@
     resource_tags:
       Name: "Public-net AZ2"
   register: publicaz2
+  when: not single_az
 - ec2_vpc_subnet:
     state: present
     vpc_id: "{{ customer_network.vpc.id }}"
@@ -106,3 +113,4 @@
     resource_tags:
       Name: "Public-net AZ3"
   register: publicaz3
+  when: not single_az
