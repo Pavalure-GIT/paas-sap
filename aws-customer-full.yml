@@ -64,6 +64,21 @@
         aws_ec2_vm_eth0_groups: "{{ cust_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ customeraz1.subnet.id }}"
         
+    - name: Provision FDE-2 ec2 VM
+      include_role:
+        name: aws-ec2-vm
+      vars:
+        aws_ec2_vm_Name: FDE-2
+        aws_ec2_vm_region: "{{ vpc_region }}"
+        aws_ec2_vm_key_name: "{{ key_name }}"
+        aws_ec2_vm_instance_type: "{{ fde_instance_type }}"
+        aws_ec2_vm_image: "{{ fde_image }}"
+        aws_ec2_vm_eth1_groups: "{{ mgmt_net_all.group_id }}"
+        aws_ec2_vm_eth1_subnet: "{{ managementaz1.subnet.id }}"
+        aws_ec2_vm_eth0_groups: "{{ cust_net_all.group_id }}"
+        aws_ec2_vm_eth0_subnet: "{{ customeraz1.subnet.id }}"
+      when: ha
+        
     - route53:
         state: present
         zone: "{{ vpc_shortname }}"
@@ -108,6 +123,21 @@
         aws_ec2_vm_eth1_subnet: "{{ managementaz1.subnet.id }}"
         aws_ec2_vm_eth0_groups: "{{ pub_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ publicaz1.subnet.id }}"
+        
+    - name: Provision SAP-2 Router ec2 VM
+      include_role:
+        name: aws-ec2-vm
+      vars:
+        aws_ec2_vm_Name: SAPRouter-2
+        aws_ec2_vm_region: "{{ vpc_region }}"
+        aws_ec2_vm_key_name: "{{ key_name }}"
+        aws_ec2_vm_instance_type: "{{ proxy_instance_type }}"
+        aws_ec2_vm_image: "{{ proxy_image }}"
+        aws_ec2_vm_eth1_groups: "{{ mgmt_net_all.group_id }}"
+        aws_ec2_vm_eth1_subnet: "{{ managementaz1.subnet.id }}"
+        aws_ec2_vm_eth0_groups: "{{ pub_net_all.group_id }}"
+        aws_ec2_vm_eth0_subnet: "{{ publicaz1.subnet.id }}"
+      when: ha
         
     - route53:
         state: present
@@ -252,6 +282,21 @@
         aws_ec2_vm_eth0_groups: "{{ cust_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ customeraz1.subnet.id }}"
       when: dr_compartment
+      
+    - name: Provision FDE-2 ec2 VM
+      include_role:
+        name: aws-ec2-vm
+      vars:
+        aws_ec2_vm_Name: FDE-DR-2
+        aws_ec2_vm_region: "{{ dr_vpc_region }}"
+        aws_ec2_vm_key_name: "{{ key_name }}"
+        aws_ec2_vm_instance_type: "{{ fde_instance_type }}"
+        aws_ec2_vm_image: "{{ dr_fde_image }}"
+        aws_ec2_vm_eth1_groups: "{{ mgmt_net_all.group_id }}"
+        aws_ec2_vm_eth1_subnet: "{{ managementaz1.subnet.id }}"
+        aws_ec2_vm_eth0_groups: "{{ cust_net_all.group_id }}"
+        aws_ec2_vm_eth0_subnet: "{{ customeraz1.subnet.id }}"
+      when: dr_ha
 
     - route53:
         state: present
@@ -301,6 +346,21 @@
         aws_ec2_vm_eth0_groups: "{{ pub_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ publicaz1.subnet.id }}"
       when: dr_compartment
+      
+    - name: Provision SAP Router ec2 VM
+      include_role:
+        name: aws-ec2-vm
+      vars:
+        aws_ec2_vm_Name: SAPRouter-DR
+        aws_ec2_vm_region: "{{ dr_vpc_region }}"
+        aws_ec2_vm_key_name: "{{ key_name }}"
+        aws_ec2_vm_instance_type: "{{ proxy_instance_type }}"
+        aws_ec2_vm_image: "{{ dr_proxy_image }}"
+        aws_ec2_vm_eth1_groups: "{{ mgmt_net_all.group_id }}"
+        aws_ec2_vm_eth1_subnet: "{{ managementaz1.subnet.id }}"
+        aws_ec2_vm_eth0_groups: "{{ pub_net_all.group_id }}"
+        aws_ec2_vm_eth0_subnet: "{{ publicaz1.subnet.id }}"
+      when: dr_ha
 
     - route53:
         state: present
