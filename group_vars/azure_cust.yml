@@ -1,5 +1,5 @@
-resource_group: "P4S-Prototype-Automation7"
-virtual_network_name: "VNET-ESO4SAP3-azureProto7"
+resource_group: "P4S-Prototype-Automation9"
+virtual_network_name: "VNET-ESO4SAP3-azureProto9"
 region: "UK South"
 azure_vpc_address_space_create: "100.65.24.0/21"
 azure_vpc_address_space_update: "100.64.0.0/20,100.64.16.0/22,100.64.20.0/23,100.64.20.0/23,100.79.0.0/28"
@@ -14,4 +14,4 @@ dns_name:
 vm_public_keys: "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAgKPo2E32TDYoeSsSJgqEVlShiApVwlcGh5b0PRbb8KVZ0jukdZTV/0Bx0dioTtQ+gLPqF46GS7kChzQH2h8Vtq52unbRDOzyxEa6O1ZT7QMIfPD088k1rm5quqXxsr/r3Id3IcqaxbHgv1N8A1upYqUIfVZ04fVfNjZsqKW3aZ9BxtrFf2jM1jKlTk0OJFFZkGDgPpe3EnbFPWgS/gRsIThTIgu6Ia7DHCQnHErxSjzkl8wf/ZLwrpcgbDyR+Bk3h6YUxx7SsRmshP+e9zm92vwLs0tgjJIvxkqdHB4EyTrMc2fOxtVi9hGj5vr3JY5UGCep1M6YR7V47nkUWAcKLw== AzureDevDR"
 username: "ec2-user"
 dr_compartment: no
-ha_compartment: no
+ha_compartment: yes 
