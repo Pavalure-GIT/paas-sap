@@ -1,8 +1,9 @@
 #Options
-single_availability_zone: true
-dr_compartment: true
-dr_single_availability_zone: true
-ha: false
+single_availability_zone: false
+dr_compartment: false
+dr_single_availability_zone: false
+ha: true
+dr_ha: false
 
 #Non-DR Vars
 vpc_cidr: 172.17.64.0/21, 172.16.0.0/20, 172.16.16.0/22, 172.16.20.0/23
