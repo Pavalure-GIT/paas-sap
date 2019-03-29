@@ -1,8 +1,8 @@
 #Options
 single_availability_zone: false
-dr_compartment: false
+dr_compartment: true
 dr_single_availability_zone: false
-ha: true
+ha: false
 dr_ha: false
 
 #Non-DR Vars
@@ -33,6 +33,13 @@ fde_image: ami-3c062943
 #SAPRouter
 proxy_instance_type: t2.xlarge
 proxy_image: ami-3c062943
+
+#MidServers
+mid_instance_type: t2.small
+mid_image: ami-6871a115
+
+#MidServers-DR
+dr_mid_image: ami-03291866
 
 #DR FDE
 dr_fde_image: ami-cd98a0a8

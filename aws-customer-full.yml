@@ -63,6 +63,7 @@
         aws_ec2_vm_eth1_subnet: "{{ managementaz1.subnet.id }}"
         aws_ec2_vm_eth0_groups: "{{ cust_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ customeraz1.subnet.id }}"
+        single_nic: false
         
     - name: Provision FDE-2 ec2 VM
       include_role:
@@ -77,6 +78,7 @@
         aws_ec2_vm_eth1_subnet: "{{ managementaz1.subnet.id }}"
         aws_ec2_vm_eth0_groups: "{{ cust_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ customeraz1.subnet.id }}"
+        single_nic: false
       when: ha
         
     - route53:
@@ -109,6 +111,32 @@
         ttl: 300
         value: "fde.{{ vpc_longname }}"
         wait: yes
+       
+    - name: Provision MidServerA ec2 VM
+      include_role:
+        name: aws-ec2-vm
+      vars:
+        aws_ec2_vm_Name: MidServerA
+        aws_ec2_vm_region: "{{ vpc_region }}"
+        aws_ec2_vm_key_name: "{{ key_name }}"
+        aws_ec2_vm_instance_type: "{{ mid_instance_type }}"
+        aws_ec2_vm_image: "{{ mid_image }}"
+        aws_ec2_vm_eth0_groups: "{{ mgmt_net_all.group_id }}"
+        aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
+        single_nic: true
+        
+    - name: Provision MidServerB ec2 VM
+      include_role:
+        name: aws-ec2-vm
+      vars:
+        aws_ec2_vm_Name: MidServerB
+        aws_ec2_vm_region: "{{ vpc_region }}"
+        aws_ec2_vm_key_name: "{{ key_name }}"
+        aws_ec2_vm_instance_type: "{{ mid_instance_type }}"
+        aws_ec2_vm_image: "{{ mid_image }}"
+        aws_ec2_vm_eth0_groups: "{{ mgmt_net_all.group_id }}"
+        aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
+        single_nic: true
 
     - name: Provision SAP Router ec2 VM
       include_role:
@@ -123,6 +151,7 @@
         aws_ec2_vm_eth1_subnet: "{{ managementaz1.subnet.id }}"
         aws_ec2_vm_eth0_groups: "{{ pub_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ publicaz1.subnet.id }}"
+        single_nic: false
         
     - name: Provision SAP-2 Router ec2 VM
       include_role:
@@ -137,6 +166,7 @@
         aws_ec2_vm_eth1_subnet: "{{ managementaz1.subnet.id }}"
         aws_ec2_vm_eth0_groups: "{{ pub_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ publicaz1.subnet.id }}"
+        single_nic: false
       when: ha
         
     - route53:
@@ -281,6 +311,7 @@
         aws_ec2_vm_eth1_subnet: "{{ managementaz1.subnet.id }}"
         aws_ec2_vm_eth0_groups: "{{ cust_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ customeraz1.subnet.id }}"
+        single_nic: false
       when: dr_compartment
       
     - name: Provision FDE-2 ec2 VM
@@ -296,6 +327,7 @@
         aws_ec2_vm_eth1_subnet: "{{ managementaz1.subnet.id }}"
         aws_ec2_vm_eth0_groups: "{{ cust_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ customeraz1.subnet.id }}"
+        single_nic: false
       when: dr_ha
 
     - route53:
@@ -331,6 +363,34 @@
         value: "fdedr.{{ vpc_longname }}"
         wait: yes
       when: dr_compartment
+      
+    - name: Provision MidServerA ec2 VM DR
+      include_role:
+        name: aws-ec2-vm
+      vars:
+        aws_ec2_vm_Name: MidServerA-DR
+        aws_ec2_vm_region: "{{ dr_vpc_region }}"
+        aws_ec2_vm_key_name: "{{ key_name }}"
+        aws_ec2_vm_instance_type: "{{ mid_instance_type }}"
+        aws_ec2_vm_image: "{{ dr_mid_image }}"
+        aws_ec2_vm_eth0_groups: "{{ mgmt_net_all.group_id }}"
+        aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
+        single_nic: true
+      when: dr_compartment
+        
+    - name: Provision MidServerB ec2 VM DR
+      include_role:
+        name: aws-ec2-vm
+      vars:
+        aws_ec2_vm_Name: MidServerB-DR
+        aws_ec2_vm_region: "{{ dr_vpc_region }}"
+        aws_ec2_vm_key_name: "{{ key_name }}"
+        aws_ec2_vm_instance_type: "{{ mid_instance_type }}"
+        aws_ec2_vm_image: "{{ dr_mid_image }}"
+        aws_ec2_vm_eth0_groups: "{{ mgmt_net_all.group_id }}"
+        aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
+        single_nic: true
+      when: dr_compartment
 
     - name: Provision SAP Router ec2 VM
       include_role:
@@ -345,6 +405,7 @@
         aws_ec2_vm_eth1_subnet: "{{ managementaz1.subnet.id }}"
         aws_ec2_vm_eth0_groups: "{{ pub_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ publicaz1.subnet.id }}"
+        single_nic: false
       when: dr_compartment
       
     - name: Provision SAP Router ec2 VM
@@ -360,6 +421,7 @@
         aws_ec2_vm_eth1_subnet: "{{ managementaz1.subnet.id }}"
         aws_ec2_vm_eth0_groups: "{{ pub_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ publicaz1.subnet.id }}"
+        single_nic: false
       when: dr_ha
 
     - route53:
