@@ -1,13 +1,13 @@
 #Options
 single_availability_zone: false
-dr_compartment: true
+dr_compartment: false
 dr_single_availability_zone: false
-ha: false
+ha: true
 dr_ha: false
 
 #Non-DR Vars
 vpc_cidr: 172.17.64.0/21, 172.16.0.0/20, 172.16.16.0/22, 172.16.20.0/23
-vpc_env_name: "Dev-Example"
+vpc_env_name: "Dev-Charlotte"
 vpc_region: us-east-1
 pubaz1_cidr: 172.16.16.0/25
 pubaz2_cidr: 172.16.16.128/25
@@ -22,8 +22,8 @@ clustaz1_cidr: 172.16.18.0/24
 clustaz2_cidr: 172.16.19.0/24
 clustaz3_cidr: 172.16.20.0/24
 vpc_management_cidr: 10.4.0.0/22
-vpc_shortname: exa.aws.paas4sap.svcs.entsvcs.com
-vpc_longname: example.paas4sap.svcs.entsvcs.com
+vpc_shortname: cv.aws.paas4sap.svcs.entsvcs.com
+vpc_longname: chartest.paas4sap.svcs.entsvcs.com
 key_name: 064692377866DevCustomerCompartment
 
 #FDE
