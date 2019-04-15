@@ -1,0 +1,15 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Delete Standard
+      azure_rm_resourcegroup:
+        name: "{{ resource_group }}"
+        force: yes
+        state: absent
+      when: terminate
+    - name: Delete DR
+      azure_rm_resourcegroup:
+        name: "{{ dr_resource_group }}"
+        force: yes
+        state: absent
+      when: terminate and dr
