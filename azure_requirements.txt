@@ -1,4 +1,3 @@
-awscli
 adal==1.2.1
 ansible==2.8.0a1
 applicationinsights==0.11.8
