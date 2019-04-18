@@ -1,0 +1,27 @@
+---
+- name: Pull Nexus Artifacts
+  hosts: localhost
+  tasks:
+    - name: Pull AutomationAnsible
+      shell: |
+        wget --user="{{ nexus_username  }}" --password="{{ nexus_password }}" http://nexus.solutionplace.svcs.hpe.com:8081/nexus/service/local/repositories/spp/content/artifacts/automationansible/"{{ AutomationAnsibleVersion }}"/automationansible-"{{ AutomationAnsibleVersion }}".rar -P "{{ working_dir }}"
+      args:
+        warn: false
+
+    - name: Pull AutomationStackstorm
+      shell: |
+        wget --user="{{ nexus_username  }}" --password="{{ nexus_password }}" http://nexus.solutionplace.svcs.hpe.com:8081/nexus/service/local/repositories/spp/content/artifacts/automationstackstorm.git/"{{ AutomationStackstormVersion }}"/automationstackstorm.git-"{{ AutomationStackstormVersion }}".rar -P "{{ working_dir }}"
+      args:
+        warn: false
+
+    - name: Pull AutomationLamaPython
+      shell: |
+        wget --user="{{ nexus_username  }}" --password="{{ nexus_password }}" http://nexus.solutionplace.svcs.hpe.com:8081/nexus/service/local/repositories/spp/content/artifacts/automationlamapython/"{{ AutomationLamaPythonVersion }}"/automationlamapython-"{{ AutomationLamaPythonVersion }}".rar -P "{{ working_dir }}"
+      args:
+        warn: false
+
+    - name: Pull AutomationServices
+      shell: |
+        wget --user="{{ nexus_username  }}" --password="{{ nexus_password }}" http://nexus.solutionplace.svcs.hpe.com:8081/nexus/service/local/repositories/spp/content/artifacts/automationservices/"{{ AutomationServicesVersion }}"/automationservices-"{{ AutomationServicesVersion }}".rar -P "{{ working_dir }}"
+      args:
+        warn: false
