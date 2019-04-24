@@ -1,5 +1,5 @@
 #Options
-single_availability_zone: false
+single_availability_zone: true
 dr_compartment: false
 dr_single_availability_zone: false
 ha: true
