@@ -1,20 +1,20 @@
 #Options
-single_availability_zone: false
+single_availability_zone: true
 dr_compartment: false
 dr_single_availability_zone: false
-ha: true
+ha: false
 dr_ha: false
 
 #Non-DR Vars
-vpc_cidr: 172.17.64.0/21, 172.16.0.0/20, 172.16.16.0/22, 172.16.20.0/23
-vpc_env_name: "Dev-Charlotte"
+vpc_cidr: 172.17.24.0/21, 172.16.0.0/20, 172.16.16.0/22, 172.16.20.0/23
+vpc_env_name: "Dev-Alex"
 vpc_region: us-east-1
 pubaz1_cidr: 172.16.16.0/25
 pubaz2_cidr: 172.16.16.128/25
 pubaz3_cidr: 172.16.17.0/25
-manaz1_cidr: 172.17.64.0/23
-manaz2_cidr: 172.17.66.0/23
-manaz3_cidr: 172.17.68.0/23
+manaz1_cidr: 172.17.24.0/23
+manaz2_cidr: 172.17.26.0/23
+manaz3_cidr: 172.17.28.0/23
 custaz1_cidr: 172.16.0.0/22
 custaz2_cidr: 172.16.4.0/22
 custaz3_cidr: 172.16.8.0/22
@@ -22,13 +22,15 @@ clustaz1_cidr: 172.16.18.0/24
 clustaz2_cidr: 172.16.19.0/24
 clustaz3_cidr: 172.16.20.0/24
 vpc_management_cidr: 10.4.0.0/22
-vpc_shortname: cv.aws.paas4sap.svcs.entsvcs.com
-vpc_longname: chartest.paas4sap.svcs.entsvcs.com
-key_name: 064692377866DevCustomerCompartment
+vpc_shortname: ac.aws.paas4sap.svcs.entsvcs.com
+vpc_longname: alextest.paas4sap.svcs.entsvcs.com
+key_name: SystemTeam
 
 #FDE
 fde_instance_type: c5.large
 fde_image: ami-3c062943
+customer_range: 172.16.0.0/21
+management_range: 172.17.64.0/21
 
 #SAPRouter
 proxy_instance_type: t2.xlarge

@@ -1,0 +1,22 @@
+---
+
+- name: CSR Spoke Creation
+  hosts: localhost
+  tasks:
+    - include_role:
+        name: csr_automation
+      vars:
+        customer_account: 720232237161
+        vpc_name: "{{ vpc_env_name }}"
+        vgw_owner: "System Team"
+        region: "{{ vpc_region }}"
+        key_arn: arn:aws:kms:eu-central-1:000987835229:key/240704ea-5c16-4075-9fd0-3aeaef52e94d
+        management_access_key: AKIAQAOXBFNOZFTHHY6F
+        management_secret_key: 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
+        customer_access_key: AKIAIKQMGCF6AVEPSPPA
+        customer_secret_key: 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
+        bucket_name: sandbox-csr-automation-vpnconfigs3bucket-1ul5mfqbrghku
+        stack_name: ac-csr-stack
+        vgw_name: ac-csr-vgw
+        key_alias: sandbox-csr-automation-key
+

@@ -16,10 +16,7 @@
         {
             "Effect": "Allow",
             "Principal": {
-                "AWS": [
-                    "arn:aws:iam::470172651571:user/SystemTeam-Automation-User",
-                    "arn:aws:iam::000987835229:user/charlotte.varley@hpe.com"
-                ]
+                "AWS": "arn:aws:iam::470172651571:user/SystemTeam-Automation-User"
             },
             "Action": [
                 "s3:GetObject",
@@ -38,7 +35,7 @@
                 "s3:PutObject",
                 "s3:PutObjectAcl"
             ],
-            "Resource": "arn:aws:s3:::sandbox-csr-automation-vpnconfigs3bucket-1ul5mfqbrghku/*"
+            "Resource": "arn:aws:s3:::cisco-csr-test-bucket/*"
         },
         {
             "Effect": "Allow",

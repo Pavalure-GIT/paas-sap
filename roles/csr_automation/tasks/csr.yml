@@ -11,9 +11,13 @@
 - aws_kms_facts:
     filters:
       alias: "{{ key_alias }}"
+    region: eu-central-1
+   # region: "{{ region }}"
     aws_access_key: "{{ management_access_key }}"
     aws_secret_key: "{{ management_secret_key }}"
   register: kms
+
+- debug: var=kms
 
 - debug: var=kms['keys'][0].key_arn
   register: key_arn
@@ -25,11 +29,15 @@
   args:
     mode: grant
     key_arn: "{{ key_arn }}"
-    role_name: "Allow use of the key"
+    #role_name: "Allow use of the key"
     role_arn: "arn:aws:iam::{{ customer_account }}:root"
     grant_types: "role"
+    #aws_access_key: AKIAJHMBMOIQDDUMOE2Q
+    #aws_secret_key: 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
     aws_access_key: "{{ management_access_key }}"
     aws_secret_key: "{{ management_secret_key }}"
+    region: eu-central-1
+    #region: "{{ region }}"
 
 - name: Create a CSR function stack, pass in the template via an URL
   cloudformation:
@@ -42,16 +50,17 @@
     aws_secret_key: "{{ customer_secret_key }}"
     template_parameters:
       BucketName: "{{ bucket_name }}"
-      BucketPrefix: test/
+      BucketPrefix: vpnconfigs/
     tags:
       Stack: ansible-cloudformation
 
 - name: Get vpc facts to retreive vpc_id
   ec2_vpc_net_facts:
     filters:
-      "tag:Name": Dev-TBS
+      "tag:Name": "{{ vpc_name }}"
     aws_access_key: "{{ customer_access_key }}"
     aws_secret_key: "{{ customer_secret_key }}"
+    region: "{{ region }}"
   register: vpc
 
 - debug: var=vpc.vpcs[0].vpc_id
@@ -62,12 +71,13 @@
 - name: Create a new unattached vgw
   ec2_vpc_vgw:
      state: present
+     asn: 64513
      region: "{{ region }}"
      name: "{{ vgw_name }}"
      type: ipsec.1
      vpc_id: "{{ vpc.vpcs[0].vpc_id }}"
      tags:
-       owner: Charlotte Varley
-       Dev-TBS: true
+       owner: "{{ vgw_owner }}"
+       transitvpc:spoke: 'true'
      aws_access_key: "{{ customer_access_key }}"
      aws_secret_key: "{{ customer_secret_key }}"
