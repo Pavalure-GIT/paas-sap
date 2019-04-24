@@ -1,39 +1,110 @@
-- name: Find Peer ID from Requester VPC
-  ec2_vpc_peering_facts:
+- ec2_vpc_subnet_facts:
+    filters:
+      vpc-id: "{{ vpc }}"
+  register: subnets
+
+- ec2_vpc_subnet:
+    state: absent
+    vpc_id: "{{ vpc }}"
+    cidr: "{{ item.cidr_block }}"
+  with_items: "{{ subnets.subnets }}"
+  when: 
+    - item.vpc_id == "{{ vpc }}"
+    - terminate
+
+- ec2_group_facts:
+    filters:
+      vpc-id: "{{ vpc }}"
+  register: security_groups
+
+- ec2_group:
+    state: absent
+    group_id: "{{ item.group_id }}"
+  with_items: "{{ security_groups.security_groups }}"
+  ignore_errors: yes
+  when: terminate
+
+- name: Get All NACLs
+  register: all_nacls
+  ec2_vpc_nacl_facts:
     region: "{{ region }}"
     filters:
-      requester-vpc-info.vpc-id: "{{ vpc }}"
-  register: peering
-  when: requester
+      vpc-id: "{{ vpc }}"
 
-- name: List VPC Peer  
-  debug:
-    msg: "{{ peering.result[0].vpc_peering_connection_id }}"
-  when: requester and list
-  
-- name: Delete VPC Peer
-  ec2_vpc_peer:
-   region: "{{ region }}"
-   peering_id: "{{ peering.result[0].vpc_peering_connection_id }}"
-   state: absent
-  when: requester and terminate
+- name: Delete nacl
+  ec2_vpc_nacl:
+    nacl_id: "{{ item.nacl_id }}"
+    state: absent
+  with_items: "{{ all_nacls.nacls }}"
+  ignore_errors: yes
+  when: terminate
 
- ec2_vpc_net_facts:
-   vpc_ids: "{{ vpc }}"
-   region: "{{ region }}"
- register: vpc_facts
- 
- debug:
-   msg: "{{ vpc_facts.vpcs[0].tags.Name }}"
- when: list
-   
- debug:
-   msg: "{{ vpc_facts.vpcs[0].cidr_block }}"
- when: list
+- ec2_vpc_igw:
+    vpc_id: "{{ vpc }}"
+    region: "{{ region }}"
+    state: absent
+  when: terminate
 
- ec2_vpc_net:
-   state: absent
-   name: "{{ vpc_facts.vpcs[0].tags.Name }}"
-   region: "{{ region }}"
-   cidr_block: "{{ vpc_facts.vpcs[0].cidr_block }}"
- when: terminate
+- name: Get facts on the route tables in the VPC
+  ec2_vpc_route_table_facts:
+    region: "{{ region }}"
+    filters:
+      vpc-id: "{{ vpc }}"
+  register: route_tables
+
+- name: Remove the route table
+  ec2_vpc_route_table:
+    vpc_id: "{{ vpc }}"
+    region: "{{ region }}"
+    route_table_id: "{{ item.id }}"
+    state: absent
+    lookup: id
+  with_items: "{{ route_tables.route_tables }}"
+  ignore_errors: yes
+  when: terminate
+
+#- name: Find VGWs for Region
+#  ec2_vpc_vgw_facts:
+#    region: "{{ region }}"
+#  register: vgw_facts
+
+#- name: Locate Attached VGW
+#  set_fact:
+#    tags: "{{ item.tags }}"
+#  with_items: "{{ vgw_facts.virtual_gateways }}"
+#  when: item.vpc_attachments[0].vpc_id == "{{ vpc }}"
+
+#- name: Locate Name
+#  set_fact:
+#    vgw_name: "{{ item.value }}"
+#  with_items: "{{ tags }}"
+#  when:
+#    - tags is defined
+#    - item.key == "Name"
+
+#- name: Remove VGW
+#  ec2_vpc_vgw:
+#    region: "{{ region }}"
+#    vpc_id: "{{ vpc }}"
+#    name: "{{ vgw_name }}"
+#    state: absent
+#  when:
+#    - vgw_name is defined
+#    - terminate
+
+- ec2_vpc_net_facts:
+    vpc_ids: "{{ vpc }}"
+  register: vpc_facts
+
+- name: Remove the VPC
+  ec2_vpc_net:
+    name: "{{ vpc_name }}"
+    state: absent
+    region: "{{ region }}"
+    cidr_block: "{{ item.cidr_block }}"
+    purge_cidrs: yes
+    tags:
+       Name: "{{ vpc_name }}"
+  with_items: "{{ vpc_facts.vpcs }}"
+  when: terminate
+

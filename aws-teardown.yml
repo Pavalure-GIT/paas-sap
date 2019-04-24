@@ -6,21 +6,26 @@
       include_role:
         name: aws-teardown
       vars:
-        vpc: 
-        region: 
+        vpc: vpc-051f0a4f0322394de
+        region: us-east-1
         list: true
-        terminate: false
+        terminate: true
         requester: false
+        route53_zones:
+          ac.aws.paas4sap.svcs.entsvcs.com. : 'ZWJTWC89RFYJR'
+          alextest.paas4sap.svcs.entsvcs.com. : 'Z15N3BGZACK2AS'
+          in-addr.arpa. : 'Z2QEU1C435XJUK'
+        vpc_name: Dev-Alex
         
-- name: AWS DR Teardown
-  hosts: localhost
-  tasks:
-    - name: Call Teardown Role
-      include_role:
-        name: aws-teardown
-      vars:
-        vpc: 
-        region: 
-        list: true
-        terminate: false
-        requester: true
+#- name: AWS DR Teardown
+#  hosts: localhost
+#  tasks:
+#    - name: Call Teardown Role
+#      include_role:
+#        name: aws-teardown
+#      vars:
+#        vpc: vpc-0fee2cc1e99a93569
+#        region: us-east-2
+#        list: true
+#        terminate: true
+#        requester: false

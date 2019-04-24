@@ -1,11 +1,62 @@
-- route53_zone:
-    zone: "{{ cust_zone }}"
-    state: absent
+---
+#Remove A records and zone for zone 1
+- name: List "{{ item.key }}" records in hosted zone
+  route53_facts:
+    query: record_sets
+    hosted_zone_id: "{{ item.value }}"
+  register: records
 
-- route53_zone:
-    zone: "{{ man_zone }}"
+- name: Set Zone Name
+  set_fact:
+    zone_name: "{{ item.key }}"
+
+- name: Get the A records from "{{ item.key }}"
+  route53:
+      state: get
+      zone: "{{ zone_name }}"
+      record: "{{ item.Name }}"
+      vpc_id: "{{ vpc }}"
+      type: A
+  with_items: "{{ records.ResourceRecordSets }}"
+
+- name: Remove A records for "{{ zone_name }}"
+  route53:
+    state: delete
+    zone: "{{ zone_name }}"
+    record: "{{ item.Name }}"
+    type: A
+    value: "{{ item.ResourceRecords[0].Value }}"
+    ttl: "{{ item.TTL }}"
+    vpc_id: "{{ vpc }}"
+  with_items: "{{ records.ResourceRecordSets }}"
+  when: terminate
+
+- name: Get the PTR records from "{{ zone_name }}"
+  route53:
+      state: get
+      zone: "{{ zone_name }}"
+      record: "{{ item.Name }}"
+      vpc_id: "{{ vpc }}"
+      type: PTR
+  with_items: "{{ records.ResourceRecordSets }}"
+
+- name: Remove PTR records for "{{ zone_name }}"
+  route53:
+    state: delete
+    zone: "{{ zone_name }}"
+    record: "{{ item.Name }}"
+    type: PTR
+    value: "{{ item.ResourceRecords[0].Value }}"
+    ttl: "{{ item.TTL }}"
+    vpc_id: "{{ vpc }}"
+  with_items: "{{ records.ResourceRecordSets }}"
+  when: terminate
+
+- name: Remove "{{ zone_name }}" from route53
+  route53_zone:
+    zone: "{{ zone_name }}"
+    vpc_id: "{{ vpc }}"
+    vpc_region: "{{ region }}"
     state: absent
-    
-- route53_zone:
-    zone: "{{ rev_zone }}"
-    state: absent
+  when: terminate
+
