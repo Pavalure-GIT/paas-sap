@@ -1,0 +1,22 @@
+# Automation Ansible Python requirements. Used to generate a frozen set of requirements (spp-requirements.txt)
+#
+# Add to a fresh virtual environment with the command pip install -r spp-requirements.txt.src
+#
+# Create spp-requirements.txt with the command pip freeze | grep -v "pkg-resources" > requirements.txt
+#
+# When creating the spp-requirements.txt, be careful to remove a line referring to pkg-resources if present. This
+# is created due to a bug.
+
+ansible[azure]==2.7.6
+boto>=2.49.0
+boto3>=1.9.86
+hvac==0.7.2
+netaddr>=0.7.19
+pyopenssl>=19.0.0
+pywinrm>=0.3.0
+requests>=2.18.3
+zeep>=2.3.0
+jinja2>=2.9.5
+pyDes>=2.0.1
+IPy>=0.83
+jsonschema>=2.6.0
