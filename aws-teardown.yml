@@ -1,4 +1,5 @@
 ---
+
 - name: AWS Teardown
   hosts: localhost
   tasks:
