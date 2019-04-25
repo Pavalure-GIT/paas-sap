@@ -1,17 +1,50 @@
-resource_group: "P4S-Prototype-Automation9"
-virtual_network_name: "VNET-ESO4SAP3-azureProto9"
-region: "UK South"
-azure_vpc_address_space_create: "100.65.24.0/21"
-azure_vpc_address_space_update: "100.64.0.0/20,100.64.16.0/22,100.64.20.0/23,100.64.20.0/23,100.79.0.0/28"
-public_subnet: "100.64.16.0/25"
-customer_subnet: "100.64.0.0/22"
-management_subnet: "100.65.24.0/23"
-gateway_subnet: "100.79.0.0/28"
+#Options
+dr_compartment: no
+ha_compartment: no
+dr_ha_compartment: no 
+username: "ec2-user"
+vm_public_keys: "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAgKPo2E32TDYoeSsSJgqEVlShiApVwlcGh5b0PRbb8KVZ0jukdZTV/0Bx0dioTtQ+gLPqF46GS7kChzQH2h8Vtq52unbRDOzyxEa6O1ZT7QMIfPD088k1rm5quqXxsr/r3Id3IcqaxbHgv1N8A1upYqUIfVZ04fVfNjZsqKW3aZ9BxtrFf2jM1jKlTk0OJFFZkGDgPpe3EnbFPWgS/gRsIThTIgu6Ia7DHCQnHErxSjzkl8wf/ZLwrpcgbDyR+Bk3h6YUxx7SsRmshP+e9zm92vwLs0tgjJIvxkqdHB4EyTrMc2fOxtVi9hGj5vr3JY5UGCep1M6YR7V47nkUWAcKLw== AzureDevDR"
+
+#Standard
+st_resource_group: "P4S-Prototype-Automation"
+st_virtual_network_name: "VNET-ESO4SAP3-azureProto"
+st_region: "UK South"
+st_azure_vpc_address_space_create: "172.65.24.0/21"
+st_azure_vpc_address_space_update: "172.64.0.0/20,172.64.16.0/22,172.64.20.0/23,172.64.20.0/23,172.79.0.0/28"
+st_public_subnet: "172.64.16.0/25"
+st_customer_subnet: "172.64.0.0/22"
+st_management_subnet: "172.65.24.0/23"
+st_gateway_subnet: "172.79.0.0/28"
 dns_name:
   Public: "124.in-addr.arpa"
   Customer: "proto-customer.dxc.paas4sap.svcs.entsvcs.com"
   Management: "proto.azure.paas4sap.svcs.entsvcs"
-vm_public_keys: "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAgKPo2E32TDYoeSsSJgqEVlShiApVwlcGh5b0PRbb8KVZ0jukdZTV/0Bx0dioTtQ+gLPqF46GS7kChzQH2h8Vtq52unbRDOzyxEa6O1ZT7QMIfPD088k1rm5quqXxsr/r3Id3IcqaxbHgv1N8A1upYqUIfVZ04fVfNjZsqKW3aZ9BxtrFf2jM1jKlTk0OJFFZkGDgPpe3EnbFPWgS/gRsIThTIgu6Ia7DHCQnHErxSjzkl8wf/ZLwrpcgbDyR+Bk3h6YUxx7SsRmshP+e9zm92vwLs0tgjJIvxkqdHB4EyTrMc2fOxtVi9hGj5vr3JY5UGCep1M6YR7V47nkUWAcKLw== AzureDevDR"
-username: "ec2-user"
-dr_compartment: no
-ha_compartment: yes 
+
+#DR
+dr_resource_group: "P4S-Prototype-AutomationDR"
+dr_virtual_network_name: "VNET-ESO4SAP3-azureProtoDR"
+dr_region: "UK South"
+dr_azure_vpc_address_space_create: "100.65.24.0/21"
+dr_azure_vpc_address_space_update: "100.64.0.0/20,100.64.16.0/22,100.64.20.0/23,100.64.20.0/23,100.79.0.0/28"
+dr_public_subnet: "100.64.16.0/25"
+dr_customer_subnet: "100.64.0.0/22"
+dr_management_subnet: "100.65.24.0/23"
+dr_gateway_subnet: "100.79.0.0/28"
+  
+#FDE
+fde_size: "Standard_B4ms"
+fde_image_offer: "SLES-Standard"
+fde_publisher: "SUSE"
+fde_sku: "12-SP3"
+
+#SAPRouter
+saprouter_size: "Standard_B4ms"
+saprouter_image_offer: "SLES-Standard"
+saprouter_publisher: "SUSE"
+saprouter_sku: "12-SP3"
+
+#MidServers
+mids_size: "Standard_B2s"
+mids_image_offer: "RHEL"
+mids_publisher: "RedHat"
+mids_sku: "7-RAW"
