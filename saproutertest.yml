@@ -8,5 +8,5 @@
       vars: 
         management_subnet_cidr: 10.6.0.0/24  
         azure_region: West US
-        aws_media_access_key: <Insert Here>
-        aws_media_secret_key: <Insert Here>
+        aws_media_access_key: 
+        aws_media_secret_key:

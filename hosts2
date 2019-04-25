@@ -1,8 +1,8 @@
 [winrm]
-35.156.27.144
+172.17.113.26
 [winrm:vars]
 ansible_user=Administrator
-ansible_password=SAT7iZOz$DSLuHM.fF=%Y5bqjGd3M9YH
+ansible_password=$(Xcmitejke$O?T!tHJS8!VCr%CrbzYy
 ansible_connection=winrm
 ansible_winrm_transport=basic
 ansible_port=5985

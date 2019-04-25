@@ -1,0 +1,65 @@
+#Options
+single_availability_zone: false
+dr_compartment: true
+dr_single_availability_zone: false
+ha: false
+dr_ha: false
+
+#Non-DR Vars
+vpc_cidr: 172.17.64.0/21, 172.16.0.0/20, 172.16.16.0/22, 172.16.20.0/23
+vpc_env_name: "Dev-Example"
+vpc_region: us-east-1
+pubaz1_cidr: 172.16.16.0/25
+pubaz2_cidr: 172.16.16.128/25
+pubaz3_cidr: 172.16.17.0/25
+manaz1_cidr: 172.17.64.0/23
+manaz2_cidr: 172.17.66.0/23
+manaz3_cidr: 172.17.68.0/23
+custaz1_cidr: 172.16.0.0/22
+custaz2_cidr: 172.16.4.0/22
+custaz3_cidr: 172.16.8.0/22
+clustaz1_cidr: 172.16.18.0/24
+clustaz2_cidr: 172.16.19.0/24
+clustaz3_cidr: 172.16.20.0/24
+vpc_management_cidr: 10.4.0.0/22
+vpc_shortname: exa.aws.paas4sap.svcs.entsvcs.com
+vpc_longname: example.paas4sap.svcs.entsvcs.com
+key_name: 064692377866DevCustomerCompartment
+
+#FDE
+fde_instance_type: c5.large
+fde_image: ami-3c062943
+
+#SAPRouter
+proxy_instance_type: t2.xlarge
+proxy_image: ami-3c062943
+
+#MidServers
+mid_instance_type: t2.small
+mid_image: ami-6871a115
+
+#MidServers-DR
+dr_mid_image: ami-03291866
+
+#DR FDE
+dr_fde_image: ami-cd98a0a8
+
+#DR SAPRouter
+dr_proxy_image: ami-cd98a0a8
+
+#DR Vars
+dr_vpc_cidr: 100.17.64.0/21, 100.16.0.0/20, 100.16.16.0/22, 100.16.20.0/23
+dr_vpc_env_name: "DR-Dev-Example"
+dr_vpc_region: us-east-2
+dr_pubaz1_cidr: 100.16.16.0/25
+dr_pubaz2_cidr: 100.16.16.128/25
+dr_pubaz3_cidr: 100.16.17.0/25
+dr_manaz1_cidr: 100.17.64.0/23
+dr_manaz2_cidr: 100.17.66.0/23
+dr_manaz3_cidr: 100.17.68.0/23
+dr_custaz1_cidr: 100.16.0.0/22
+dr_custaz2_cidr: 100.16.4.0/22
+dr_custaz3_cidr: 100.16.8.0/22
+dr_clustaz1_cidr: 100.16.18.0/24
+dr_clustaz2_cidr: 100.16.19.0/24
+dr_clustaz3_cidr: 100.16.20.0/24

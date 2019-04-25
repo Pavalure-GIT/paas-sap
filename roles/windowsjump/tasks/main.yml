@@ -1,6 +1,6 @@
 #Provision Windows VM
 
-#eth1
+# eth1
 - ec2_eni:
     security_groups: "{{ aws_ec2_vm_eth1_groups }}"
     subnet_id: "{{ aws_ec2_vm_eth1_subnet }}"
@@ -10,27 +10,15 @@
 
 - name: create "{{ aws_ec2_vm_Name }}"
   ec2:
-    aws_access_key: "AKIAIC4X7URJUSVP47JA"
-    aws_secret_key: "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"
+    aws_access_key: "AKIAQ6D7XLEFP4XMS3XR"
+    aws_secret_key: "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"
     image: "{{ aws_ec2_vm_image }}"
     user_data: "{{ lookup('template', 'test.txt.j2') }}"
     instance_type: "{{ aws_ec2_vm_instance_type }}"
     instance_tags:
       Name: "{{ aws_ec2_vm_Name }}"
     network_interfaces: "{{ eth1.interface.id }}"
-    #group_id: "{{ aws_ec2_vm_eth1_groups }}"
-    #vpc_subnet_id: "{{ aws_ec2_vm_eth1_subnet }}"
-    #assign_public_ip: yes
     key_name: "{{ aws_ec2_vm_key_name }}"
     region: "{{ aws_ec2_vm_region }}"
     wait: true
   register: ec2_vm
-  
-# - name: assign eip
-  # ec2_eip:
-    # in_vpc: yes
-    # reuse_existing_ip_allowed: yes
-    # state: present
-    # region: "{{ aws_ec2_vm_region }}"
-    # device_id: "{{ ec2_vm.instance_ids[0] }}"
-  # register: elastic_ip

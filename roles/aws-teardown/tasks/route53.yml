@@ -1,0 +1,11 @@
+- route53_zone:
+    zone: "{{ cust_zone }}"
+    state: absent
+
+- route53_zone:
+    zone: "{{ man_zone }}"
+    state: absent
+    
+- route53_zone:
+    zone: "{{ rev_zone }}"
+    state: absent
