@@ -10,8 +10,8 @@
 
 - name: create "{{ aws_ec2_vm_Name }}"
   ec2:
-    aws_access_key: "AKIAQ6D7XLEFP4XMS3XR"
-    aws_secret_key: "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"
+    aws_access_key: #ACCESS
+    aws_secret_key: #SECRET
     image: "{{ aws_ec2_vm_image }}"
     user_data: "{{ lookup('template', 'test.txt.j2') }}"
     instance_type: "{{ aws_ec2_vm_instance_type }}"
