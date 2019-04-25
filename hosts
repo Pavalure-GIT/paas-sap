@@ -2,10 +2,10 @@
 10.6.0.4
 <<<<<<< HEAD
 [winrm]
-172.17.113.26
+#IP
 [winrm:vars]
 ansible_user=Administrator
-ansible_password=$(Xcmitejke$O?T!tHJS8!VCr%CrbzYy
+ansible_password= # MUST BE SPECIFIED TO RUN WINRM COMMANDS
 ansible_connection=winrm
 ansible_winrm_transport=basic
 ansible_port=5985
