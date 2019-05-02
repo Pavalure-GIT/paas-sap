@@ -19,7 +19,7 @@
 - name: delete squid.conf
   file:   
     path: /etc/squid/squid.conf
-    state: absent
+    state absent
   
 - name: copy squid.conf
   copy:
@@ -28,7 +28,9 @@
     owner: root
     group: root
     mode: 0644
-  
+
+ 
+      
 # the lines below will search for what is specified in regexp and replace it with the content of 'line' and pull the management_subnet_cidr from playbook
 
 - name: modify squid.conf
@@ -36,7 +38,21 @@
     path: /etc/squid/squid.conf
     regexp: '^acl localnet src management_lan'
     line: 'acl localnet src {{ management_subnet_cidr }}'
-  
+
+# the lines below will search for what is specified in regexp and replace it with the content of 'line' and pull the respective acl_localnet_src from playbook
+
+- name: modify squid.conf
+  lineinfile:
+    path: /etc/squid/squid.conf
+    regexp: '^acl localnet src customer_management_lan_a'
+    line: 'acl localnet src {{ acl_localnet_src_a }}'
+ 
+- name: modify squid.conf
+  lineinfile:
+    path: /etc/squid/squid.conf
+    regexp: '^acl localnet src customer_management_lan_b'
+    line: 'acl localnet src {{ acl_localnet_src_b }}'
+ 
 - name: restart squid
   service:
     name: squid
@@ -74,6 +90,7 @@
     owner: root
     group: root
     mode: 0644
+
   
 # the lines below will search for what is specified in regexp and replace it with the content of 'line' and pull the management_subnet_cidr from playbook
 
@@ -137,3 +154,16 @@
   service:
     name: squid-sles4sap
     state: started
+
+# Add static route as part of start up command
+- name: change permissions
+  file:
+    path: /etc/init.d/after.local
+    state: touch
+    mode: 0755
+
+# the lines below will add the contents of 'line' to the end of the file and pull static_route from the playbook
+- name: modify boot.local
+  lineinfile:
+    path: /etc/init.d/after.local
+    line: '{{ static_route }}'

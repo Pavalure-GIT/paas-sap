@@ -33,6 +33,9 @@
 - pip:
     name: boto3
 
+- name: Refresh Repos
+  shell: /usr/sbin/registercloudguest --force-new
+
 - aws_s3:
     bucket: p4s-binaries
     object: /INSTALL_UPGRADE/SAP/ROUTER/SAPCRYPTOLIBP_8521-20011697.SAR
@@ -68,4 +71,5 @@
 
 - command: "/media/NW75/SAPCAR_816-80000935.EXE -xvf /media/ROUTER/saprouter_113-80003478.sar"
   args:
-    chdir: /usr/sap/saprouter
+    chdir: /usr/sap/saprouter 
+
