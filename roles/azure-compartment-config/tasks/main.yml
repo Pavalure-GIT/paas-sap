@@ -35,17 +35,19 @@
     state: present
     resource_group: "{{ resource_group }}"
     name: "{{dns_name['Public']}}"
+  when: create_dns
 
 - name: Create Customer DNS
   azure_rm_dnszone:
     state: present
     resource_group: "{{ resource_group }}"
     name: "{{dns_name['Customer']}}"
-  when: "{{ dr_compartment }} == false"
+  when: create_dns
 
 - name: Create Managment DNS
   azure_rm_dnszone:
     state: present
     resource_group: "{{ resource_group }}"
     name: "{{dns_name['Management']}}"
-  when: "{{ dr_compartment }} == false"
+  when: create_dns
+

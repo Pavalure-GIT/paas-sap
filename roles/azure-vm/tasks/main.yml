@@ -64,6 +64,6 @@
   
 #Calling DNS entries to add the NIC(s) to the required DNS
 - include_tasks: dns-entries.yml
-
+  when: azure_vm_add_dns
 
 

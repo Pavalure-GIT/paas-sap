@@ -1,0 +1,26 @@
+---
+- name: AWS Teardown
+  hosts: localhost
+  tasks:
+    - name: Call Teardown Role
+      include_role:
+        name: aws-teardown
+      vars:
+        vpc: 
+        region: 
+        list: true
+        terminate: false
+        requester: false
+        
+- name: AWS DR Teardown
+  hosts: localhost
+  tasks:
+    - name: Call Teardown Role
+      include_role:
+        name: aws-teardown
+      vars:
+        vpc: 
+        region: 
+        list: true
+        terminate: false
+        requester: true
