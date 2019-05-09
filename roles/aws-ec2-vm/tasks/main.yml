@@ -1,0 +1,43 @@
+---
+#eth0
+- ec2_eni:
+    security_groups: "{{ aws_ec2_vm_eth0_groups }}"
+    subnet_id: "{{ aws_ec2_vm_eth0_subnet }}"
+    region: "{{ aws_ec2_vm_region }}"
+    state: present
+  register: eth0
+
+#eth1
+- ec2_eni:
+    security_groups: "{{ aws_ec2_vm_eth1_groups }}"
+    subnet_id: "{{ aws_ec2_vm_eth1_subnet }}"
+    region: "{{ aws_ec2_vm_region }}"
+    state: present
+  register: eth1
+  when: not single_nic
+
+- name: create "{{ aws_ec2_vm_Name }}"
+  ec2:
+    image: "{{ aws_ec2_vm_image }}"
+    instance_type: "{{ aws_ec2_vm_instance_type }}"
+    instance_tags:
+      Name: "{{ aws_ec2_vm_Name }} "
+    network_interfaces: ["{{ eth0.interface.id }}"]
+    key_name: "{{ aws_ec2_vm_key_name }}"
+    region: "{{ aws_ec2_vm_region }}"
+    wait: true
+  register: ec2_vm
+  when: single_nic
+  
+- name: create "{{ aws_ec2_vm_Name }}"
+  ec2:
+    image: "{{ aws_ec2_vm_image }}"
+    instance_type: "{{ aws_ec2_vm_instance_type }}"
+    instance_tags:
+      Name: "{{ aws_ec2_vm_Name }} "
+    network_interfaces: ["{{ eth0.interface.id }}" , "{{ eth1.interface.id }}"]
+    key_name: "{{ aws_ec2_vm_key_name }}"
+    region: "{{ aws_ec2_vm_region }}"
+    wait: true
+  register: ec2_vm
+  when: not single_nic

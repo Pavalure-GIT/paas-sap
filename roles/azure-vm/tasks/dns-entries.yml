@@ -1,0 +1,30 @@
+#Populating prefix: Always use the VM name, unless VM is 'SAPRouter' then use proxy. 
+- set_fact:      
+      dns_prefix: "{{ ( azure_vm_name == 'SAPRouter') | ternary( 'proxy',azure_vm_name ) }}" 
+
+#Adding nic1 result to the DNS, zonename is derived on a lookup from the subnet
+#the NIC is created with
+- name: Add nic1 to DNS
+  azure_rm_dnsrecordset:
+    state: present
+    resource_group: "{{azure_vm_dns_resource_group}}" 
+    relative_name: "{{dns_prefix}}" 
+    zone_name: "{{dns_name[azure_vm_nic1]}}"
+    record_type: "A" 
+    time_to_live: 300
+    records: 
+      - entry: "{{nic1.state.ip_configuration.private_ip_address}}"
+
+#Adding nic2 result to the DNS, zonename is derived on a lookup from the subnet
+#the NIC is created with. (Only if nic2 is defined, aka exists)
+- name: add nic2 to DNS
+  azure_rm_dnsrecordset:
+    state: present
+    resource_group:  "{{azure_vm_dns_resource_group}}" 
+    relative_name: "{{dns_prefix}}" 
+    zone_name: "{{dns_name[azure_vm_nic2]}}"
+    record_type: "A"
+    time_to_live: 300
+    records: 
+      - entry: "{{nic2.state.ip_configuration.private_ip_address}}"
+  when: nic2.state is defined

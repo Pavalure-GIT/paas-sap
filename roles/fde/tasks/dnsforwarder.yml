@@ -1,0 +1,109 @@
+- name: install bind
+  zypper:
+    name: bind
+    state: present
+    disable_gpg_check: yes
+#  environment:
+#    http_proxy: "http://{{ proxy_domain }}:8080"
+#    #    https_proxy: "http://{{ proxy_domain }}:8080"
+#    #    no_proxy: "localhost, 127.0.0.1"
+
+- name: copy named.conf
+  copy:
+    src: files/named.conf
+    dest: /etc/named.conf
+    owner: root
+    group: named
+    mode: 0755
+
+- name: modify named.conf - customer-lan
+  lineinfile:
+    path: /etc/named.conf
+    regexp: '^     customer-lan'
+    line: '     {{ customer_lan }};'
+
+- name: modify named.conf - management-lan
+  lineinfile:
+    path: /etc/named.conf
+    regexp: '^     management-lan'
+    line: '     {{ management_lan }};'
+
+- name: modify named.conf - dns-dev
+  lineinfile:
+    path: /etc/named.conf
+    regexp: '^     dns-dev'
+    line: '     {{ dns_ip_dev }};'
+
+- name: modify named.conf - dns-test
+  lineinfile:
+    path: /etc/named.conf
+    regexp: '^     dns-test'
+    line: '     {{ dns_ip_test }};'
+
+- name: modify named.conf - management_zone
+  lineinfile:
+    path: /etc/named.conf
+    regexp: '^zone "management_zone"'
+    line: 'zone "{{ management_zone }}" in {'
+
+- name: modify named.conf - customer_zone
+  lineinfile:
+    path: /etc/named.conf
+    regexp: '^zone "customer_zone"'
+    line: 'zone "{{ customer_zone }}" in {'
+
+- name: modify named.conf - reverse_zone
+  lineinfile:
+    path: /etc/named.conf
+    regexp: '^zone "reverse_zone"'
+    line: 'zone "{{ reverse_zone }}" in {'
+
+- name: modify named.conf - management_forwarders
+  lineinfile:
+    path: /etc/named.conf
+    regexp: '^        forwarders { management_forwarders };'
+    line: '        forwarders { {{ management_forwarders }} };'
+
+- name: modify named.conf - customer_forwarders
+  lineinfile:
+    path: /etc/named.conf
+    regexp: '^        forwarders { customer_forwarders };'
+    line: '        forwarders { {{ customer_forwarders }} };'
+
+- name: modify named.conf - reverse_forwarders
+  lineinfile:
+    path: /etc/named.conf
+    regexp: '^        forwarders { reverse_forwarders };'
+    line: '        forwarders { {{ reverse_forwarders }} };'
+
+- name: copy forwarders.conf
+  copy:
+    src: files/forwarders.conf
+    dest: /etc/named.d/forwarders.conf
+    owner: root
+    group: named
+    mode: 0755
+
+- name: modify forwarders.conf
+  lineinfile:
+    path: /etc/named.d/forwarders.conf
+    regexp: '^        forwarder_ip'
+    line: '        {{ forwarder_ip }}'
+
+- name: enable on startup
+  shell: chkconfig named on
+
+- name: restart bind service
+  shell: rcnamed restart
+
+- name: modify resolv.conf - search
+  lineinfile:
+    path: /etc/resolv.conf
+    regexp: '^search'
+    line: 'search {{ fde_customer_domain }}'
+
+- name: modify resolv.conf - nameserver
+  lineinfile:
+    path: /etc/resolv.conf
+    regexp: '^nameserver'
+    line: 'nameserver {{ fde_ip }}'

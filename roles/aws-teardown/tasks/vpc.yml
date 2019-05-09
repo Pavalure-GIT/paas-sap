@@ -1,0 +1,39 @@
+- name: Find Peer ID from Requester VPC
+  ec2_vpc_peering_facts:
+    region: "{{ region }}"
+    filters:
+      requester-vpc-info.vpc-id: "{{ vpc }}"
+  register: peering
+  when: requester
+
+- name: List VPC Peer  
+  debug:
+    msg: "{{ peering.result[0].vpc_peering_connection_id }}"
+  when: requester and list
+  
+- name: Delete VPC Peer
+  ec2_vpc_peer:
+   region: "{{ region }}"
+   peering_id: "{{ peering.result[0].vpc_peering_connection_id }}"
+   state: absent
+  when: requester and terminate
+
+ ec2_vpc_net_facts:
+   vpc_ids: "{{ vpc }}"
+   region: "{{ region }}"
+ register: vpc_facts
+ 
+ debug:
+   msg: "{{ vpc_facts.vpcs[0].tags.Name }}"
+ when: list
+   
+ debug:
+   msg: "{{ vpc_facts.vpcs[0].cidr_block }}"
+ when: list
+
+ ec2_vpc_net:
+   state: absent
+   name: "{{ vpc_facts.vpcs[0].tags.Name }}"
+   region: "{{ region }}"
+   cidr_block: "{{ vpc_facts.vpcs[0].cidr_block }}"
+ when: terminate

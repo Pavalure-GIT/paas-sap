@@ -302,6 +302,32 @@
             }
          },
          {
+            "name": "330",
+            "properties": {
+                "description": "BUaaS flows from  BUaaS to BUaaS in customer-VPC.",
+                "protocol": "TCP",
+                "sourcePortRange": "*",
+                "destinationPortRange": "7443",
+                "access": "Allow",
+                "priority": 330,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceApplicationSecurityGroups": [
+                    {
+                        "id": "[variables('buaas-mgt-id')]"
+                    }
+                ],
+                "destinationApplicationSecurityGroups": [
+                    {
+                        "id": "[variables('buaas-mgt-id')]"
+                    }
+                ]
+            }
+         },
+         {
             "name": "400",
             "properties": {
                 "description": "outbound web proxy",

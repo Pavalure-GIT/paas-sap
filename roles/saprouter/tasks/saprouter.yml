@@ -1,0 +1,71 @@
+- file:
+    path: /media
+    state: directory
+    
+- file:
+    path: /media/WILEYM
+    state: directory
+
+- file:
+    path: /media/ROUTER
+    state: directory
+
+- file:
+    path: /media/NW75
+    state: directory
+
+- file:
+    path: /usr/sap
+    state: directory
+
+- file:
+    path: /usr/sap/saprouter
+    state: directory
+
+- zypper:
+    name: python-pip
+    state: present
+    disable_gpg_check: yes
+
+- pip:
+    name: botocore
+
+- pip:
+    name: boto3
+
+- aws_s3:
+    bucket: p4s-binaries
+    object: /INSTALL_UPGRADE/SAP/ROUTER/SAPCRYPTOLIBP_8521-20011697.SAR
+    dest: /media/ROUTER/SAPCRYPTOLIBP_8521-20011697.SAR
+    mode: get
+    aws_access_key: "{{ aws_media_access_key }}"
+    aws_secret_key: "{{ aws_media_secret_key }}"
+
+- aws_s3:
+    bucket: p4s-binaries
+    object: /INSTALL_UPGRADE/SAP/ROUTER/saprouter_113-80003478.sar
+    dest: /media/ROUTER/saprouter_113-80003478.sar
+    mode: get
+    aws_access_key: "{{ aws_media_access_key }}"
+    aws_secret_key: "{{ aws_media_secret_key }}"
+    
+- aws_s3:
+    bucket: p4s-binaries
+    object: /INSTALL_UPGRADE/TOOLS/SAPCAR_816-80000935.EXE
+    dest: /media/NW75/SAPCAR_816-80000935.EXE
+    mode: get
+    aws_access_key: "{{ aws_media_access_key }}"
+    aws_secret_key: "{{ aws_media_secret_key }}"
+
+- file:
+    path: /media
+    mode: 0775
+    recurse: yes
+
+- command: "/media/NW75/SAPCAR_816-80000935.EXE -xvf /media/ROUTER/SAPCRYPTOLIBP_8521-20011697.SAR"
+  args:
+    chdir: /usr/sap/saprouter
+
+- command: "/media/NW75/SAPCAR_816-80000935.EXE -xvf /media/ROUTER/saprouter_113-80003478.sar"
+  args:
+    chdir: /usr/sap/saprouter

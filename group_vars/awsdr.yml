@@ -1,0 +1,48 @@
+#Options
+dr_compartment: true
+dr_single_availability_zone: true
+dr_ha: false
+
+#Non-DR Vars
+existing_vpc_region: us-east-1
+existing_vpc_id: vpc-0f2497e0bc942b933
+existing_management_route_table_az1_id: rtb-0fe0feb7097af3462
+existing_management_route_table_az1_cidr: 172.17.48.0/23
+existing_management_route_table_az2_id: rtb-0f6e701b92f237b62
+existing_management_route_table_az2_cidr: 172.17.50.0/23
+existing_management_route_table_az3_id: rtb-08d78cc5a480c2f86
+existing_management_route_table_az3_cidr: 172.17.52.0/23
+vpc_management_cidr: 10.4.0.0/22
+vpc_shortname: devac.aws.paas4sap.svcs.entsvcs.com
+vpc_longname: devalex.paas4sap.svcs.entsvcs.com
+rev_zone: ZQTUMZX5ITUGB
+key_name: 064692377866DevCustomerCompartment
+
+#MidServers-DR
+dr_mid_image: ami-03291866
+mid_instance_type: t2.small
+
+#DR FDE
+dr_fde_image: ami-cd98a0a8
+fde_instance_type: c5.large
+
+#DR SAPRouter
+dr_proxy_image: ami-cd98a0a8
+proxy_instance_type: t2.xlarge
+
+#DR Vars
+dr_vpc_cidr: 100.17.64.0/21, 100.16.0.0/20, 100.16.16.0/22, 100.16.20.0/23
+dr_vpc_env_name: "DR-Dev-Example"
+dr_vpc_region: us-east-2
+dr_pubaz1_cidr: 100.16.16.0/25
+dr_pubaz2_cidr: 100.16.16.128/25
+dr_pubaz3_cidr: 100.16.17.0/25
+dr_manaz1_cidr: 100.17.64.0/23
+dr_manaz2_cidr: 100.17.66.0/23
+dr_manaz3_cidr: 100.17.68.0/23
+dr_custaz1_cidr: 100.16.0.0/22
+dr_custaz2_cidr: 100.16.4.0/22
+dr_custaz3_cidr: 100.16.8.0/22
+dr_clustaz1_cidr: 100.16.18.0/24
+dr_clustaz2_cidr: 100.16.19.0/24
+dr_clustaz3_cidr: 100.16.20.0/24
