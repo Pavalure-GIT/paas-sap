@@ -24,8 +24,14 @@ pipeline{
     
  
     stages{
+        stage('clone git repo'){
+            steps{
+                git url: 'e4s@vs-ssh.visualstudio.com:v3/e4s/E4S-PublicCloud/SystemTeam', credentialsId: 'daivdprivatekeygit', branch: 'AWSCustomerAutomationImprovements'
+            }
+         
+        }
         
-        stage('AWS'){
+        stage('Tear down AWS'){
                         //stop logging, export env variable for aws cli in virutal env, pull down vars file and kick off build
             steps{
                 sh """
