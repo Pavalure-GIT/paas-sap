@@ -1,0 +1,120 @@
+- group:
+    name: sapsys
+    system: yes
+    state: present
+
+- user:
+    name: sapadm
+    group: sapsys
+
+- file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - /media
+    - /media/SAP
+    - /media/SAP/WILYEM
+
+- zypper:
+    name: python-pip
+    state: present
+    disable_gpg_check: yes
+
+- pip:
+    name: botocore
+
+- pip:
+    name: boto3
+
+- aws_s3:
+    bucket: p4s-binaries
+    object: /INSTALL_UPGRADE/SAP/WILYEM/ISAGNTJ5STD02_0-70003142.ZIP
+    dest: /media/SAP/WILYEM/ISAGNTJ5STD02_0-70003142.ZIP
+    mode: get
+    aws_access_key: "{{ aws_media_access_key }}"
+    aws_secret_key: "{{ aws_media_secret_key }}"
+
+- aws_s3:
+    bucket: p4s-binaries
+    object: /INSTALL_UPGRADE/SAP/WILYEM/WILYISEM02_0-70003060.ZIP
+    dest: /media/SAP/WILYEM/WILYISEM02_0-70003060.ZIP
+    mode: get
+    aws_access_key: "{{ aws_media_access_key }}"
+    aws_secret_key: "{{ aws_media_secret_key }}"
+
+- aws_s3:
+    bucket: p4s-binaries
+    object: /INSTALL_UPGRADE/SAP/WILYEM/WILYISMM02_0-70003054.ZIP
+    dest: /media/SAP/WILYEM/WILYISMM02_0-70003054.ZIP
+    mode: get
+    aws_access_key: "{{ aws_media_access_key }}"
+    aws_secret_key: "{{ aws_media_secret_key }}"
+
+- zypper:
+    name: java-1_8_0-ibm
+    state: present
+
+- file:
+    path: "{{ item }}" 
+    state: directory
+  with_items:
+    - /usr
+    - /usr/sap
+    - /usr/sap/ccms
+    - /usr/sap/ccms/apmintroscope
+
+- file:
+    path: "{{ item }}"
+    owner: sapadm
+    group: sapsys
+  with_items:
+    - /usr/sap/ccms
+    - /usr/sap/ccms/apmintroscope
+
+- file:
+    path: /media/SAP/WILYEM
+    owner: sapadm
+    group: sapsys
+
+- file:
+    path: /media/WILY_10_5/extracted
+    state: directory
+
+- unarchive:
+    src: /media/SAP/WILYEM/WILYISEM02_0-70003060.ZIP
+    dest: /media/WILY_10_5/extracted/
+    remote_src: yes
+
+- file:
+    path: /media/WILY_10_5/extracted
+    owner: sapadm
+    group: sapsys
+    recurse: yes
+
+- file:
+    path: /media/WILY_10_5/extracted/introscope10.5.2.27linuxAMD64SAP.bin
+    mode: 0755
+
+- lineinfile:
+    path: /media/WILY_10_5/extracted/ca-eula.txt
+    regexp: '^CA-EULA=reject'
+    line: 'CA-EULA=accept'
+
+- command: /media/WILY_10_5/extracted/introscope10.5.2.27linuxAMD64SAP.bin -Djava.awt.headless=true
+  become_user: sapadm
+  args:
+    creates: /usr/sap/ccms/apmintroscope/install/Introscope_10.5.2.27_InstallLog.log
+
+- unarchive:
+    src: /media/SAP/WILYEM/WILYISMM02_0-70003054.ZIP
+    dest: /usr/sap/ccms/apmintroscope
+    remote_src: yes
+  become_user: sapadm
+  
+- file:
+    path: /usr/sap/ccms/apmintroscope
+    owner: sapadm
+    group: sapsys
+        
+- command: /usr/sap/ccms/apmintroscope/bin/EMCtrl.sh start
+  become_user: sapadm

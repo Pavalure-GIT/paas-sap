@@ -1,0 +1,21 @@
+# /etc/systemd/system/EMC.service
+#
+ 
+[Unit]
+Description=Start the Introscope Enterprise Manager
+After=sapinit.service
+ 
+[Service]
+Type=simple
+RemainAfterExit=true
+TimeoutSec=5min
+TimeoutStopSec=5min
+User=sapadm
+Group=sapsys
+Environment="WILYHOME=/usr/sap/ccms/apmintroscope"
+WorkingDirectory=/usr/sap/ccms/apmintroscope
+ExecStart=/bin/sh -c "/usr/sap/ccms/apmintroscope/bin/EMCtrl.sh start"
+ExecStop=/bin/sh -c "/usr/sap/ccms/apmintroscope/bin/EMCtrl.sh stop"
+ 
+[Install]
+WantedBy=multi-user.target

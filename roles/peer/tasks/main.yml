@@ -1,0 +1,20 @@
+- name: Create VPC peering Connection
+  ec2_vpc_peer:
+    region: "{{ region1 }}"
+    peer_region: "{{ region2 }}"
+    vpc_id: "{{ vpc1 }}"
+    peer_vpc_id: "{{ vpc2 }}"
+    state: present
+    tags:
+      Name: "{{ peer_name }}"
+  register: vpc_peer
+
+- pause:
+    seconds: 5
+
+- name: Accept local VPC peering request
+  ec2_vpc_peer:
+    region: "{{ region2 }}"
+    peering_id: "{{ vpc_peer.peering_id }}"
+    state: accept
+  register: action_peer

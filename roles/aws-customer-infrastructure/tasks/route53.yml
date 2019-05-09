@@ -1,16 +1,23 @@
 - route53_zone:
     zone: "{{ aws_customer_vpc_shortname }}"
-    vpc_id: "{{ vpcid }}"
+    vpc_id: "{{ customer_network.vpc.id }}"
     vpc_region: "{{ aws_customer_vpc_region }}"
     comment: mgmt
+  register: management_zone
+  when: create_zone
+  
 - route53_zone:
     zone: "{{ aws_customer_vpc_longname }}"
-    vpc_id: "{{ vpcid }}"
+    vpc_id: "{{ customer_network.vpc.id }}"
     vpc_region: "{{ aws_customer_vpc_region }}"
     comment: work
+  register: customer_zone
+  when: create_zone
+
 - route53_zone:
     zone: in-addr.arpa
-    vpc_id: "{{ vpcid }}"
+    vpc_id: "{{ customer_network.vpc.id }}"
     vpc_region: "{{ aws_customer_vpc_region }}"
     comment: Reverse
-
+  register: reverse_zone
+  when: create_zone

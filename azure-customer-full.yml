@@ -1,0 +1,291 @@
+
+- name: Azure Compartment Configuration
+  vars_files:
+      - group_vars/azure_cust.yml
+  hosts: localhost
+  tasks:
+    - name: Create Infastructure
+      include_role: 
+        name: azure-compartment-config
+      vars:
+        resource_group: "{{ st_resource_group }}"
+        virtual_network_name: "{{ st_virtual_network_name }}"
+        region: "{{ st_region }}"
+        azure_vpc_address_space_create: "{{ st_azure_vpc_address_space_create }}"
+        azure_vpc_address_space_update: "{{ st_azure_vpc_address_space_update }}"
+        public_subnet: "{{ st_public_subnet }}"
+        customer_subnet: "{{ st_customer_subnet }}"
+        management_subnet: "{{ st_management_subnet }}"
+        gateway_subnet: "{{ st_gateway_subnet }}"
+        create_dns: true
+        
+- name: Provision Component VMs
+  vars_files:
+      - group_vars/azure_cust.yml 
+  hosts: localhost 
+  tasks:
+    - name: Provision SAP Router
+      include_role:
+        name: azure-vm
+      vars:
+        azure_vm_name: "SAPRouter"
+        azure_vm_resource_group: "{{ st_resource_group }}"
+        azure_vm_dns_resource_group: "{{ st_resource_group }}"
+        azue_vm_vnet: "{{ st_virtual_network_name }}" 
+        azure_vm_size: "{{ saprouter_size }}"
+        azure_vm_image_offer: "{{ saprouter_image_offer }}"
+        azure_vm_publisher: "{{ saprouter_publisher }}"
+        azure_vm_sku: "{{ saprouter_sku }}"
+        azure_vm_public_ssh: "{{vm_public_keys}}"
+        azure_vm_nic1: "Public"
+        azure_vm_nic2: "Management" #Must use quotes to define empty"
+        azure_vm_add_dns: true
+
+    - name: Provison MidServerA
+      include_role:
+        name: azure-vm
+      vars:
+        azure_vm_name: "MidServerA"
+        azure_vm_resource_group: "{{ st_resource_group }}"
+        azure_vm_dns_resource_group: "{{ st_resource_group }}"
+        azue_vm_vnet: "{{ st_virtual_network_name }}" 
+        azure_vm_size: "{{ mids_size }}"
+        azure_vm_image_offer: "{{ mids_image_offer }}"
+        azure_vm_publisher: "{{ mids_publisher }}"
+        azure_vm_sku: "{{ mids_sku }}"
+        azure_vm_public_ssh: "{{ vm_public_keys }}"
+        azure_vm_nic1: "Management"
+        azure_vm_nic2: "" #Must use quotes to define empty
+        azure_vm_add_dns: false
+
+    - name: Provison MidServerB
+      include_role:
+        name: azure-vm  
+      vars:
+        azure_vm_name: "MidServerB"
+        azure_vm_resource_group: "{{ st_resource_group }}"
+        azure_vm_dns_resource_group: "{{ st_resource_group }}"
+        azue_vm_vnet: "{{ st_virtual_network_name }}" 
+        azure_vm_size: "{{ mids_size }}"
+        azure_vm_image_offer: "{{ mids_image_offer }}"
+        azure_vm_publisher: "{{ mids_publisher }}"
+        azure_vm_sku: "{{ mids_sku }}"
+        azure_vm_public_ssh: "{{ vm_public_keys }}"
+        azure_vm_nic1: "Management"
+        azure_vm_nic2: "" #Must use quotes to define empty
+        azure_vm_add_dns: false
+ 
+    - name: Provision FDE
+      include_role:
+        name: azure-vm  
+      vars:
+        azure_vm_name: "FDE"
+        azure_vm_resource_group: "{{ st_resource_group }}"
+        azure_vm_dns_resource_group: "{{ st_resource_group }}"
+        azue_vm_vnet: "{{ st_virtual_network_name }}" 
+        azure_vm_size: "{{ fde_size }}"
+        azure_vm_image_offer: "{{ fde_image_offer }}"
+        azure_vm_publisher: "{{ fde_publisher }}"
+        azure_vm_sku: "{{ fde_sku }}"
+        azure_vm_public_ssh: "{{ vm_public_keys }}"
+        azure_vm_nic1: "Customer"
+        azure_vm_nic2: "Management" #Must use quotes to define empty
+        azure_vm_add_dns: true
+
+    ##Duplicating provisions for HA requirements     
+    - name: Provision SAP Router
+      include_role:
+        name: azure-vm
+      vars:
+        azure_vm_name: "SAPRouter-HA"
+        azure_vm_resource_group: "{{ st_resource_group }}"
+        azure_vm_dns_resource_group: "{{ st_resource_group }}"
+        azue_vm_vnet: "{{ st_virtual_network_name }}" 
+        azure_vm_size: "{{ saprouter_size }}"
+        azure_vm_image_offer: "{{ saprouter_image_offer }}"
+        azure_vm_publisher: "{{ saprouter_publisher }}"
+        azure_vm_sku: "{{ saprouter_sku }}"
+        azure_vm_public_ssh: "{{vm_public_keys}}"
+        azure_vm_nic1: "Public"
+        azure_vm_nic2: "Management" #Must use quotes to define empty"
+        azure_vm_add_dns: false
+      when: ha_compartment
+ 
+    - name: Provision FDE
+      include_role:
+        name: azure-vm  
+      vars:
+        azure_vm_name: "FDE-HA"
+        azure_vm_resource_group: "{{ st_resource_group }}"
+        azure_vm_dns_resource_group: "{{ st_resource_group }}"
+        azue_vm_vnet: "{{ st_virtual_network_name }}" 
+        azure_vm_size: "{{ fde_size }}"
+        azure_vm_image_offer: "{{ fde_image_offer }}"
+        azure_vm_publisher: "{{ fde_publisher }}"
+        azure_vm_sku: "{{ fde_sku }}"
+        azure_vm_public_ssh: "{{ vm_public_keys }}"
+        azure_vm_nic1: "Customer"
+        azure_vm_nic2: "Management" #Must use quotes to define empty 
+        azure_vm_add_dns: false
+      when: ha_compartment       
+
+##########################DR###########################
+
+- name: Azure Compartment Configuration
+  vars_files:
+      - group_vars/azure_cust.yml
+  hosts: localhost
+  tasks:
+    - name: Create Infastructure
+      include_role: 
+        name: azure-compartment-config
+      vars:
+        resource_group: "{{ dr_resource_group }}"
+        virtual_network_name: "{{ dr_virtual_network_name }}"
+        region: "{{ dr_region }}"
+        azure_vpc_address_space_create: "{{ dr_azure_vpc_address_space_create }}"
+        azure_vpc_address_space_update: "{{ dr_azure_vpc_address_space_update }}"
+        public_subnet: "{{ dr_public_subnet }}"
+        customer_subnet: "{{ dr_customer_subnet }}"
+        management_subnet: "{{ dr_management_subnet }}"
+        gateway_subnet: "{{ dr_gateway_subnet }}"
+        create_dns: false
+      when: dr_compartment
+        
+- name: Provision Component VMs
+  vars_files:
+      - group_vars/azure_cust.yml 
+  hosts: localhost 
+  tasks:
+    - name: Provision SAP Router
+      include_role:
+        name: azure-vm
+      vars:
+        azure_vm_name: "SAPRouter"
+        azure_vm_resource_group: "{{ dr_resource_group }}"
+        azure_vm_dns_resource_group: "{{ st_resource_group }}"
+        azue_vm_vnet: "{{ dr_virtual_network_name }}" 
+        azure_vm_size: "{{ saprouter_size }}"
+        azure_vm_image_offer: "{{ saprouter_image_offer }}"
+        azure_vm_publisher: "{{ saprouter_publisher }}"
+        azure_vm_sku: "{{ saprouter_sku }}"
+        azure_vm_public_ssh: "{{vm_public_keys}}"
+        azure_vm_nic1: "Public"
+        azure_vm_nic2: "Management" #Must use quotes to define empty"
+        azure_vm_add_dns: true
+      when: dr_compartment
+
+    - name: Provison MidServerA
+      include_role:
+        name: azure-vm
+      vars:
+        azure_vm_name: "MidServerA"
+        azure_vm_resource_group: "{{ dr_resource_group }}"
+        azure_vm_dns_resource_group: "{{ st_resource_group }}"
+        azue_vm_vnet: "{{ dr_virtual_network_name }}" 
+        azure_vm_size: "{{ mids_size }}"
+        azure_vm_image_offer: "{{ mids_image_offer }}"
+        azure_vm_publisher: "{{ mids_publisher }}"
+        azure_vm_sku: "{{ mids_sku }}"
+        azure_vm_public_ssh: "{{ vm_public_keys }}"
+        azure_vm_nic1: "Management"
+        azure_vm_nic2: "" #Must use quotes to define empty
+        azure_vm_add_dns: true
+      when: dr_compartment
+
+    - name: Provison MidServerB
+      include_role:
+        name: azure-vm  
+      vars:
+        azure_vm_name: "MidServerB"
+        azure_vm_resource_group: "{{ dr_resource_group }}"
+        azure_vm_dns_resource_group: "{{ st_resource_group }}"
+        azue_vm_vnet: "{{ dr_virtual_network_name }}" 
+        azure_vm_size: "{{ mids_size }}"
+        azure_vm_image_offer: "{{ mids_image_offer }}"
+        azure_vm_publisher: "{{ mids_publisher }}"
+        azure_vm_sku: "{{ mids_sku }}"
+        azure_vm_public_ssh: "{{ vm_public_keys }}"
+        azure_vm_nic1: "Management"
+        azure_vm_nic2: "" #Must use quotes to define empty
+        azure_vm_add_dns: true
+      when: dr_compartment
+ 
+    - name: Provision FDE
+      include_role:
+        name: azure-vm  
+      vars:
+        azure_vm_name: "FDE"
+        azure_vm_resource_group: "{{ dr_resource_group }}"
+        azure_vm_dns_resource_group: "{{ st_resource_group }}"
+        azue_vm_vnet: "{{ dr_virtual_network_name }}" 
+        azure_vm_size: "{{ fde_size }}"
+        azure_vm_image_offer: "{{ fde_image_offer }}"
+        azure_vm_publisher: "{{ fde_publisher }}"
+        azure_vm_sku: "{{ fde_sku }}"
+        azure_vm_public_ssh: "{{ vm_public_keys }}"
+        azure_vm_nic1: "Customer"
+        azure_vm_nic2: "Management" #Must use quotes to define empty
+        azure_vm_add_dns: true
+      when: dr_compartment
+
+    ##Duplicating provisions for HA requirements     
+    - name: Provision SAP Router
+      include_role:
+        name: azure-vm
+      vars:
+        azure_vm_name: "SAPRouter-HA"
+        azure_vm_resource_group: "{{ dr_resource_group }}"
+        azure_vm_dns_resource_group: "{{ st_resource_group }}"
+        azue_vm_vnet: "{{ dr_virtual_network_name }}" 
+        azure_vm_size: "{{ saprouter_size }}"
+        azure_vm_image_offer: "{{ saprouter_image_offer }}"
+        azure_vm_publisher: "{{ saprouter_publisher }}"
+        azure_vm_sku: "{{ saprouter_sku }}"
+        azure_vm_public_ssh: "{{vm_public_keys}}"
+        azure_vm_nic1: "Public"
+        azure_vm_nic2: "Management" #Must use quotes to define empty"
+        azure_vm_add_dns: false
+      when: dr_compartment and dr_ha_compartment
+ 
+    - name: Provision FDE
+      include_role:
+        name: azure-vm  
+      vars:
+        azure_vm_name: "FDE-HA"
+        azure_vm_resource_group: "{{ dr_resource_group }}"
+        azure_vm_dns_resource_group: "{{ st_resource_group }}"
+        azue_vm_vnet: "{{ dr_virtual_network_name }}" 
+        azure_vm_size: "{{ fde_size }}"
+        azure_vm_image_offer: "{{ fde_image_offer }}"
+        azure_vm_publisher: "{{ fde_publisher }}"
+        azure_vm_sku: "{{ fde_sku }}"
+        azure_vm_public_ssh: "{{ vm_public_keys }}"
+        azure_vm_nic1: "Customer"
+        azure_vm_nic2: "Management" #Must use quotes to define empty
+        azure_vm_add_dns: false
+      when: dr_compartment and dr_ha_compartment       
+    
+    - azure_rm_virtualnetworkpeering:
+        resource_group: "{{ st_resource_group }}"
+        virtual_network: "{{ st_virtual_network_name }}"
+        name: DRPeering
+        remote_virtual_network:
+          resource_group: "{{ dr_resource_group }}"
+          name: "{{ dr_virtual_network_name }}"
+          allow_virtual_network_access: true
+          allow_forwarded_traffic: true
+      when: dr_compartment
+
+    - azure_rm_securitygroup:
+        resource_group: "{{ dr_resource_group  }}"
+        name: nsg-mgmt
+        rules:
+          - name: 190
+            protocol: Tcp
+            source_address_prefix: "{{ st_azure_vpc_address_space_create }}"
+            destination_address_prefix: "{{ dr_azure_vpc_address_space_create  }}"
+            access: Allow
+            priority: 190
+            direction: Inbound
+      when: dr_compartment

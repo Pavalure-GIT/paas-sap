@@ -1,0 +1,23 @@
+- ec2_vpc_nat_gateway_facts:
+    filters:
+      vpc-id: "{{ vpc }}"
+    region: "{{ region }}"
+  register: nat_gateways
+
+- debug:
+    msg: "{{ item_id.nat_gateway_id }}"
+  with_items: "{{ nat_gateways.result }}"
+  loop_control:
+       loop_var: item_id
+  when: list
+       
+- ec2_vpc_nat_gateway:
+    state: absent
+    wait: yes
+    nat_gateway_id: "{{ item_id.nat_gateway_id }}"
+    release_eip: yes
+    region: "{{ region }}"
+  with_items: "{{ nat_gateways.result }}"
+  loop_control:
+       loop_var: item_id
+  when: terminate
