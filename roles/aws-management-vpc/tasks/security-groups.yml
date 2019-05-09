@@ -1,0 +1,540 @@
+- ec2_group:
+    name: "{{ aws_management_vpc_env_shortname }}-ermslave-dxc"
+    description: Assign to DXC-subnet interface of ERM-slave VMs
+    vpc_id: "{{ management_network.vpc.id }}"
+    region: "{{ aws_managment_vpc_region }}"
+    rules:
+      - proto: TCP
+        ports: 22222
+        cidr_ip: 15.143.137.79/32
+      - proto: TCP
+        ports: 22222
+        cidr_ip: 138.35.0.57/32
+
+- ec2_group:
+    name: "{{ aws_management_vpc_env_shortname }}-servicedbtools"
+    description: Assign to all tools-subnet interfaces of servicedb VMs
+    vpc_id: "{{ management_network.vpc.id }}"
+    region: "{{ aws_managment_vpc_region }}"
+    rules:
+      - proto: TCP 
+        ports: 8080
+        group_name: ermslave-dxc
+
+- ec2_group:
+    name: "{{ aws_management_vpc_env_shortname }}-frun-tools"
+    description: Assign to all tools-subnet interfaces of FRUN servers
+    vpc_id: "{{ management_network.vpc.id }}"
+    region: "{{ aws_managment_vpc_region }}"
+    rules:
+      - proto: TCP
+        ports: 8001-8099
+        group_name: frun-tools
+      - proto: TCP
+        ports: 44301-44399
+        group_name: frun-tools
+      - proto: TCP
+        ports: 1128-1129
+        group_name: frun-tools
+      - proto: TCP
+        ports: 8001-8099
+        cidr_ip: 172.16.0.0/12
+      - proto: TCP
+        ports: 8001-8099
+        cidr_ip: 100.64.0.0/12
+      - proto: TCP
+        ports: 44301-44399
+        cidr_ip: 172.16.0.0/12
+      - proto: TCP
+        ports: 44301-44399
+        cidr_ip: 100.64.0.0/12
+      - proto: TCP
+        ports: 1128-1129
+        cidr_ip: 172.16.0.0/12
+      - proto: TCP
+        ports: 1128-1129
+        cidr_ip: 100.64.0.0/12
+
+- ec2_group:
+    name: "{{ aws_management_vpc_env_shortname }}-buaasnetworker-dxc"
+    description: Assign to DXC-subnet interfaces of BUaaS servers running DPA agent
+    vpc_id: "{{ management_network.vpc.id }}"
+    region: "{{ aws_managment_vpc_region }}"
+    rules:
+      - proto: TCP
+        ports: 3741
+        cidr_ip: 20.148.116.202/32
+      - proto: icmp
+        from_port: -1 # icmp type, -1 = any type
+        to_port: -1 # icmp subtype, -1 = any subtype
+        cidr_ip: 20.148.116.202/32
+
+- ec2_group:
+    name: "{{ aws_management_vpc_env_shortname }}-jump-dxc"
+    description: DXC-facing subnet interfaces of jump-servers
+    vpc_id: "{{ management_network.vpc.id }}"
+    region: "{{ aws_managment_vpc_region }}"
+    rules:
+      - proto: TCP
+        ports: 22
+        cidr_ip: 155.61.0.0/16
+      - proto: TCP
+        ports: 22
+        cidr_ip: 138.35.0.0/16
+      - proto: TCP
+        ports: 3389
+        cidr_ip: 155.61.0.0/16
+      - proto: TCP
+        ports: 3389
+        cidr_ip: 138.35.0.0/16
+      - proto: TCP
+        ports: 3299
+        cidr_ip: 155.61.0.0/16
+      - proto: TCP
+        ports: 3299
+        cidr_ip: 138.35.0.0/16
+      - proto: icmp
+        from_port: -1 # icmp type, -1 = any type
+        to_port: -1 # icmp subtype, -1 = any subtype
+        cidr_ip: 155.61.0.0/16
+      - proto: icmp
+        from_port: -1 # icmp type, -1 = any type
+        to_port: -1 # icmp subtype, -1 = any subtype
+        cidr_ip: 138.35.0.0/16
+
+- ec2_group:
+    name: "{{ aws_management_vpc_env_shortname }}-buildserver-tools"
+    description: There's No  inbound rules. Used a destination in other security groups. Assign all buildservers tools-subnet interfaces to this group.
+    vpc_id: "{{ management_network.vpc.id }}"
+    region: "{{ aws_managment_vpc_region }}"
+
+- ec2_group:
+    name: "{{ aws_management_vpc_env_shortname }}-automationengine-tools"
+    description: all tools subnet interfaces of automation-engine servers
+    vpc_id: "{{ management_network.vpc.id }}"
+    region: "{{ aws_managment_vpc_region }}"
+    rules:
+      - proto:
+        ports:
+        group_name: -automationengine-tools
+
+- ec2_group:
+    name: "{{ aws_management_vpc_env_shortname }}-vault-tools"
+    description: all vault servers' tools interfaces
+    vpc_id: "{{ management_network.vpc.id }}"
+    region: "{{ aws_managment_vpc_region }}"
+    rules:
+      - proto: TCP
+        ports: 8200
+        group_name: -all-tools
+
+- ec2_group:
+    name: "{{ aws_management_vpc_env_shortname }}-lama-tools"
+    description: There's No inbound rules. Used as a destination in other security groups. Assign all LaMa VMs tools interfaces to this group
+    vpc_id: "{{ management_network.vpc.id }}"
+    region: "{{ aws_managment_vpc_region }}"
+    rules:
+      - proto: TCP
+        ports: 8200
+        group_name: -all-tools
+
+- ec2_group:
+    name: "{{ aws_management_vpc_env_shortname }}-reverseproxy-public"
+    description: aka service now
+    vpc_id: "{{ management_network.vpc.id }}"
+    region: "{{ aws_managment_vpc_region }}"
+    rules:
+      - proto: TCP
+        ports: 22
+        group_name: -jump-tools
+      - proto: TCP
+        ports: 443
+        cidr_ip: 16.0.0.0/8
+      - proto: TCP
+        ports: 443
+        cidr_ip: 15.128.0.0/9
+      - proto: TCP
+        ports: 443
+        cidr_ip: 37.98.232.8/29
+      - proto: TCP
+        ports: 443
+        cidr_ip: 199.91.173.8/29
+      - proto: TCP
+        ports: 443
+        cidr_ip: 191.91.140.8/29
+      - proto: TCP
+        ports: 443
+        cidr_ip: 18.208.70.247/32
+      - proto: TCP
+        ports: 443
+        cidr_ip: 35.168.168.21/32
+      - proto: TCP
+        ports: 443
+        cidr_ip: 35.169.118.169/32
+      - proto: TCP
+        ports: 443
+        cidr_ip: 35.171.35.11/32
+      - proto: TCP
+        ports: 443
+        cidr_ip: 84.92.62.20/32
+      - proto: TCP
+        ports: 443
+        cidr_ip: 35.171.122.165/32
+      - proto: TCP
+        ports: 443
+        cidr_ip: 34.235.252.179/32
+      - proto: TCP
+        ports: 80
+        cidr_ip: 54.252.79.144/32
+      - proto: TCP
+        ports: 80
+        cidr_ip: 54.228.16.48/32
+      - proto: TCP
+        ports: 80
+        cidr_ip: 176.34.159.208/32
+      - proto: TCP
+        ports: 80
+        cidr_ip: 177.71.207.144/32
+      - proto: TCP
+        ports: 80
+        cidr_ip: 54.232.40.112/32
+      - proto: TCP
+        ports: 80
+        cidr_ip: 54.243.31.208/32
+      - proto: TCP
+        ports: 80
+        cidr_ip: 107.23.255.48/32
+      - proto: TCP
+        ports: 80
+        cidr_ip: 54.241.32.80/32
+      - proto: TCP
+        ports: 80
+        cidr_ip: 54.183.255.176/32
+      - proto: TCP
+        ports: 80
+        cidr_ip: 54.245.168.16/32
+      - proto: TCP
+        ports: 80
+        cidr_ip: 54.244.52.240/32
+      - proto: TCP
+        ports: 443
+        cidr_ip: 54.252.79.144/32
+      - proto: TCP
+        ports: 443
+        cidr_ip: 54.228.16.48/32
+      - proto: TCP
+        ports: 443
+        cidr_ip: 176.34.159.208/32
+      - proto: TCP
+        ports: 443
+        cidr_ip: 177.71.207.144/32
+      - proto: TCP
+        ports: 443
+        cidr_ip: 54.232.40.112/32
+      - proto: TCP
+        ports: 443
+        cidr_ip: 54.228.16.48/32
+      - proto: TCP
+        ports: 443
+        cidr_ip: 176.34.159.208/32
+      - proto: TCP
+        ports: 443
+        cidr_ip: 177.71.207.144/32
+      - proto: TCP
+        ports: 443
+        cidr_ip: 54.232.40.112/32
+      - proto: TCP
+        ports: 443
+        cidr_ip: 54.243.31.208/32
+      - proto: TCP
+        ports: 443
+        cidr_ip: 107.23.255.48/32
+      - proto: TCP
+        ports: 443
+        cidr_ip: 54.241.32.80/32
+      - proto: TCP
+        ports: 443
+        cidr_ip: 54.183.255.176/32
+      - proto: TCP
+        ports: 443
+        cidr_ip: 54.245.168.16/32
+      - proto: TCP
+        ports: 443
+        cidr_ip: 54.244.52.240/32
+
+        
+- ec2_group:
+    name: "{{ aws_management_vpc_env_shortname }}-all-tools"
+    description: all interfaces in tools subnets
+    vpc_id: "{{ management_network.vpc.id }}"
+    region: "{{ aws_managment_vpc_region }}"
+    rules:
+      - proto: TCP
+        ports: 22
+        group_name: -jump-dxc
+      - proto: TCP
+        ports: 22
+        group_name: -ermslave-dxc
+      - proto: TCP
+        ports: 22
+        group_name: -automationengine-tools
+      - proto: TCP
+        ports: 3389
+        group_name: -jump-dxc
+      - proto: TCP
+        ports: 7937-9936
+        group_name: -buaasnetworker-tools
+      - proto: TCP
+        ports: 2049
+        group_name: -all-tools
+      - proto: TCP
+        ports: 3600-3699
+        group_name: -all-tools
+      - proto: TCP
+        ports: 443
+        group_name: -all-tools
+      - proto: TCP
+        ports: 4901-4903
+        group_name: -all-tools
+      - proto: TCP
+        ports: 50000-59999
+        group_name: -all-tools
+      - proto: TCP
+        ports: 80
+        group_name: -all-tools
+      - proto: TCP
+        ports: 8080
+        group_name: -all-tools
+      - proto: TCP
+        ports: 8200
+        group_name: -vault-tools
+        proto: TCP
+        ports: 50000
+        group_name: -lama-tools
+      - proto: icmp
+        from_port: -1 # icmp type, -1 = any type
+        to_port: -1 # icmp subtype, -1 = any subtype
+      - proto: TCP
+        ports: 8443
+        group_name: - reverseproxy-public
+
+- ec2_group:
+    name: "{{ aws_management_vpc_env_shortname }}-saprouter-public"
+    description: Assign to public-subnet interfaces of SAP-router (Create in production only) ##################################################################################################FLAGifPROD
+    vpc_id: "{{ management_network.vpc.id }}"
+    region: "{{ aws_managment_vpc_region }}"
+    rules:
+      - proto: TCP
+        ports: 3299
+        cidr_ip: 10.165.0.0/22
+      - proto: TCP
+        ports: 3299
+        cidr_ip: 10.2.0.0/22
+      - proto: TCP
+        ports: 3299
+        cidr_ip: 10.4.0.0/22
+      - proto: TCP
+        ports: 3299
+        cidr_ip: 194.39.131.34/32
+
+- ec2_group:
+    name: "{{ aws_management_vpc_env_shortname }}-buaasnetworker-tools"
+    description: All BuaaS servers' tools subnet interfaces
+    vpc_id: "{{ management_network.vpc.id }}"
+    region: "{{ aws_managment_vpc_region }}"
+    rules:
+      - proto: TCP
+        ports: 7937-9936
+        group_name: -all-tools
+      - proto: TCP
+        ports: 7937-9936
+        group_name: -saprouter-public
+      - proto: TCP
+        ports: 7937-9936
+        group_name: -reverseproxy-public
+
+- ec2_group:
+    name: "{{ aws_management_vpc_env_shortname }}-dnsforwarder-tools"
+    description: Assign to tools-subnet interfaces of dnsforwarder VMs
+    vpc_id: "{{ management_network.vpc.id }}"
+    region: "{{ aws_managment_vpc_region }}"
+    rules:
+      - proto: UDP
+        ports: 53
+        group_name: -all-tools
+      - proto: TCP
+        ports: 53
+        group_name: -all-tools
+      - proto: UDP
+        ports: 53
+        group_name: -saprouter-public
+      - proto: TCP
+        ports: 53
+        group_name: -saprouter-public
+      - proto: UDP
+        ports: 53
+        group_name: -reverseproxy-public
+      - proto: TCP
+        ports: 53
+        group_name: -reverseproxy-public
+      - proto: UDP
+        ports: 53
+        cidr_ip: 172.16.0.0/12
+      - proto: TCP
+        ports: 53
+        cidr_ip: 172.16.0.0/12
+      - proto: UDP
+        ports: 53
+        cidr_ip: 100.64.0.0/12
+      - proto: TCP
+        ports: 53
+        cidr_ip: 100.64.0.0/12
+
+- ec2_group:
+    name: "{{ aws_management_vpc_env_shortname }}-jump-tools"
+    description: There's No inbound rules.  Used a destination in other security groups.  Assign all jump servers' tools-subnet interfaces to this group
+    vpc_id: "{{ management_network.vpc.id }}"
+    region: "{{ aws_managment_vpc_region }}"
+
+- ec2_group:
+    name: "{{ aws_management_vpc_env_shortname }}-all-public"
+    description: All interfaces in public subnets
+    vpc_id: "{{ management_network.vpc.id }}"
+    region: "{{ aws_managment_vpc_region }}"
+    rules:
+      - proto: TCP
+        ports: 443
+        cidr_ip: 16.0.0.0/8
+      - proto: TCP
+        ports: 443
+        cidr_ip: 15.128.0.0/9
+      - proto: TCP
+        ports: 443
+        cidr_ip: 37.98.232.8/29
+      - proto: TCP
+        ports: 443
+        cidr_ip: 199.91.137.8/29
+      - proto: TCP
+        ports: 443
+        cidr_ip: 191.91.140.8/29
+      - proto: TCP
+        ports: 443
+        cidr_ip: 84.92.62.20/32
+      - proto: icmp
+        from_port: -1 # icmp type, -1 = any type
+        to_port: -1 # icmp subtype, -1 = any subtype
+      - proto: TCP
+        ports: 7937-9936
+        group_name: -buaasnetworker-tools
+      - proto: TCP
+        ports: 22
+        group_name: -ermslave-dxc
+      - proto: TCP
+        ports: 22
+        group_name: -automationengine-tools
+      - proto: TCP
+        ports: 3389
+        group_name: -jump-tools
+
+- ec2_group:
+    name: "{{ aws_management_vpc_env_shortname }}-postgresql-tools"
+    description: 
+    vpc_id: "{{ management_network.vpc.id }}"
+    region: "{{ aws_managment_vpc_region }}"
+    rules:
+      - proto: TCP
+        ports: 5432
+        group_name: -all-tools
+
+- ec2_group:
+    name: "{{ aws_management_vpc_env_shortname }}-sap-tools"
+    description: tools interfaces of all SAP servers 
+    vpc_id: "{{ management_network.vpc.id }}"
+    region: "{{ aws_managment_vpc_region }}"
+    rules:
+      - proto: TCP
+        ports: 1128-1129
+        group_name: -all-tools
+      - proto: TCP
+        ports: 22
+        group_name: -all-tools
+      - proto: TCP
+        ports: 4237
+        group_name: -all-tools
+      - proto: TCP
+        ports: 50000
+        group_name: -all-tools
+      - proto: TCP
+        ports: 50000-59999
+        group_name: -all-tools
+      - proto: TCP
+        ports: 4327 
+        group_name: -lama-tools
+      - proto: TCP
+        ports: 22
+        group_name: -saprouter-public
+      - proto: TCP
+        ports: 3200-3299
+        group_name: -saprouter-public
+      - proto: TCP
+        ports: 3300-3399
+        group_name: -saprouter-public
+      - proto: TCP
+        ports: 3389
+        group_name: -saprouter-public
+      - proto: TCP
+        ports: 443
+        group_name: -saprouter-public
+      - proto: TCP
+        ports: 44300-44399
+        group_name: -saprouter-public
+      - proto: TCP
+        ports: 50000-59999
+        group_name: -saprouter-public
+      - proto: TCP
+        ports: 8000-8099
+        group_name: -saprouter-public
+        proto: icmp
+        from_port: -1 # icmp type, -1 = any type
+        to_port: -1 # icmp subtype, -1 = any subtype
+      - proto: TCP
+        ports: 1128-1129
+        group_name: -jump-tools
+      - proto: TCP
+        ports: 30013-39913
+        group_name: -jump-tools
+      - proto: TCP
+        ports: 30015-39915
+        group_name: -jump-tools
+      - proto: TCP
+        ports: 3200-3299
+        group_name: -jump-tools
+      - proto: TCP
+        ports: 3300-3399
+        group_name: -jump-tools
+      - proto: TCP
+        ports: 3600-3699
+        group_name: -jump-tools
+      - proto: TCP
+        ports: 443
+        group_name: -jump-tools
+      - proto: TCP
+        ports: 44300-44399
+        group_name: -jump-tools
+      - proto: TCP
+        ports: 50000-59999
+        group_name: -jump-tools
+      - proto: TCP
+        ports: 80
+        group_name: -jump-tools
+      - proto: TCP
+        ports: 8000-8099
+        group_name: -jump-tools
+      - proto: icmp
+        from_port: -1 # icmp type, -1 = any type
+        to_port: -1 # icmp subtype, -1 = any subtype
+      - proto: TCP
+        ports: 3300-3399
+      - group_name: -sap-tools
+
+

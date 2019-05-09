@@ -1,0 +1,190 @@
+---
+- ec2_vpc_route_table:
+    vpc_id: "{{ management_network.vpc.id  }}"
+    region: "{{ aws_management_vpc_region  }}"
+    tags:
+      Name:
+    subnets:
+      - "{{ subnet.id }}"
+  register: route_table
+
+- ec2_vpc_route_table:
+    vpc_id: "{{ management_network.vpc.id  }}"
+    region: "{{ aws_management_vpc_region  }}"
+    tags:
+      Name: Public
+    subnets:
+      - "{{ subnet.id }}" tools_public_subnet
+    routes:
+      - dest: 10.208.0.0/26
+        gateway_id: "{{ igw.gateway_id }}" - actually local
+      - dest: 10.4.0.0/22
+        gateway_id: local
+      - dest: 0.0.0.0/0
+        gateway_id: igw-65098b1d
+      - dest: 10.2.0.0/22
+        gateway_id: pcx-aa23e7c2
+      - dest: 10.165.0.0/22
+        gateway_id: pcx-6123e709
+      - dest: 100.65.16.0/22
+        gateway_id: vgw-0227d16b
+      - dest: 100.65.32.0/22
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.88.0/23
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.112.0/21
+        gateway_id: vgw-0227d16b
+  register: public_route_table
+
+- ec2_vpc_route_table:
+    vpc_id: "{{ management_network.vpc.id  }}"
+    region: "{{ aws_management_vpc_region  }}"
+    tags:
+      Name: Private
+    subnets:
+      - "{{ subnet.id }}" tools_private_subnet
+    routes:
+      - dest: 10.208.0.0/26
+        gateway_id: "{{ igw.gateway_id }}" - actually local
+      - dest: 10.4.0.0/22 
+        gateway_id: local
+      - dest: 0.0.0.0/0
+        gateway_id: nat-067df46a2dd838183
+      - dest: 10.2.0.0/22
+        gateway_id: pcx-aa23e7c2
+      - dest: 10.165.0.0/22
+        gateway_id: pcx-6123e709
+      - dest: 15.143.137.0/24
+        gateway_id: vgw-0227d16b
+      - dest: 20.148.116.202/32
+        gateway_id: vgw-0227d16b
+      - dest: 100.64.0.0/20
+        gateway_id: vgw-0227d16b
+      - dest: 100.64.0.0/16
+        gateway_id: vgw-0227d16b
+      - dest: 100.64.16.0/24
+        gateway_id: vgw-0227d16b
+      - dest: 100.64.16.0/22
+        gateway_id: vgw-0227d16b
+      - dest: 100.64.20.0/23
+        gateway_id: vgw-0227d16b
+      - dest: 100.65.0.0/16
+        gateway_id: vgw-0227d16b
+      - dest: 100.65.16.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 100.65.24.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 100.65.32.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 100.79.0.0/28
+        gateway_id: vgw-0227d16b
+      - dest: 100.79.0.0/27
+        gateway_id: vgw-0227d16b
+      - dest: 138.35.0.0/16
+        gateway_id: vgw-0227d16b
+      - dest: 155.61.0.0/16
+        gateway_id: vgw-0227d16b
+      - dest: 172.16.0.0/20
+        gateway_id: vgw-0227d16b
+      - dest: 172.16.0.0/16
+        gateway_id: vgw-0227d16b
+      - dest: 172.16.16.0/22
+        gateway_id: vgw-0227d16b
+      - dest: 172.16.20.0/23
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.0.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.0.0/16
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.16.0/23
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.64.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.72.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.80.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.88.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.96.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.96.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.104.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.112.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 172.31.0.0/28
+        gateway_id: vgw-0227d16b
+      - dest: 172.31.0.0/27
+
+- ec2_vpc_route_table:
+    vpc_id: "{{ management_network.vpc.id  }}"
+    region: "{{ aws_management_vpc_region  }}"
+    tags:
+      Name: DXC private subnet
+    subnets:
+      - "{{ subnet.id }}" tools_dxc_private_subnet
+    routes:
+      - dest: 10.208.0.0/26
+        gateway_id: "{{ igw.gateway_id }}" - actually local
+      - dest: 10.4.0.0/22
+        gateway_id: local
+      - dest: 15.143.137.0/24
+        gateway_id: vgw-0227d16b
+      - dest: 20.148.116.202/32
+        gateway_id: vgw-0227d16b
+      - dest: 100.64.0.0/20
+        gateway_id: vgw-0227d16b
+      - dest: 100.64.0.0/16
+        gateway_id: vgw-0227d16b
+      - dest: 100.64.16.0/22
+        gateway_id: vgw-0227d16b
+      - dest: 100.64.20.0/23
+        gateway_id: vgw-0227d16b
+      - dest: 100.65.0.0/16
+        gateway_id: vgw-0227d16b
+      - dest: 100.65.16.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 100.65.24.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 100.65.32.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 100.79.0.0/28
+        gateway_id: vgw-0227d16b
+      - dest: 100.79.0.0/27
+        gateway_id: vgw-0227d16b
+      - dest: 138.35.0.0/16
+        gateway_id: vgw-0227d16b
+      - dest: 155.61.0.0/16
+        gateway_id: vgw-0227d16b
+      - dest: 172.16.0.0/20
+        gateway_id: vgw-0227d16b
+      - dest: 172.16.0.0/16
+        gateway_id: vgw-0227d16b
+      - dest: 172.16.16.0/22
+        gateway_id: vgw-0227d16b
+      - dest: 172.16.16.0/23
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.0.0/16
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.16.0/23
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.64.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.72.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.80.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.88.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.96.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.104.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 172.17.112.0/21
+        gateway_id: vgw-0227d16b
+      - dest: 172.31.0.0/28
+        gateway_id: vgw-0227d16b
+      - dest: 172.31.0.0/27
+        gateway_id: vgw-0227d16b
