@@ -32,5 +32,7 @@
         fde_customer_domain: "test-customer.example.com"
         #Management IP of the FDE itself
         fde_ip: "10.2.2.2"
-        aws_media_access_key: 
-        aws_media_secret_key: 
+        fde_virualhostname: test123
+  environment:
+    AWS_ACCESS_KEY: 
+    AWS_SECRET_KEY:

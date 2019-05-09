@@ -1,6 +1,6 @@
 [saprouter]
 10.6.0.4
-<<<<<<< HEAD
+
 [winrm]
 #IP
 [winrm:vars]
@@ -10,8 +10,7 @@ ansible_connection=winrm
 ansible_winrm_transport=basic
 ansible_port=5985
 ansible_winrm_server_cert_validation=ignore
-=======
 
 [fde]
+10.6.0.4
 10.6.0.15
->>>>>>> 
