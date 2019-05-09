@@ -1,0 +1,2 @@
+#Install aws-cli
+- { include: awscli.yml, become: yes }

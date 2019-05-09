@@ -1,0 +1,54 @@
+#Automate aws-cli install
+
+#aws-cli
+- zypper:
+    name: aws-cli
+    state: present
+    
+# Access Key
+- name: Get AWS access key from Vault
+  set_fact:
+    aws_access_key: "{{ lookup('vault', '{{ aws_access_key }}', 'value') }}"
+  ignore_errors: yes
+  when:
+    - aws_access_key is not defined
+    - aws_access_key is defined
+    - aws_access_key|length|int > 0
+    
+#- debug:
+#    var: aws_access_key    
+    
+# Secret Key
+- name: Get AWS secret key from Vault
+  set_fact:
+    aws_secret_key: "{{ lookup('vault', '{{ aws_secret_key }}', 'value') }}"
+  ignore_errors: yes
+  when:
+    - aws_secret_key is not defined
+    - aws_secret_key is defined
+    - aws_secret_key|length|int > 0
+    
+#- debug:
+#    var: aws_secret_key
+    
+# Default Region Name
+- name: Get AWS region from Vault
+  set_fact:
+    region: "{{ lookup('vault', '{{ region }}', 'value') }}"
+  ignore_errors: yes
+  when:
+    - region is not defined
+    - region is defined
+    - region|length|int > 0
+    
+#- debug:
+#    var: region    
+- file:
+    path: '/home/ec2-user/.aws'
+    state: directory
+    mode: 0755
+  remote_user: ec2-user  
+    
+- template:
+    src: 'config.j2'
+    dest: '/home/ec2-user/.aws/credentials'
