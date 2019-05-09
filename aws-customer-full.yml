@@ -137,6 +137,117 @@
         aws_ec2_vm_eth0_groups: "{{ mgmt_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
         single_nic: true
+        
+    - name: Provision BUaaS-Networker-Server
+      include_role:
+        name: aws-ec2-vm
+      vars:
+        aws_ec2_vm_Name: BUaaS-Networker-Server
+        aws_ec2_vm_region: "{{ vpc_region }}"
+        aws_ec2_vm_key_name: "{{ key_name }}"
+        aws_ec2_vm_instance_type: "{{ buaas_nwr_srv_instance_type }}"
+        aws_ec2_vm_image: "{{ buaas_nwr_srv_image }}"
+        aws_ec2_vm_eth0_groups: "{{ mgmt_net_all.group_id }}"
+        aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
+        single_nic: true
+      when: buaas
+        
+    - route53:
+        state: present
+        zone: "{{ vpc_shortname }}"
+        record: "nwr-srv.{{ vpc_shortname }}"
+        type: A
+        private_zone: yes
+        ttl: 300
+        value: "{{ eth0.interface.private_ip_address }}"
+        wait: yes
+      when: buaas
+        
+    - route53:
+        state: present
+        zone: in-addr.arpa
+        hosted_zone_id: "{{ reverse_zone.zone_id }}"
+        record: "{{ eth0.interface.private_ip_address | ipaddr('revdns') }}"
+        type: PTR
+        private_zone: yes
+        ttl: 300
+        value: "nwr-srv.{{ vpc_shortname }}"
+        wait: yes
+      when: buaas
+        
+    - name: Provision BUaaS-Networker-Console
+      include_role:
+        name: aws-ec2-vm
+      vars:
+        aws_ec2_vm_Name: BUaaS-Networker-Console
+        aws_ec2_vm_region: "{{ vpc_region }}"
+        aws_ec2_vm_key_name: "{{ key_name }}"
+        aws_ec2_vm_instance_type: "{{ buaas_nwr_con_instance_type }}"
+        aws_ec2_vm_image: "{{ buaas_nwr_con_image }}"
+        aws_ec2_vm_eth0_groups: "{{ mgmt_net_all.group_id }}"
+        aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
+        single_nic: true
+      when: buaas
+        
+    - route53:
+        state: present
+        zone: "{{ vpc_shortname }}"
+        record: "nwr-con.{{ vpc_shortname }}"
+        type: A
+        private_zone: yes
+        ttl: 300
+        value: "{{ eth0.interface.private_ip_address }}"
+        wait: yes
+      when: buaas
+        
+    - route53:
+        state: present
+        zone: in-addr.arpa
+        hosted_zone_id: "{{ reverse_zone.zone_id }}"
+        record: "{{ eth0.interface.private_ip_address | ipaddr('revdns') }}"
+        type: PTR
+        private_zone: yes
+        ttl: 300
+        value: "nwr-con.{{ vpc_shortname }}"
+        wait: yes
+      when: buaas
+        
+    - name: Provision BUaaS-Cloudboost-Server
+      include_role:
+        name: aws-ec2-vm
+      vars:
+        aws_ec2_vm_Name: BUaaS-Cloudboost-Server
+        aws_ec2_vm_region: "{{ vpc_region }}"
+        aws_ec2_vm_key_name: "{{ key_name }}"
+        aws_ec2_vm_instance_type: "{{ buaas_cb_instance_type }}"
+        aws_ec2_vm_image: "{{ buaas_cb_image }}"
+        aws_ec2_vm_eth0_groups: "{{ mgmt_net_all.group_id }}"
+        aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
+        single_nic: true
+      when: buaas
+        
+    - route53:
+        state: present
+        zone: "{{ vpc_shortname }}"
+        record: "nwr-cb.{{ vpc_shortname }}"
+        type: A
+        private_zone: yes
+        ttl: 300
+        value: "{{ eth0.interface.private_ip_address }}"
+        wait: yes
+      when: buaas
+        
+    - route53:
+        state: present
+        zone: in-addr.arpa
+        hosted_zone_id: "{{ reverse_zone.zone_id }}"
+        record: "{{ eth0.interface.private_ip_address | ipaddr('revdns') }}"
+        type: PTR
+        private_zone: yes
+        ttl: 300
+        value: "nwr-cb.{{ vpc_shortname }}"
+        wait: yes
+      when: buaas
 
     - name: Provision SAP Router ec2 VM
       include_role:
@@ -474,6 +585,8 @@
         vpc_id: "{{ vpcid }}"
         region: "{{ vpc_region }}"
         route_table_id: "{{ manaz1rt }}"
+        tags:
+          Name: Management AZ1
         routes:
           - dest: "{{ dr_manaz1_cidr }}"
             vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
@@ -484,6 +597,8 @@
         vpc_id: "{{ vpcid }}"
         region: "{{ vpc_region }}"
         route_table_id: "{{ manaz2rt }}"
+        tags:
+          Name: Management AZ2
         routes:
           - dest: "{{ dr_manaz2_cidr }}"
             vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
@@ -494,6 +609,8 @@
         vpc_id: "{{ vpcid }}"
         region: "{{ vpc_region }}"
         route_table_id: "{{ manaz3rt }}"
+        tags:
+          Name: Management AZ3
         routes:
           - dest: "{{ dr_manaz3_cidr }}"
             vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
@@ -504,6 +621,8 @@
         vpc_id: "{{ drvpcid }}"
         region: "{{ dr_vpc_region }}"
         route_table_id: "{{ drmanaz1rt }}"
+        tags:
+          Name: Management AZ1
         routes:
           - dest: "{{ manaz1_cidr }}"
             vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
@@ -514,6 +633,8 @@
         vpc_id: "{{ drvpcid }}"
         region: "{{ dr_vpc_region }}"
         route_table_id: "{{ drmanaz2rt }}"
+        tags:
+          Name: Management AZ2
         routes:
           - dest: "{{ manaz2_cidr }}"
             vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
@@ -524,6 +645,8 @@
         vpc_id: "{{ drvpcid }}"
         region: "{{ dr_vpc_region }}"
         route_table_id: "{{ drmanaz3rt }}"
+        tags:
+          Name: Management AZ3
         routes:
           - dest: "{{ manaz3_cidr }}"
             vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
