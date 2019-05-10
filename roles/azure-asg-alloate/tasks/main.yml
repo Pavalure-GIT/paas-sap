@@ -1,14 +1,10 @@
-- name: debug
-  debug:
-    msg: '{{ lookup("env",) "AZURE_SUBSCRIPTION_ID" }}'
-
 - name: asg stuff
   azure_rm_networkinterface_asg:
-    subscription_id: '{{ lookup("env",) "AZURE_SUBSCRIPTION_ID" }}'
-    client_id: '{{ lookup("env",) "AZURE_CLIENT_ID" }}'
-    secret: '{{ lookup("env",) "AZURE_SECRET" }}'
-    tenant: '{{ lookup("env",) "AZURE_TENANT" }}'
-    resource_group: P4S-Prototype-Automation-Matthew
+    subscription_id: '{{ lookup("env", "AZURE_SUBSCRIPTION_ID") }}'
+    client_id: '{{ lookup("env", "AZURE_CLIENT_ID") }}'
+    secret: '{{ lookup("env", "AZURE_SECRET") }}'
+    tenant: '{{ lookup("env", "AZURE_TENANT") }}'
+    resource_group: "{{ asg.resource_group }}"
     name: SAPRouter-nic1
     ip_configurations:
       - name: "default"
