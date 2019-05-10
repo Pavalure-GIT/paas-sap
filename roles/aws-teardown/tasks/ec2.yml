@@ -18,7 +18,11 @@
   with_items: "{{ ec2_machines.instances }}"
   loop_control:
        loop_var: item_id
-  when: terminate       
+  when: terminate
+
+- pause:
+    seconds: 30
+  when: terminate 
        
 - ec2_eni_facts:
     region: "{{ region }}"

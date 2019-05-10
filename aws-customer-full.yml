@@ -65,21 +65,10 @@
         aws_ec2_vm_eth0_subnet: "{{ customeraz1.subnet.id }}"
         single_nic: false
         
-    - name: Provision FDE-2 ec2 VM
-      include_role:
-        name: aws-ec2-vm
-      vars:
-        aws_ec2_vm_Name: FDE-2
-        aws_ec2_vm_region: "{{ vpc_region }}"
-        aws_ec2_vm_key_name: "{{ key_name }}"
-        aws_ec2_vm_instance_type: "{{ fde_instance_type }}"
-        aws_ec2_vm_image: "{{ fde_image }}"
-        aws_ec2_vm_eth1_groups: "{{ mgmt_net_all.group_id }}"
-        aws_ec2_vm_eth1_subnet: "{{ managementaz1.subnet.id }}"
-        aws_ec2_vm_eth0_groups: "{{ cust_net_all.group_id }}"
-        aws_ec2_vm_eth0_subnet: "{{ customeraz1.subnet.id }}"
-        single_nic: false
-      when: ha
+    - name: Add FDE to fde group
+      add_host:
+        name: "{{ eth1.interface.private_ip_address }}"
+        groups: fde
         
     - route53:
         state: present
@@ -111,6 +100,28 @@
         ttl: 300
         value: "fde.{{ vpc_longname }}"
         wait: yes
+        
+    - name: Provision FDE-2 ec2 VM
+      include_role:
+        name: aws-ec2-vm
+      vars:
+        aws_ec2_vm_Name: FDE-2
+        aws_ec2_vm_region: "{{ vpc_region }}"
+        aws_ec2_vm_key_name: "{{ key_name }}"
+        aws_ec2_vm_instance_type: "{{ fde_instance_type }}"
+        aws_ec2_vm_image: "{{ fde_image }}"
+        aws_ec2_vm_eth1_groups: "{{ mgmt_net_all.group_id }}"
+        aws_ec2_vm_eth1_subnet: "{{ managementaz2.subnet.id }}"
+        aws_ec2_vm_eth0_groups: "{{ cust_net_all.group_id }}"
+        aws_ec2_vm_eth0_subnet: "{{ customeraz2.subnet.id }}"
+        single_nic: false
+      when: ha
+      
+    - name: Add FDE to fde-2 group
+      add_host:
+        name: "{{ eth1.interface.private_ip_address }}"
+        groups: fde
+      when: ha
        
     - name: Provision MidServerA ec2 VM
       include_role:
@@ -125,6 +136,11 @@
         aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
         single_nic: true
         
+    - name: Add mid1 to mids group
+      add_host:
+        name: "{{ eth0.interface.private_ip_address }}"
+        groups: mids
+        
     - name: Provision MidServerB ec2 VM
       include_role:
         name: aws-ec2-vm
@@ -138,6 +154,11 @@
         aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
         single_nic: true
         
+    - name: Add mid2 to mids group
+      add_host:
+        name: "{{ eth0.interface.private_ip_address }}"
+        groups: mids
+
     - name: Provision BUaaS-Networker-Server
       include_role:
         name: aws-ec2-vm
@@ -264,21 +285,10 @@
         aws_ec2_vm_eth0_subnet: "{{ publicaz1.subnet.id }}"
         single_nic: false
         
-    - name: Provision SAP-2 Router ec2 VM
-      include_role:
-        name: aws-ec2-vm
-      vars:
-        aws_ec2_vm_Name: SAPRouter-2
-        aws_ec2_vm_region: "{{ vpc_region }}"
-        aws_ec2_vm_key_name: "{{ key_name }}"
-        aws_ec2_vm_instance_type: "{{ proxy_instance_type }}"
-        aws_ec2_vm_image: "{{ proxy_image }}"
-        aws_ec2_vm_eth1_groups: "{{ mgmt_net_all.group_id }}"
-        aws_ec2_vm_eth1_subnet: "{{ managementaz1.subnet.id }}"
-        aws_ec2_vm_eth0_groups: "{{ pub_net_all.group_id }}"
-        aws_ec2_vm_eth0_subnet: "{{ publicaz1.subnet.id }}"
-        single_nic: false
-      when: ha
+    - name: Add saprouter to saprouter group
+      add_host:
+        name: "{{ eth1.interface.private_ip_address }}"
+        groups: saprouter
         
     - route53:
         state: present
@@ -311,54 +321,28 @@
         value: "proxy.{{ vpc_longname }}"
         wait: yes
         
-#- name: CSR Spoke Creation
-#  hosts: localhost
-#  tasks:
-#        
-#- name: Configure FDE Server
-#  hosts: FDE
-#  tasks:
-#    - name: Call role
-#      include_role:
-#        name: fde
-#      vars:
-#        #The customer and management subnet CIDR ranges should cover multiple AZ's if deploying on AWS, for example 172.17.104.0/21 would cover multiple AZs
-#        customer_subnet_cidr: "172.16.32.0/22"
-#        customer_management_subnet_cidr: "172.17.32.0/22"
-#        #This is the IP of the LaMa instance for the associated management compartment
-#        lama_ip: "10.4.0.41"
-#        #Customer Lan (all AZ's) of customer
-#        customer_lan: "172.16.0.0/12"
-#        #Customer Lan (all AZ's) of customer
-#        management_lan: "172.17.0.0/12"
-#        #IPs of Dev/Test DNS Forwarders
-#        dns_ip_dev: "10.4.0.5"
-#        dns_ip_test: "10.2.0.5"
-#        #DNS Zones for mangement, customer and reverse DNS
-#        management_zone: "tst.example.com"
-#        customer_zone: "test-customer.example.com"
-#        reverse_zone: "172.in-addr.arpa"
-#        #Forwarder IPs for each zone, for Azure these are taken from the nameserver addresses for each zone. For AWS it is by default the x.x.x.2 of the CIDR, e.g. 172.17.104.2
-#        management_forwarders: "80.20.3.1; 6.80.232.2; 87.56.3.2;"
-#        customer_forwarders: "32.32.32.0; 6.80.232.2; 89.76.23.1;"
-#        reverse_forwarders: "40.3.32.1; 80.20.3.1; 6.80.232.2;"
-#        #Forwarder IP, if Azure then 168.63.129.16, if AWS then first IP in management range, e.g. 172.17.0.2
-#        forwarder_ip: "168.63.129.16"
-#        #FDE customer domain is the customer domain
-#        fde_customer_domain: "test-customer.example.com"
-#        #Management IP of the FDE itself
-#        fde_ip: "10.2.2.2"
-##   
-#- name: Configure SAP Router Server
-#  hosts: SAPRouter
-#  tasks:
-#    - name: Call SAP Router Role
-#      include_role:
-#        name: saprouter
-#      vars: 
-#       management_subnet_cidr: 10.6.0.0/24 
+    - name: Provision SAP-2 Router ec2 VM
+      include_role:
+        name: aws-ec2-vm
+      vars:
+        aws_ec2_vm_Name: SAPRouter-2
+        aws_ec2_vm_region: "{{ vpc_region }}"
+        aws_ec2_vm_key_name: "{{ key_name }}"
+        aws_ec2_vm_instance_type: "{{ proxy_instance_type }}"
+        aws_ec2_vm_image: "{{ proxy_image }}"
+        aws_ec2_vm_eth1_groups: "{{ mgmt_net_all.group_id }}"
+        aws_ec2_vm_eth1_subnet: "{{ managementaz2.subnet.id }}"
+        aws_ec2_vm_eth0_groups: "{{ pub_net_all.group_id }}"
+        aws_ec2_vm_eth0_subnet: "{{ publicaz2.subnet.id }}"
+        single_nic: false
+      when: ha
+      
+    - name: Add saprouter2 to saprouter group
+      add_host:
+        name: "{{ eth1.interface.private_ip_address }}"
+        groups: saprouter
+      when: ha
 
-#####################################################DR##############################################
 
 - name: Create DR Infrastructure
   hosts: localhost
@@ -425,21 +409,11 @@
         single_nic: false
       when: dr_compartment
       
-    - name: Provision FDE-2 ec2 VM
-      include_role:
-        name: aws-ec2-vm
-      vars:
-        aws_ec2_vm_Name: FDE-DR-2
-        aws_ec2_vm_region: "{{ dr_vpc_region }}"
-        aws_ec2_vm_key_name: "{{ key_name }}"
-        aws_ec2_vm_instance_type: "{{ fde_instance_type }}"
-        aws_ec2_vm_image: "{{ dr_fde_image }}"
-        aws_ec2_vm_eth1_groups: "{{ mgmt_net_all.group_id }}"
-        aws_ec2_vm_eth1_subnet: "{{ managementaz1.subnet.id }}"
-        aws_ec2_vm_eth0_groups: "{{ cust_net_all.group_id }}"
-        aws_ec2_vm_eth0_subnet: "{{ customeraz1.subnet.id }}"
-        single_nic: false
-      when: dr_ha
+    - name: Add dr fde to fde group
+      add_host:
+        name: "{{ eth1.interface.private_ip_address }}"
+        groups: fde
+      when: dr_compartment
 
     - route53:
         state: present
@@ -474,6 +448,28 @@
         value: "fdedr.{{ vpc_longname }}"
         wait: yes
       when: dr_compartment
+    
+    - name: Provision FDE-2 ec2 VM
+      include_role:
+        name: aws-ec2-vm
+      vars:
+        aws_ec2_vm_Name: FDE-DR-2
+        aws_ec2_vm_region: "{{ dr_vpc_region }}"
+        aws_ec2_vm_key_name: "{{ key_name }}"
+        aws_ec2_vm_instance_type: "{{ fde_instance_type }}"
+        aws_ec2_vm_image: "{{ dr_fde_image }}"
+        aws_ec2_vm_eth1_groups: "{{ mgmt_net_all.group_id }}"
+        aws_ec2_vm_eth1_subnet: "{{ managementaz2.subnet.id }}"
+        aws_ec2_vm_eth0_groups: "{{ cust_net_all.group_id }}"
+        aws_ec2_vm_eth0_subnet: "{{ customeraz2.subnet.id }}"
+        single_nic: false
+      when: dr_ha
+      
+    - name: Add dr fde2 to fde group
+      add_host:
+        name: "{{ eth1.interface.private_ip_address }}"
+        groups: fde
+      when: dr_compartment and dr_ha
       
     - name: Provision MidServerA ec2 VM DR
       include_role:
@@ -488,6 +484,12 @@
         aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
         single_nic: true
       when: dr_compartment
+      
+    - name: Add dr mid1 to mids group
+      add_host:
+        name: "{{ eth0.interface.private_ip_address }}"
+        groups: mids
+      when: dr_compartment
         
     - name: Provision MidServerB ec2 VM DR
       include_role:
@@ -501,6 +503,12 @@
         aws_ec2_vm_eth0_groups: "{{ mgmt_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
         single_nic: true
+      when: dr_compartment
+      
+    - name: Add dr mid2 to mids group
+      add_host:
+        name: "{{ eth0.interface.private_ip_address }}"
+        groups: mids
       when: dr_compartment
 
     - name: Provision SAP Router ec2 VM
@@ -519,21 +527,11 @@
         single_nic: false
       when: dr_compartment
       
-    - name: Provision SAP Router ec2 VM
-      include_role:
-        name: aws-ec2-vm
-      vars:
-        aws_ec2_vm_Name: SAPRouter-DR
-        aws_ec2_vm_region: "{{ dr_vpc_region }}"
-        aws_ec2_vm_key_name: "{{ key_name }}"
-        aws_ec2_vm_instance_type: "{{ proxy_instance_type }}"
-        aws_ec2_vm_image: "{{ dr_proxy_image }}"
-        aws_ec2_vm_eth1_groups: "{{ mgmt_net_all.group_id }}"
-        aws_ec2_vm_eth1_subnet: "{{ managementaz1.subnet.id }}"
-        aws_ec2_vm_eth0_groups: "{{ pub_net_all.group_id }}"
-        aws_ec2_vm_eth0_subnet: "{{ publicaz1.subnet.id }}"
-        single_nic: false
-      when: dr_ha
+    - name: Add dr saprouter to saprouter group
+      add_host:
+        name: "{{ eth1.interface.private_ip_address }}"
+        groups: saprouter
+      when: dr_compartment
 
     - route53:
         state: present
@@ -568,6 +566,28 @@
         value: "proxydr.{{ vpc_longname }}"
         wait: yes
       when: dr_compartment
+      
+    - name: Provision SAP Router ec2 VM
+      include_role:
+        name: aws-ec2-vm
+      vars:
+        aws_ec2_vm_Name: SAPRouter-DR
+        aws_ec2_vm_region: "{{ dr_vpc_region }}"
+        aws_ec2_vm_key_name: "{{ key_name }}"
+        aws_ec2_vm_instance_type: "{{ proxy_instance_type }}"
+        aws_ec2_vm_image: "{{ dr_proxy_image }}"
+        aws_ec2_vm_eth1_groups: "{{ mgmt_net_all.group_id }}"
+        aws_ec2_vm_eth1_subnet: "{{ managementaz2.subnet.id }}"
+        aws_ec2_vm_eth0_groups: "{{ pub_net_all.group_id }}"
+        aws_ec2_vm_eth0_subnet: "{{ publicaz2.subnet.id }}"
+        single_nic: false
+      when: dr_ha
+      
+    - name: Add dr saprouter2 to saprouter group
+      add_host:
+        name: "{{ eth1.interface.private_ip_address }}"
+        groups: saprouter
+      when: dr_compartment and dr_ha
       
     - name: Peer VPCs
       include_role:
@@ -663,52 +683,66 @@
             cidr_ip: 172.64.0.0/12
       register: mgmt_net_all_dr
       when: dr_compartment
+      
+- name: CSR Spoke Creation
+  hosts: localhost
+  tasks:
+    - include_role:
+        name: csr_automation
+      vars:
+        customer_account: 720232237161
+        vpc_name: "{{ vpc_env_name }}"
+        vgw_owner: "System Team"
+        region: "{{ vpc_region }}"
+        key_arn: arn:aws:kms:eu-central-1:000987835229:key/240704ea-5c16-4075-9fd0-3aeaef52e94d
+        management_access_key: "{{ management_access_key }}"
+        management_secret_key: "{{ management_secret_key }}"
+        customer_access_key: "{{ customer_access_key }}"
+        customer_secret_key: "{{ customer_secret_key }}"
+        bucket_name: sandbox-csr-automation-vpnconfigs3bucket-1ul5mfqbrghku
+        stack_name: ac-csr-stack
+        vgw_name: ac-csr-vgw
+        key_alias: sandbox-csr-automation-key
 
-#- name: CSR Spoke Creation
-##  hosts: localhost
-##  tasks:
-##
-##- name: Configure FDE Server
-##  hosts: FDE
-##  tasks:
-##    - name: Call role
-##      include_role:
-##        name: fde
-##      vars:
-##        #The customer and management subnet CIDR ranges should cover multiple AZ's if deploying on AWS, for example 172.17.104.0/21 would cover multiple AZs
-##        customer_subnet_cidr: "172.16.32.0/22"
-##        customer_management_subnet_cidr: "172.17.32.0/22"
-##        #This is the IP of the LaMa instance for the associated management compartment
-##        lama_ip: "10.4.0.41"
-##        #Customer Lan (all AZ's) of customer
-##        customer_lan: "172.16.0.0/12"
-##        #Customer Lan (all AZ's) of customer
-##        management_lan: "172.17.0.0/12"
-##        #IPs of Dev/Test DNS Forwarders
-##        dns_ip_dev: "10.4.0.5"
-##        dns_ip_test: "10.2.0.5"
-##        #DNS Zones for mangement, customer and reverse DNS
-##        management_zone: "tst.example.com"
-##        customer_zone: "test-customer.example.com"
-##        reverse_zone: "172.in-addr.arpa"
-##        #Forwarder IPs for each zone, for Azure these are taken from the nameserver addresses for each zone. For AWS it is by default the x.x.x.2 of the CIDR, e.g. 172.17.104.2
-##        management_forwarders: "80.20.3.1; 6.80.232.2; 87.56.3.2;"
-##        customer_forwarders: "32.32.32.0; 6.80.232.2; 89.76.23.1;"
-##        reverse_forwarders: "40.3.32.1; 80.20.3.1; 6.80.232.2;"
-##        #Forwarder IP, if Azure then 168.63.129.16, if AWS then first IP in management range, e.g. 172.17.0.2
-##        forwarder_ip: "168.63.129.16"
-##        #FDE customer domain is the customer domain
-##        fde_customer_domain: "test-customer.example.com"
-##        #Management IP of the FDE itself
-##        fde_ip: "10.2.2.2"
-###
-##- name: Configure SAP Router Server
-##  hosts: SAPRouter
-##  tasks:
-##    - name: Call SAP Router Role
-##      include_role:
-##        name: saprouter
-##      vars:
-##       management_subnet_cidr: 10.6.0.0/24
-#
-#dr_compartment
+- name: Configure FDE Server
+  hosts: FDE
+  tasks:
+    - name: Call role
+      include_role:
+        name: fde
+      vars:
+        #The customer and management subnet CIDR ranges should cover multiple AZ's if deploying on AWS, for example 172.17.104.0/21 would cover multiple AZs
+        customer_subnet_cidr: "{{ customer_range }}"
+        customer_management_subnet_cidr: "{{ management_range }}"
+        #This is the IP of the LaMa instance for the associated management compartment
+        lama_ip: "10.4.0.41"
+        #Customer Lan (all AZ's) of customer
+        customer_lan: "172.16.0.0/12"
+        #Customer Lan (all AZ's) of customer
+        management_lan: "172.17.0.0/12"
+        #IPs of Dev/Test DNS Forwarders
+        dns_ip_dev: "10.4.0.5"
+        dns_ip_test: "10.2.0.5"
+        #DNS Zones for mangement, customer and reverse DNS
+        management_zone: "{{ vpc_shortname }}"
+        customer_zone: "{{ vpc_longname }}"
+        reverse_zone: "in-addr.arpa"
+        #Forwarder IPs for each zone, for Azure these are taken from the nameserver addresses for each zone. For AWS it is by default the x.x.x.2 of the CIDR, e.g. 172.17.104.2
+        management_forwarders: "80.20.3.1; 6.80.232.2; 87.56.3.2;"
+        customer_forwarders: "32.32.32.0; 6.80.232.2; 89.76.23.1;"
+        reverse_forwarders: "40.3.32.1; 80.20.3.1; 6.80.232.2;"
+        #Forwarder IP, if Azure then 168.63.129.16, if AWS then first IP in management range, e.g. 172.17.0.2
+        forwarder_ip: "168.63.129.16"
+        #FDE customer domain is the customer domain
+        fde_customer_domain: "{{ vpc_longname }}"
+        #Management IP of the FDE itself
+        fde_ip: "{{ ansible_default_ipv4.address }}"
+
+- name: Configure SAP Router Server
+  hosts: SAPRouter
+  tasks:
+    - name: Call SAP Router Role
+      include_role:
+        name: saprouter
+      vars:
+       management_subnet_cidr: 10.6.0.0/24

@@ -1,0 +1,21 @@
+---
+
+- name: Cisco CSR
+  hosts: 127.0.0.1
+  connection: local
+  tasks:
+    - include_role: 
+         name: csr_automation
+      vars:
+        customer_account: 470172651571
+        env: non-prod
+        region: us-east-1
+        key_arn: arn:aws:kms:us-east-1:470172651571:key/4c1f0c66-b4bf-40ca-8d2a-a22c5f9450fa
+        management_access_key: 
+        management_secret_key: 
+        customer_access_key: 
+        customer_secret_key: 
+        bucket_name: cisco-csr-test-bucket
+        stack_name: cisco-csr-test-stack
+        vgw_name: cisco-csr-gw-test
+        key_alias: cisco-csr-test

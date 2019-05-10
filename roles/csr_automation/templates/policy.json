@@ -1,0 +1,56 @@
+{
+    "Version": "2008-10-17",
+    "Statement": [
+        {
+            "Sid": "DenyUnEncryptedObjectUploads",
+            "Effect": "Deny",
+            "Principal": "*",
+            "Action": "s3:PutObject",
+            "Resource": "arn:aws:s3:::sandbox-csr-automation-vpnconfigs3bucket-1ul5mfqbrghku/vpnconfigs/*",
+            "Condition": {
+                "StringNotEquals": {
+                    "s3:x-amz-server-side-encryption": "aws:kms"
+                }
+            }
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": [
+                    "arn:aws:iam::470172651571:user/SystemTeam-Automation-User",
+                    "arn:aws:iam::000987835229:user/charlotte.varley@hpe.com"
+                ]
+            },
+            "Action": [
+                "s3:GetObject",
+                "s3:PutObject",
+                "s3:PutObjectAcl"
+            ],
+            "Resource": "arn:aws:s3:::sandbox-csr-automation-vpnconfigs3bucket-1ul5mfqbrghku/*"
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::{{ customer_account }}:root"
+            },
+            "Action": [
+                "s3:GetObject",
+                "s3:PutObject",
+                "s3:PutObjectAcl"
+            ],
+            "Resource": "arn:aws:s3:::sandbox-csr-automation-vpnconfigs3bucket-1ul5mfqbrghku/*"
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::470172651571:root"
+            },
+            "Action": [
+                "s3:GetObject",
+                "s3:PutObject",
+                "s3:PutObjectAcl"
+            ],
+            "Resource": "arn:aws:s3:::sandbox-csr-automation-vpnconfigs3bucket-1ul5mfqbrghku/vpnconfigs/*"
+        }
+    ]
+}
