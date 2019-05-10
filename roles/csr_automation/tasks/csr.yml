@@ -32,8 +32,6 @@
     #role_name: "Allow use of the key"
     role_arn: "arn:aws:iam::{{ customer_account }}:root"
     grant_types: "role"
-    #aws_access_key: AKIAJHMBMOIQDDUMOE2Q
-    #aws_secret_key: 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
     aws_access_key: "{{ management_access_key }}"
     aws_secret_key: "{{ management_secret_key }}"
     region: eu-central-1
