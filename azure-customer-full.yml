@@ -40,6 +40,13 @@
         azure_vm_nic1: "Public"
         azure_vm_nic2: "Management" #Must use quotes to define empty"
         azure_vm_add_dns: true
+    - name: Allocate ASG
+      include_role: 
+        name: azure-asg-alloate
+      vars:
+        asgs:
+          - { resource_group: P4S-Prototype-Automation-Matthew, name: mid-mgt  }
+          - { resource_group: P4S-Prototype-Automation-Matthew, name: mgmt-net-all }
 
     - name: Provison MidServerA
       include_role:

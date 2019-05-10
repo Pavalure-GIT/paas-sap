@@ -1,0 +1,16 @@
+---
+- name: asg stuff
+  hosts: 127.0.0.1
+  connection: local
+  tasks:
+    - name: test
+      azure_rm_networkinterface_asg:
+        subscription_id: "{{ lookup('env',) AZURE_SUBSCRIPTION_ID }}"
+        client_id: "{{ lookup('env',) AZURE_CLIENT_ID }}" 
+        secret: "{{ lookup('env',) AZURE_SECRET }}"
+        tenant: "{{ lookup('env',) AZURE_TENANT }}"
+        resource_group: P4S-Prototype-Automation-Matthew
+        name: SAPRouter-nic1
+        ip_configurations:
+          - name: "default"
+            application_security_groups: "{{ asgs }}"
