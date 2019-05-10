@@ -1,6 +1,6 @@
 - name: debug
   debug:
-    msg: "{{ lookup('env',) 'AZURE_SUBSCRIPTION_ID' }}"
+    msg: '{{ lookup("env",) "AZURE_SUBSCRIPTION_ID" }}'
 
 - name: asg stuff
   azure_rm_networkinterface_asg:
