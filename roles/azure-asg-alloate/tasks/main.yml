@@ -4,7 +4,7 @@
     client_id: '{{ lookup("env", "AZURE_CLIENT_ID") }}'
     secret: '{{ lookup("env", "AZURE_SECRET") }}'
     tenant: '{{ lookup("env", "AZURE_TENANT") }}'
-    resource_group: "{{ asgs.resource_group }}"
+    resource_group: P4S-Prototype-Automation-DAVIDTEST100519
     name: SAPRouter-nic1
     ip_configurations:
       - name: "default"
