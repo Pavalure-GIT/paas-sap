@@ -19,7 +19,7 @@
 - name: delete squid.conf
   file:   
     path: /etc/squid/squid.conf
-    state absent
+    state: absent
   
 - name: copy squid.conf
   copy:

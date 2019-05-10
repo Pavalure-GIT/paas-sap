@@ -123,5 +123,3 @@
 - command: /usr/sap/ccms/apmintroscope/bin/EMCtrl.sh start
   become_user: sapadm
 
-- name: Refresh Repos
-  shell: /usr/sbin/registercloudguest --force-new
