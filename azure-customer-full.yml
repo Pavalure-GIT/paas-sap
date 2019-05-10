@@ -45,8 +45,8 @@
         name: azure-asg-alloate
       vars:
         asgs:
-          - { resource_group: P4S-Prototype-Automation-DAVIDTEST100519, name: mid-mgt  }
-          - { resource_group: P4S-Prototype-Automation-DAVIDTEST100519, name: mgmt-net-all }
+          - { resource_group: P4S-Prototype-Automation-DAVID, name: mid-mgt  }
+          - { resource_group: P4S-Prototype-Automation-DAVID, name: mgmt-net-all }
 
     - name: Provison MidServerA
       include_role:
