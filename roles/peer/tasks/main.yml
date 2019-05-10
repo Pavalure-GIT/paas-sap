@@ -9,6 +9,9 @@
       Name: "{{ peer_name }}"
   register: vpc_peer
 
+- pause:
+    seconds: 5
+
 - name: Accept local VPC peering request
   ec2_vpc_peer:
     region: "{{ region2 }}"

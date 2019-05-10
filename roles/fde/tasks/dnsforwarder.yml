@@ -108,7 +108,7 @@
     regexp: '^nameserver'
     line: 'nameserver {{ fde_ip }}'
 
-/////###- name: modify named.conf - customer-management-lan
+- name: modify named.conf - customer-management-lan
   lineinfile:
     path: /etc/named.conf
     regexp: '^     customer-management-lan'
