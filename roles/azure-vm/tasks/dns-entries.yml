@@ -7,7 +7,7 @@
 - name: Add nic1 to DNS
   azure_rm_dnsrecordset:
     state: present
-    resource_group: "{{resource_group}}" 
+    resource_group: "{{azure_vm_dns_resource_group}}" 
     relative_name: "{{dns_prefix}}" 
     zone_name: "{{dns_name[azure_vm_nic1]}}"
     record_type: "A" 
@@ -20,7 +20,7 @@
 - name: add nic2 to DNS
   azure_rm_dnsrecordset:
     state: present
-    resource_group:  "{{resource_group}}" 
+    resource_group:  "{{azure_vm_dns_resource_group}}" 
     relative_name: "{{dns_prefix}}" 
     zone_name: "{{dns_name[azure_vm_nic2]}}"
     record_type: "A"

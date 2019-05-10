@@ -1,0 +1,462 @@
+---
+
+- name: Kav Test
+  hosts: kavtest
+  tasks: 
+  
+     
+#     - name: list of packages
+#       yum:
+#         name: "{{ packages }}"
+#         state: latest
+#       vars:
+#         packages:
+#         - curl-devel
+#         - expat-devel
+#         - gettext-devel
+#         - openssl-devel
+#         - zlib-devel
+#         - perl-ExtUtils-MakeMaker
+#         - epel-release
+#         - gcc
+#         - wget
+ #
+ #      become: true
+
+ #    - name: install ansible
+ #      yum:
+ #        name: ansible
+ #      become: true
+
+ #    - name: install python pip
+ #      yum:
+ #        name: python-pip
+ #        state: latest
+ #      become: true
+       
+ #    - name: install python pexpect
+ #      command: pip install pexpect==3.3  
+  #     become: true  
+#
+#     - name: Download git
+#       get_url:
+ #        url: 'https://www.kernel.org/pub/software/scm/git/git-2.9.5.tar.gz'
+ #        dest: /usr/src
+ #        remote_src: yes
+ #      become: true
+     
+#     - name: Unarchive git file
+#       unarchive:
+#         src: /usr/src/git-2.9.5.tar.gz
+#         dest: /usr/src
+#         remote_src: yes
+#       become: true
+
+    
+#     - name: make all
+#       make: 
+#         chdir: /usr/src/git-2.9.5
+#         target: all
+#         params:
+#           prefix: /usr/local/git
+#       become: true
+#   
+#     - name: make install
+#       make:
+#         chdir: /usr/src/git-2.9.5
+#         target: INSTALL
+#         params:
+#           prefix: usr/local/git
+#       become: true
+#
+#     - name: Download java jdk
+#       get_url:
+#         url: 'https://download.oracle.com/otn-pub/java/jdk/8u202-b08/1961070e4c9b4e26a04e7f5a083f551e/jdk-8u202-linux-x64.rpm'
+#         dest: /tmp/jdk-8u202-linux-x64.rpm
+#         validate_certs: no
+#         headers: 
+#           Cookie:
+#             - gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie'
+#             - oraclelicense=accept-securebackup-cookie'
+#         checksum: sha256:fd93c7205e223fb399e566712d90fc1f1168924c5b0089bf0c3cae2dcfa23887
+#
+#
+#
+#     - name: install java jdk
+#       yum:
+#         name: /tmp/jdk-8u202-linux-x64.rpm
+#         disable_gpg_check: yes
+#         state: present
+#       become: true
+#  
+#
+#     - name: Upgrade all packages
+#       yum: name=* state=latest
+#       become: true
+#
+#     - name: Check if Docker is installed
+#       command: systemctl status docker
+#       register: docker_check
+#       ignore_errors: yes
+##
+#     - name: Download the Docker installer
+#       get_url:
+#         url: https://get.docker.com/
+#         dest: /tmp/install_docker.sh
+#         mode: 0700
+#       when: docker_check.stderr.find('service could not be found') != -1
+#
+#     - name: Install Docker
+#       shell: /tmp/install_docker.sh
+#       when: docker_check.stderr.find('service could not be found') != -1
+#
+#     - name: Remove the Docker installer file.
+#       file:
+#         state: absent
+#         path: /tmp/install_docker.sh
+#
+#     - name: Enable the Docker daemon in systemd
+#       systemd:
+#         name: docker
+#         enabled: yes
+#         masked: no
+#       become: true
+#
+#     - name: Start the Docker daemon
+#       systemd:
+#         name: docker
+#         state: started
+#         masked: no
+#       become: true
+#
+#     - name: Check if Docker Compose is installed
+#       command: docker-compose --version
+#       register: docker_compose_check
+#       ignore_errors: yes
+#
+#     - name: Download and install Docker Compose
+#       get_url:
+#         url: https://github.com/docker/compose/releases/download/1.21.2/docker-compose-Linux-x86_64
+#         dest: /usr/bin/docker-compose
+#         mode: 0755
+#       when:
+#         - docker_compose_check.msg is defined
+#         - docker_compose_check.msg.find('No such file or directory') != -1
+#       become: true
+#
+#
+#     - name: create agent directory
+#       file:
+#         path: /tmp/myagent
+#         state: directory
+#         remote_src: yes
+#
+#     - name:
+#       get_url:
+#         url: https://vstsagentpackage.azureedge.net/agent/2.127.0/vsts-agent-linux-x64-2.127.0.tar.gz
+#         dest: /tmp/myagent
+#       become: true
+      
+#     - name: unarchive vsts file
+#       unarchive: 
+#         src: /tmp/myagent/vsts-agent-linux-x64-2.127.0.tar.gz
+#         dest: /tmp/myagent
+#         remote_src: yes
+       
+
+#     - name: install dependencies command
+#       command: ./bin/installdependencies.sh
+#       args:
+#         chdir: /tmp/myagent 
+#       become: true
+      
+#     - name: new owner
+#       file:
+#         path: /tmp/myagent/
+#         state: directory
+#         owner: ec2-user
+#         mode: 0777
+#         recurse: yes
+#       become: true
+     
+
+     
+#     - name: vsts config 
+#       expect:
+#         chdir: /tmp/myagent
+#         command: ./config.sh
+#         responses: 
+#           Accept the Team Explorer Everywhere license: Y
+#           Enter server URL: https://e4s.visualstudio.com
+#           Enter authentication type: PAT
+#           Enter personal access token: 'y22sf3npkvafszi5ai7wp53lked77e2y5wlcm5wyp5fsmud2fipa'                                      
+#           Enter agent pool: SPP-M-BuildAgent
+#           Enter agent name: SPP-M-BuildAgent
+#           Enter work folder: enter
+#           
+          
+   
+     - name: run as a service (install)
+       command: ./svc.sh install
+       args:
+         chdir: /tmp/myagent
+       become: true      
+      
+     - name: run as a service (start)
+       command: ./svc.sh start
+       args:
+         chdir: /tmp/myagent
+       become: true
+
+
+         
+ 
+#     - name: create directory
+#       file:
+#         path: /tmp/git
+#         state: directory
+#         remote_src: yes     
+
+#     - name: Download java jdk
+#       get_url:
+#         url: https://download.oracle.com/otn-pub/java/jdk/8u202-b08/1961070e4c9b4e26a04e7f5a083f551e/jdk-8u202-linux-x64.rpm
+#         dest: /tmp/jdk-8u202-linux-x64.rpm
+#         validate_certs: no
+#         headers:
+#           Cookie: oraclelicense=accept-securebackup-cookie
+ 
+#     - name: install java jdk
+#       yum:
+#         name: jdk-8u202-linux-x64.rpm
+#       become: true
+
+#     - name: install java jdk
+#       yum:
+#         name: /tmp/jdk-8u202-linux-x64.rpm
+#       become: true
+        
+
+       
+#     - name: Download git
+#       get_url: 
+#         url: 'https://www.kernel.org/pub/software/scm/git/git-2.9.5.tar.gz'
+#         dest: /usr/src
+#       become: true
+
+#     - name: Unarchive git file
+#       unarchive:
+#         src: /usr/src/git-2.9.5.tar.gz
+#         dest: /usr/src
+#         remote_src: yes
+#       become: true
+    
+#       name: make all
+#       make:
+#         chdir: /usr/src/git-2.9.5
+#         target: all
+#         params:
+#           prefix: /usr/local
+#         changed_when: false
+#         become: true 
+
+    # - name: make file config
+    #   command: make /usr/local/git
+    #   args:
+    #     chdir: /usr/src/git-2.9.5
+    #   become: true 
+
+   #  - name: create directory
+   #    file: 
+   #      path: /usr/local/git
+   #      state: directory
+   #      remote_src: yes
+
+# ***    - make:
+#         chdir: /usr/src/git-2.9.5
+#         target: configure
+#         file: /usr/local
+#       become: true
+     
+#     - make:
+#         chdir: /usr/src/git-2.9.5
+#         target: INSTALL
+#         file: /usr/local/git
+# ***      become: true
+      
+
+
+     
+   #  - name: install Git
+   #    yum:
+   #      disable_gpg_check: yes
+   #      name: /tmp/git/
+   #      state: present
+   #      remote_src: yes
+   #    become: true
+
+
+# Start Here   - name: check file exists (pip install)
+#      stat:
+#        path: /etc/zypp/repos.d/Cloud_Tools.repo
+#      register: st
+
+#    - name: Add Repo when it doesn't already exist
+#      zypper_repository:
+#        repo: 'https://download.opensuse.org/repositories/Cloud:Tools/SLE_12_SP3/Cloud:Tools.repo'
+#      become: true
+#      when: st.stat.exists  == false
+      
+#    - name: install pip
+#      zypper:
+#        disable_gpg_check: yes
+#        name: python-pip
+#        state: present
+#      become: true
+
+#    - pip:
+#        name: ansible==2.6.1
+#      become: true
+      
+ #   - pip:
+ #       name: 'SLE-Module-Adv-Systems-Management12-Updates.repo'
+
+ #   - name: install ansible
+ #     zypper:
+ #       disable_gpg_check: yes 
+ #       name: ansible
+ #       state: present
+ #     become: true 
+   
+ #   - name: install git
+ #     zypper:
+ #       name: 'git-core>=2.9'
+ #       state: present
+
+ #   - name: check file exists
+ #     stat:
+ #       path: /etc/zypp/repos.d/Virtualization_containers.repo
+ #     register: st
+
+ #   - name: Add Repo when it doesn't already exist
+ #     zypper_repository:
+ #       repo: 'http://download.opensuse.org/repositories/Virtualization:/containers/SLE_12_SP3/'
+ #     become: true
+ #     when: st.stat.exists  == false 
+
+ #   - name: Install gzip from remote repo
+ #     zypper:
+ #       disable_gpg_check: yes
+ #       name: 'http://download.opensuse.org/repositories/openSUSE:/Leap:/15.0/standard/x86_64/gzip-1.9-lp150.2.16.x86_64.rpm'
+ #       state: present
+ #     become: true
+
+ #   - name: Install gtar from remote repo
+ #     zypper:
+ #       disable_gpg_check: yes
+ #       name: 'http://download.opensuse.org/repositories/openSUSE:/Leap:/15.0:/Update/standard/x86_64/tar-1.30-lp150.2.3.2.x86_64.rpm'
+ #       state: present
+ #     become: true
+
+
+#     - name: Download java jdk
+#       get_url:
+#         url: 'https://download.oracle.com/otn-pub/java/jdk/8u202-b08/1961070e4c9b4e26a04e7f5a083f551e/jdk-8u202-linux-x64.rpm'
+#         dest: /tmp/jdk-8u202-linux-x64.rpm
+#         headers: 
+#           Cookie: 'oraclelicense=accept-securebackup-cookie'
+
+#     - name: install java jdk
+#       yum:
+#         name: /tmp/jdk-8u202-linux-x64.rpm
+#         disable_gpg_check: yes
+#                  state: present
+#       become: true
+ 
+ #   - name: create directory
+ #     file:
+ #       path: /tmp/VSTSagent
+ #       state: directory
+
+ #   - name: VSTS install 
+ #     get_url:
+ #       url: 'https://vstsagentpackage.azureedge.net/agent/2.148.0/vsts-agent-linux-x64-2.148.0.tar.gz'
+ #       dest: /tmp/VSTSagent
+    
+ #   - name: Unarchive VSTS file
+ #     unarchive:
+ #       src: /tmp/VSTSagent/vsts-agent-linux-x64-2.148.0.tar.gz
+ #       dest: /tmp/VSTSagent
+ #       remote_src: yes
+
+ #   - name: download .NET package
+ #     get_url:
+ #       url: 'https://packages.microsoft.com/config/sles/12/packages-microsoft-prod.rpm'
+ #       dest: /tmp/prod.rpm
+        
+ #   - name: install .NET
+ #     zypper:
+ #       name: /tmp/prod.rpm
+ #       disable_gpg_check: yes
+ #       state: present
+ #     become: true
+
+ #   - name: install libunwind
+ #     zypper:
+ #       name: libunwind
+ #       disable_gpg_check: yes
+ #       state: present
+ #     become: true
+
+ #   - name: install libicu
+ #     zypper: 
+ #       name: libicu
+ #       disable_gpg_check: yes
+ #       state: present
+ #     become: true
+
+  #  - name: install libcurl
+  #    zypper:
+  #      name: libcurl
+  #      disable_gpg_check: yes
+  #      state: present
+  #    become: true   
+   
+ #  - name: install .NET SDK (2)
+  #   zypper:
+   ##     name: dotnet-sdk-2.1.4
+   #     disable_gpg_check: yes
+   #     state: present
+   #   become: true
+ 
+   # - name: Install all dependencies
+   #   command: /tmp/VSTSagent/bin/installdependencies.sh
+   #   remote_src: yes
+   #   become: true 
+    
+
+# x   - name: create directory
+#      file:
+#        path: /tmp/java
+#        state: directory
+  
+#    - name: java jdk 
+#      get_url: 
+#        url: 'http://download.oracle.com/otn-pub/java/jdk/11.0.2+9/f51449fcd52f4d52b93a989c5c56ed3c/jdk-11.0.2_linux-x64_bin.tar.gz'
+#        headers:
+#          Cookie: 'Cookie:oraclelicense=accept-securebackup-cookie'
+#        dest: /tmp/java.tar.gz  
+
+
+#    - name: Unzip a java file 
+#      unarchive:
+#        src: /tmp/java.tar.gz
+#        dest: /tmp/java
+#        remote_src: yes
+#        register: gtar
+#        extra_opts:
+#         " --install-- "
+      
+#    - debcon://download.opensuse.org/repositories/system:packagemanager/openSUSE_Leap_15.1/system:packagemanager.repoug: 
+#  x       var: gtar
+   
+ 

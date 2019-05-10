@@ -1,0 +1,8 @@
+- ec2_vpc_nat_gateway:
+    state: present
+    subnet_id: "{{ public.subnet.id }}"
+    wait: yes
+    region: "{{ aws_management_vpc_region }}"
+    resource_tags:
+      Name: "{{ aws_management_vpc_env_name }} NAT Gateway"
+  register: nat_gateway

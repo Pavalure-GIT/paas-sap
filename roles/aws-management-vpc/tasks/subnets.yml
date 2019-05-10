@@ -1,0 +1,44 @@
+- ec2_vpc_subnet:
+    state: present
+    vpc_id: "{{ management_network.vpc.id }}"
+    region: "{{ aws_management_vpc_region }}"
+    cidr: "{{ aws_management_vpc_public_subnet }}"
+    resource_tags: 
+      Name: "{{  aws_management_vpc_env_name }} Tools Public Subnet"
+  register: public
+
+- ec2_vpc_subnet:
+    state: present
+    vpc_id: "{{ management_network.vpc.id }}"
+    region: "{{ aws_management_vpc_region }}"
+    cidr: "{{ aws_management_vpc_private_subnet }}"
+    resource_tags:
+      Name: "{{  aws_management_vpc_env_name }} Tools Private Subnet"
+  register: private
+
+- ec2_vpc_subnet:
+    state: present
+    vpc_id: "{{ management_network.vpc.id }}"
+    region: "{{ aws_management_vpc_region }}"
+    cidr: "{{ aws_management_vpc_private_subnet2 }}"
+    resource_tags:
+      Name: "{{  aws_management_vpc_env_name }} Tools Private Subnet2"
+  register: private_2
+  
+- ec2_vpc_subnet:
+    state: present
+    vpc_id: "{{ management_network.vpc.id }}"
+    region: "{{ aws_management_vpc_region }}"
+    cidr: "{{ aws_management_vpc_dxc_private_subnet }}"
+    resource_tags:
+      Name: "{{  aws_management_vpc_env_name }} DXC Private Subnet"
+  register: dxc_private
+  
+- ec2_vpc_subnet:
+    state: present
+    vpc_id: "{{ management_network.vpc.id }}"
+    region: "{{ aws_management_vpc_region }}"
+    cidr: "{{ aws_management_vpc_dxc_private_subnet2 }}"
+    resource_tags:
+      Name: "{{  aws_management_vpc_env_name }} DXC Private Subnet2"
+  register: dxc_private_2

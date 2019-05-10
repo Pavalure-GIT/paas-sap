@@ -1,0 +1,9 @@
+---
+- name: Build Agent
+  hosts: buildagent
+  tasks:
+    - name: Call Build Agent Role
+      include_role:
+        name: buildagent
+      vars:
+        #INSERT VAULT DETAILS

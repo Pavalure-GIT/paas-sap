@@ -55,6 +55,9 @@
       - proto: tcp
         ports: 7937 - 9936
         cidr_ip: 172.17.0.0/16
+      - proto: tcp
+        ports: 7443
+        group_name: buaas-mgt
   register: buaas_mgt
 
 - ec2_group:

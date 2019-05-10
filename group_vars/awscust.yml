@@ -1,5 +1,6 @@
 #Options
 single_availability_zone: true
+buaas: true
 dr_compartment: false
 dr_single_availability_zone: false
 ha: false
@@ -39,6 +40,14 @@ proxy_image: ami-3c062943
 #MidServers
 mid_instance_type: t2.small
 mid_image: ami-6871a115
+
+#BUaaS
+buaas_nwr_srv_instance_type: c4.2xlarge
+buaas_nwr_srv_image: ami-3c062943
+buaas_nwr_con_instance_type: t2.large
+buaas_nwr_con_image: ami-3c062943
+buaas_cb_instance_type: m4.2xlarge
+buaas_cb_image: ami-3c062943
 
 #MidServers-DR
 dr_mid_image: ami-03291866

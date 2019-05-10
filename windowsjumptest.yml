@@ -1,0 +1,16 @@
+---
+
+- name: Windows Provisioning
+  hosts: localhost
+  tasks:
+    - name: Call Windows Jump Automation
+      include_role:
+        name: windowsjump
+      vars:
+        aws_ec2_vm_Name: mp-test-vm9
+        aws_ec2_vm_region: us-east-1
+        aws_ec2_vm_key_name: e4s-automation
+        aws_ec2_vm_instance_type: c5.large
+        aws_ec2_vm_image: ami-0246f4914689c475f
+        aws_ec2_vm_eth1_groups: sg-03b0bfaa40940417f
+        aws_ec2_vm_eth1_subnet: subnet-5ff18e15 

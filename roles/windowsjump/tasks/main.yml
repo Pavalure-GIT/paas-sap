@@ -1,0 +1,24 @@
+#Provision Windows VM
+
+# eth1
+- ec2_eni:
+    security_groups: "{{ aws_ec2_vm_eth1_groups }}"
+    subnet_id: "{{ aws_ec2_vm_eth1_subnet }}"
+    region: "{{ aws_ec2_vm_region }}"
+    state: present
+  register: eth1
+
+- name: create "{{ aws_ec2_vm_Name }}"
+  ec2:
+    aws_access_key: #ACCESS
+    aws_secret_key: #SECRET
+    image: "{{ aws_ec2_vm_image }}"
+    user_data: "{{ lookup('template', 'test.txt.j2') }}"
+    instance_type: "{{ aws_ec2_vm_instance_type }}"
+    instance_tags:
+      Name: "{{ aws_ec2_vm_Name }}"
+    network_interfaces: "{{ eth1.interface.id }}"
+    key_name: "{{ aws_ec2_vm_key_name }}"
+    region: "{{ aws_ec2_vm_region }}"
+    wait: true
+  register: ec2_vm

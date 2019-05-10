@@ -1,0 +1,24 @@
+---
+- ec2_vpc_net:
+    state: present
+    name: "{{ aws_management_vpc_env_name }} Tools VPC"
+    cidr_block: "{{ aws_management_vpc_cidr }}"
+    region: "{{ aws_management_vpc_region }}"
+  register: management_network
+
+- include_tasks: subnets.yml
+
+- ec2_vpc_igw:
+   vpc_id: "{{ management_network.vpc.id }}"
+   region: "{{ aws_management_vpc_region }}"
+   state: "present"
+   tags:
+     Name: "{{ aws_management_vpc_env_name }} Internet Gateway"
+  register: igw
+
+- include_tasks: nat-gateways.yml
+
+- include_tasks: security-groups.yml
+
+- include_tasks: route-tables.yml
+
