@@ -74,6 +74,7 @@ pipeline{
                 export AZURE_SUBSCRIPTION_ID=${env.AZURE_SUBSCRIPTION_ID}
                 export AZURE_TENANT=${env.AZURE_TENANT}
                 aws s3 cp s3://jenkins-vars/vars/${params.vars_file} group_vars/
+		echo $AZURE_SECRET
                 ansible-playbook azure-customer-full.yml
                 """
             }
