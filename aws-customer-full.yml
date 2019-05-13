@@ -690,19 +690,19 @@
     - include_role:
         name: csr_automation
       vars:
-        customer_account: 720232237161
+        customer_accout: "{{ customer_account }}"
         vpc_name: "{{ vpc_env_name }}"
-        vgw_owner: "System Team"
+        vgw_owner: "{{ vgw_owner }}"
         region: "{{ vpc_region }}"
-        key_arn: arn:aws:kms:eu-central-1:000987835229:key/240704ea-5c16-4075-9fd0-3aeaef52e94d
+        key_arn: "{{ key_arn }}"
         management_access_key: "{{ management_access_key }}"
         management_secret_key: "{{ management_secret_key }}"
         customer_access_key: "{{ customer_access_key }}"
         customer_secret_key: "{{ customer_secret_key }}"
-        bucket_name: sandbox-csr-automation-vpnconfigs3bucket-1ul5mfqbrghku
-        stack_name: ac-csr-stack
-        vgw_name: ac-csr-vgw
-        key_alias: sandbox-csr-automation-key
+        bucket_name: "{{ bucket_name }}"
+        stack_name: "{{ stack_name }}"
+        vgw_name: "{{ vgw_name }}"
+        key_alias: "{{ key_alias }}"
 
 - name: Configure FDE Server
   hosts: FDE
