@@ -47,7 +47,7 @@
         asgs:
           - { resource_group: "{{ st_resource_group }}", name: mid-mgt  }
           - { resource_group: "{{ st_resource_group }}", name: mgmt-net-all }
-        azure_vm_nic: "Public"
+        azure_vm_nic: "SAPRouter-nic1"
     - name: Allocate ASG nic2 - Management
       include_role: 
         name: azure-asg-allocate
@@ -55,7 +55,7 @@
         asgs:
           - { resource_group: "{{ st_resource_group }}", name: mid-mgt  }
           - { resource_group: "{{ st_resource_group }}", name: mgmt-net-all }
-        azure_vm_nic: "Management"
+        azure_vm_nic: "SAPRouter-nic2"
 
     - name: Provison MidServerA
       include_role:
@@ -80,7 +80,7 @@
         asgs:
           - { resource_group: "{{ st_resource_group }}", name: mid-mgt  }
           - { resource_group: "{{ st_resource_group }}", name: mgmt-net-all }
-        azure_vm_nic: "Management"
+        azure_vm_nic: "MidServerA-nic1"
     
 
     - name: Provison MidServerB
@@ -106,7 +106,7 @@
         asgs:
           - { resource_group: "{{ st_resource_group }}", name: mid-mgt  }
           - { resource_group: "{{ st_resource_group }}", name: mgmt-net-all }
-        azure_vm_nic: "Management"
+        azure_vm_nic: "MidServerB-nic1"
  
     - name: Provision FDE
       include_role:
@@ -131,7 +131,7 @@
         asgs:
           - { resource_group: "{{ st_resource_group }}", name: mid-mgt  }
           - { resource_group: "{{ st_resource_group }}", name: mgmt-net-all }
-        azure_vm_nic: "Customer"
+        azure_vm_nic: "FDE-nic1"
     - name: Allocate ASG nic2 - Management
       include_role: 
         name: azure-asg-allocate
@@ -139,7 +139,7 @@
         asgs:
           - { resource_group: "{{ st_resource_group }}", name: mid-mgt  }
           - { resource_group: "{{ st_resource_group }}", name: mgmt-net-all }
-        azure_vm_nic: "Management"
+        azure_vm_nic: "FDE-nic2"
 
     ##Duplicating provisions for HA requirements     
     - name: Provision SAP Router
@@ -166,7 +166,7 @@
         asgs:
           - { resource_group: "{{ st_resource_group }}", name: mid-mgt  }
           - { resource_group: "{{ st_resource_group }}", name: mgmt-net-all }
-        azure_vm_nic: "Public"
+        azure_vm_nic: "SAPRouter-HA-nic1"
       when: ha_compartment
 
     - name: Allocate ASG nic2 - Management
@@ -176,7 +176,7 @@
         asgs:
           - { resource_group: "{{ st_resource_group }}", name: mid-mgt  }
           - { resource_group: "{{ st_resource_group }}", name: mgmt-net-all }
-        azure_vm_nic: "Management"
+        azure_vm_nic: "SAPRouter-HA-nic2"
       when: ha_compartment
  
     - name: Provision FDE
@@ -204,7 +204,7 @@
         asgs:
           - { resource_group: "{{ st_resource_group }}", name: mid-mgt  }
           - { resource_group: "{{ st_resource_group }}", name: mgmt-net-all }
-        azure_vm_nic: "Customer"
+        azure_vm_nic: "FDE-HA-nic1"
       when: ha_compartment
       
     - name: Allocate ASG nic2 - Management
@@ -214,7 +214,7 @@
         asgs:
           - { resource_group: "{{ st_resource_group }}", name: mid-mgt  }
           - { resource_group: "{{ st_resource_group }}", name: mgmt-net-all }
-        azure_vm_nic: "Management"
+        azure_vm_nic: "FDE-HA-nic2"
       when: ha_compartment       
 
 ##########################DR###########################
@@ -270,7 +270,7 @@
         asgs:
           - { resource_group: "{{ dr_resource_group }}", name: mid-mgt  }
           - { resource_group: "{{ dr_resource_group }}", name: mgmt-net-all }
-        azure_vm_nic: "Public"
+        azure_vm_nic: "SAPRouter-nic1"
       when: dr_compartment
 
     - name: Allocate ASG nic2 - Management
@@ -280,7 +280,7 @@
         asgs:
           - { resource_group: "{{ dr_resource_group }}", name: mid-mgt  }
           - { resource_group: "{{ dr_resource_group }}", name: mgmt-net-all }
-        azure_vm_nic: "Management"
+        azure_vm_nic: "SAPRouter-nic2"
       when: dr_compartment
 
     - name: Provison MidServerA
@@ -307,7 +307,7 @@
         asgs:
           - { resource_group: "{{ dr_resource_group }}", name: mid-mgt  }
           - { resource_group: "{{ dr_resource_group }}", name: mgmt-net-all }
-        azure_vm_nic: "Management"
+        azure_vm_nic: "MidServerA-nic1"
       when: dr_compartment
 
     - name: Provison MidServerB
@@ -334,7 +334,7 @@
         asgs:
           - { resource_group: "{{ dr_resource_group }}", name: mid-mgt  }
           - { resource_group: "{{ dr_resource_group }}", name: mgmt-net-all }
-        azure_vm_nic: "Management"
+        azure_vm_nic: "MidServerB-nic1"
       when: dr_compartment
  
     - name: Provision FDE
@@ -361,7 +361,7 @@
         asgs:
           - { resource_group: "{{ dr_resource_group }}", name: mid-mgt  }
           - { resource_group: "{{ dr_resource_group }}", name: mgmt-net-all }
-        azure_vm_nic: "Customer"
+        azure_vm_nic: "FDE-nic1"
       when: dr_compartment
     - name: Allocate ASG nic2 - Management
       include_role: 
@@ -370,7 +370,7 @@
         asgs:
           - { resource_group: "{{ dr_resource_group }}", name: mid-mgt  }
           - { resource_group: "{{ dr_resource_group }}", name: mgmt-net-all }
-        azure_vm_nic: "Management"
+        azure_vm_nic: "FDE-nic2"
       when: dr_compartment
 
     ##Duplicating provisions for HA requirements     
@@ -398,7 +398,7 @@
         asgs:
           - { resource_group: "{{ dr_resource_group }}", name: mid-mgt  }
           - { resource_group: "{{ dr_resource_group }}", name: mgmt-net-all }
-        azure_vm_nic: "Public"
+        azure_vm_nic: "SAPRouter-HA-nic1"
       when: dr_compartment and dr_ha_compartment
 
     - name: Allocate ASG nic2 - Management
@@ -408,7 +408,7 @@
         asgs:
           - { resource_group: "{{ dr_resource_group }}", name: mid-mgt  }
           - { resource_group: "{{ dr_resource_group }}", name: mgmt-net-all }
-        azure_vm_nic: "Management"
+        azure_vm_nic: "SAPRouter-HA-nic2"
       when: dr_compartment and dr_ha_compartment
  
     - name: Provision FDE
@@ -434,7 +434,7 @@
         asgs:
           - { resource_group: "{{ dr_resource_group }}", name: mid-mgt  }
           - { resource_group: "{{ dr_resource_group }}", name: mgmt-net-all }
-        azure_vm_nic: "Customer"
+        azure_vm_nic: "FDE-HA-nic1"
       when: dr_compartment and dr_ha_compartment
 
     - name: Allocate ASG nic2 - Management
@@ -444,7 +444,7 @@
         asgs:
           - { resource_group: "{{ dr_resource_group }}", name: mid-mgt  }
           - { resource_group: "{{ dr_resource_group }}", name: mgmt-net-all }
-        azure_vm_nic: "Management"
+        azure_vm_nic: "FDE-HA-nic2"
       when: dr_compartment and dr_ha_compartment
     
     - azure_rm_virtualnetworkpeering:
