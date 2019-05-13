@@ -42,7 +42,7 @@
         azure_vm_add_dns: true
     - name: Allocate ASG
       include_role: 
-        name: azure-asg-alloate
+        name: azure-asg-allocate
       vars:
         asgs:
           - { resource_group: "{{ st_resource_group }}", name: mid-mgt  }
@@ -67,7 +67,7 @@
         azure_vm_add_dns: false
     - name: Allocate ASG
       include_role: 
-        name: azure-asg-alloate
+        name: azure-asg-allocate
       vars:
         asgs:
           - { resource_group: "{{ st_resource_group }}", name: mid-mgt  }
@@ -93,7 +93,7 @@
         azure_vm_add_dns: false
     - name: Allocate ASG
       include_role: 
-        name: azure-asg-alloate
+        name: azure-asg-allocate
       vars:
         asgs:
           - { resource_group: "{{ st_resource_group }}", name: mid-mgt  }
@@ -118,7 +118,7 @@
         azure_vm_add_dns: true
     - name: Allocate ASG
       include_role: 
-        name: azure-asg-alloate
+        name: azure-asg-allocate
       vars:
         asgs:
           - { resource_group: "{{ st_resource_group }}", name: mid-mgt  }
@@ -145,7 +145,7 @@
       when: ha_compartment
     - name: Allocate ASG
       include_role: 
-        name: azure-asg-alloate
+        name: azure-asg-allocate
       vars:
         asgs:
           - { resource_group: "{{ st_resource_group }}", name: mid-mgt  }
@@ -172,7 +172,7 @@
       when: ha_compartment
     - name: Allocate ASG
       include_role: 
-        name: azure-asg-alloate
+        name: azure-asg-allocate
       vars:
         asgs:
           - { resource_group: "{{ st_resource_group }}", name: mid-mgt  }
@@ -227,7 +227,7 @@
       when: dr_compartment
     - name: Allocate ASG
       include_role: 
-        name: azure-asg-alloate
+        name: azure-asg-allocate
       vars:
         asgs:
           - { resource_group: "{{ dr_resource_group }}", name: mid-mgt  }
@@ -254,7 +254,7 @@
       when: dr_compartment
     - name: Allocate ASG
       include_role: 
-        name: azure-asg-alloate
+        name: azure-asg-allocate
       vars:
         asgs:
           - { resource_group: "{{ dr_resource_group }}", name: mid-mgt  }
@@ -281,7 +281,7 @@
       when: dr_compartment
     - name: Allocate ASG
       include_role: 
-        name: azure-asg-alloate
+        name: azure-asg-allocate
       vars:
         asgs:
           - { resource_group: "{{ dr_resource_group }}", name: mid-mgt  }
@@ -308,7 +308,7 @@
       when: dr_compartment
     - name: Allocate ASG
       include_role: 
-        name: azure-asg-alloate
+        name: azure-asg-allocate
       vars:
         asgs:
           - { resource_group: "{{ dr_resource_group }}", name: mid-mgt  }
@@ -336,7 +336,7 @@
       when: dr_compartment and dr_ha_compartment
     - name: Allocate ASG
       include_role: 
-        name: azure-asg-alloate
+        name: azure-asg-allocate
       vars:
         asgs:
           - { resource_group: "{{ dr_resource_group }}", name: mid-mgt  }
@@ -363,7 +363,7 @@
       when: dr_compartment and dr_ha_compartment    
     - name: Allocate ASG
       include_role: 
-        name: azure-asg-alloate
+        name: azure-asg-allocate
       vars:
         asgs:
           - { resource_group: "{{ dr_resource_group }}", name: mid-mgt  }
