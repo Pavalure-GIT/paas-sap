@@ -9,7 +9,7 @@
     secret: '{{ lookup("env", "AZURE_SECRET") }}'
     tenant: '{{ lookup("env", "AZURE_TENANT") }}'
     resource_group: "{{ asgs[0].resource_group }}"
-    name: "{{ azure_vm_name }}"
+    name: "{{ azure_vm_nic }}"
     ip_configurations:
       - name: "default"
         application_security_groups: "{{ asgs }}"
