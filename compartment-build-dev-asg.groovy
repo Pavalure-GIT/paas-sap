@@ -59,11 +59,13 @@ pipeline{
             
             }
 
-            configFileProvider([configFile(fileId: 'azure_cust.yml', targetLocation: 'group_vars/azure_cust.yml')]) {
-                // some block
-            }
+           
             
             steps{
+                configFileProvider([configFile(fileId: 'azure_cust.yml', targetLocation: 'group_vars/azure_cust.yml')]) {
+                // some block
+                }
+                
                 sh """
                 set +x
                 virtualenv .
