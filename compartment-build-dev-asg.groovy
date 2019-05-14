@@ -15,7 +15,7 @@ pipeline{
     
  
     stages{
-        stage('clone git repo'){
+        stage('Check Out SCM'){
             steps{
                 git url: 'e4s@vs-ssh.visualstudio.com:v3/e4s/E4S-PublicCloud/SystemTeam', credentialsId: 'daivdprivatekeygit', branch: 'davidasg-refactor'
             }
@@ -59,6 +59,10 @@ pipeline{
             AZURE_TENANT = vault path: 'secret/128a9e84-5963-4862-a4d5-8fbc804c56cb/automation/azure/tenant_id', key: 'value', vaultUrl: 'http://10.4.0.11:8200', credentialsId: 'jenkinsreadvaulttoken'
             
             }
+
+            configFileProvider([configFile(fileId: 'azure_cust.yml', targetLocation: 'group_vars/azure_cust.yml')]) {
+                // some block
+            }
             
             steps{
                 sh """
@@ -66,15 +70,10 @@ pipeline{
                 virtualenv .
                 source bin/activate
                 pip install -r azure_requirements.txt
-                export AWS_ACCESS_KEY_ID=${env.AWS_ACCESS_KEY}
-                export AWS_SECRET_ACCESS_KEY=${env.AWS_SECRET_KEY}
-                export AWS_DEFAULT_REGION=${env.AWS_DEFAULT_REGION}
                 export AZURE_CLIENT_ID=${env.AZURE_CLIENT_ID}
                 export AZURE_SECRET=${env.AZURE_SECRET}
                 export AZURE_SUBSCRIPTION_ID=${env.AZURE_SUBSCRIPTION_ID}
                 export AZURE_TENANT=${env.AZURE_TENANT}
-                aws s3 cp s3://jenkins-vars/vars/${params.vars_file} group_vars/
-		echo $AZURE_SECRET
                 ansible-playbook azure-customer-full.yml
                 """
             }
