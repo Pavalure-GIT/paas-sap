@@ -3,15 +3,9 @@ pipeline{
     
     parameters {
         choice choices: ['AWS', 'AZURE'], description: 'Select the cloud provider to host the compartment', name: 'cloud_provider'
-        string description: 's3://jenkins-vars/vars/<file-name>', name: 'vars_file', trim: true
     }
 
-     //get keys from vault
-    environment {
-        AWS_ACCESS_KEY = vault path: 'secret/720232237161/automation/aws/access_key', key: 'value', vaultUrl: 'http://10.4.0.11:8200', credentialsId: 'jenkinsreadvaulttoken'
-        AWS_SECRET_KEY = vault path: 'secret/720232237161/automation/aws/secret_key', key: 'value', vaultUrl: 'http://10.4.0.11:8200', credentialsId: 'jenkinsreadvaulttoken'
-        AWS_DEFAULT_REGION = 'us-east-1'
-    }
+
     
  
     stages{
@@ -27,7 +21,12 @@ pipeline{
             when{
                 expression { params.cloud_provider == "AWS" }
             }
-           
+            //get keys from vault
+            environment {
+                AWS_ACCESS_KEY = vault path: 'secret/720232237161/automation/aws/access_key', key: 'value', vaultUrl: 'http://10.4.0.11:8200', credentialsId: 'jenkinsreadvaulttoken'
+                AWS_SECRET_KEY = vault path: 'secret/720232237161/automation/aws/secret_key', key: 'value', vaultUrl: 'http://10.4.0.11:8200', credentialsId: 'jenkinsreadvaulttoken'
+                AWS_DEFAULT_REGION = 'us-east-1'
+            }
 
             //stop logging, export env variable for aws cli in virutal env, pull down vars file and kick off build
             steps{
