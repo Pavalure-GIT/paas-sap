@@ -55,10 +55,10 @@ pipeline{
             }
              //get keys from vault
             environment {
-            AZURE_CLIENT_ID = vault path: 'secret/128a9e84-5963-4862-a4d5-8fbc804c56cb/automation/azure/client_id', key: 'value', vaultUrl: 'http://10.4.0.11:8200', credentialsId: 'jenkinsreadvaulttoken'
-            AZURE_SECRET = vault path: 'secret/128a9e84-5963-4862-a4d5-8fbc804c56cb/automation/azure/client_secret', key: 'value', vaultUrl: 'http://10.4.0.11:8200', credentialsId: 'jenkinsreadvaulttoken'
-            AZURE_SUBSCRIPTION_ID = vault path: 'secret/128a9e84-5963-4862-a4d5-8fbc804c56cb/automation/azure/subscription_id', key: 'value', vaultUrl: 'http://10.4.0.11:8200', credentialsId: 'jenkinsreadvaulttoken'
-            AZURE_TENANT = vault path: 'secret/128a9e84-5963-4862-a4d5-8fbc804c56cb/automation/azure/tenant_id', key: 'value', vaultUrl: 'http://10.4.0.11:8200', credentialsId: 'jenkinsreadvaulttoken'
+            AZURE_CLIENT_ID = vault path: 'secret/${params.subscription}/automation/azure/client_id', key: 'value', vaultUrl: 'http://10.4.0.11:8200', credentialsId: 'jenkinsreadvaulttoken'
+            AZURE_SECRET = vault path: 'secret/${params.subscription}/automation/azure/client_secret', key: 'value', vaultUrl: 'http://10.4.0.11:8200', credentialsId: 'jenkinsreadvaulttoken'
+            AZURE_SUBSCRIPTION_ID = vault path: 'secret/${params.subscription}/automation/azure/subscription_id', key: 'value', vaultUrl: 'http://10.4.0.11:8200', credentialsId: 'jenkinsreadvaulttoken'
+            AZURE_TENANT = vault path: 'secret/${params.subscription}/automation/azure/tenant_id', key: 'value', vaultUrl: 'http://10.4.0.11:8200', credentialsId: 'jenkinsreadvaulttoken'
             
             }
 
