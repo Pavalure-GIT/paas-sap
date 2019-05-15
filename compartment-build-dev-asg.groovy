@@ -3,6 +3,7 @@ pipeline{
     
     parameters {
         choice choices: ['AWS', 'AZURE'], description: 'Select the cloud provider to host the compartment', name: 'cloud_provider'
+        string defaultValue: '----', description: 'enter subscription', name: 'subscription', trim: true
     }
 
 
@@ -23,13 +24,16 @@ pipeline{
             }
             //get keys from vault
             environment {
-                AWS_ACCESS_KEY = vault path: 'secret/720232237161/automation/aws/access_key', key: 'value', vaultUrl: 'http://10.4.0.11:8200', credentialsId: 'jenkinsreadvaulttoken'
-                AWS_SECRET_KEY = vault path: 'secret/720232237161/automation/aws/secret_key', key: 'value', vaultUrl: 'http://10.4.0.11:8200', credentialsId: 'jenkinsreadvaulttoken'
+                AWS_ACCESS_KEY = vault path: 'secret/${params.subscription}/automation/aws/access_key', key: 'value', vaultUrl: 'http://10.4.0.11:8200', credentialsId: 'jenkinsreadvaulttoken'
+                AWS_SECRET_KEY = vault path: 'secret/${params.subscription}/automation/aws/secret_key', key: 'value', vaultUrl: 'http://10.4.0.11:8200', credentialsId: 'jenkinsreadvaulttoken'
                 AWS_DEFAULT_REGION = 'us-east-1'
             }
 
-            //stop logging, export env variable for aws cli in virutal env, pull down vars file and kick off build
             steps{
+                //copy the vars file to the /group_vars folder
+                configFileProvider([configFile(fileId: 'awscust.yml', targetLocation: 'group_vars/awscust.yml')]) {
+                }
+
                 sh """
                 set +x
                 virtualenv .
@@ -38,8 +42,7 @@ pipeline{
                 export AWS_ACCESS_KEY_ID=${env.AWS_ACCESS_KEY}
                 export AWS_SECRET_ACCESS_KEY=${env.AWS_SECRET_KEY}
                 export AWS_DEFAULT_REGION=${env.AWS_DEFAULT_REGION}
-                aws s3 cp s3://jenkins-vars/vars/${params.vars_file} group_vars/
-                ansible-playbook aws-customer-full.yml --extra-vars @group_vars/${params.vars_file}
+                ansible-playbook aws-customer-full.yml --extra-vars @group_vars/awscust.yml
                 
                 """
             }
@@ -65,7 +68,7 @@ pipeline{
                 configFileProvider([configFile(fileId: 'azure_cust.yml', targetLocation: 'group_vars/azure_cust.yml')]) {
                 // some block
                 }
-                
+
                 sh """
                 set +x
                 virtualenv .
