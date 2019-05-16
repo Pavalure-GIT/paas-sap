@@ -37,11 +37,11 @@
     - name: Set Management AZ2 Route Table ID for DR Peering
       set_fact:
         manaz2rt: "{{ managementaz2_route_table.route_table.route_table_id }}"
-      when: dr_compartment and not dr_single_availability_zone
+      when: dr_compartment and not single_availability_zone
     - name: Set Management AZ3 Route Table ID for DR Peering
       set_fact:
         manaz3rt: "{{ managementaz3_route_table.route_table.route_table_id }}"
-      when: dr_compartment and not dr_single_availability_zone
+      when: dr_compartment and not single_availability_zone
     - name: Set Reverse Zone for DR
       set_fact:
         rev_zone: "{{ reverse_zone.zone_id }}"
@@ -94,6 +94,17 @@
         state: present
         zone: in-addr.arpa
         hosted_zone_id: "{{ reverse_zone.zone_id }}"
+        record: "{{ eth1.interface.private_ip_address | ipaddr('revdns') }}"
+        type: PTR
+        private_zone: yes
+        ttl: 300
+        value: "fde.{{ vpc_shortname }}"
+        wait: yes
+
+    - route53:
+        state: present
+        zone: in-addr.arpa
+        hosted_zone_id: "{{ reverse_zone.zone_id }}"
         record: "{{ eth0.interface.private_ip_address | ipaddr('revdns') }}"
         type: PTR
         private_zone: yes
@@ -135,6 +146,27 @@
         aws_ec2_vm_eth0_groups: "{{ mgmt_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
         single_nic: true
+
+    - route53:
+        state: present
+        zone: "{{ vpc_shortname }}"
+        record: "mida.{{ vpc_shortname }}"
+        type: A
+        private_zone: yes
+        ttl: 300
+        value: "{{ eth0.interface.private_ip_address }}"
+        wait: yes
+
+    - route53:
+        state: present
+        zone: in-addr.arpa
+        hosted_zone_id: "{{ reverse_zone.zone_id }}"
+        record: "{{ eth0.interface.private_ip_address | ipaddr('revdns') }}"
+        type: PTR
+        private_zone: yes
+        ttl: 300
+        value: "mida.{{ vpc_shortname }}"
+        wait: yes
         
     - name: Add mid1 to mids group
       add_host:
@@ -153,6 +185,27 @@
         aws_ec2_vm_eth0_groups: "{{ mgmt_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
         single_nic: true
+
+    - route53:
+        state: present
+        zone: "{{ vpc_shortname }}"
+        record: "midb.{{ vpc_shortname }}"
+        type: A
+        private_zone: yes
+        ttl: 300
+        value: "{{ eth0.interface.private_ip_address }}"
+        wait: yes
+
+    - route53:
+        state: present
+        zone: in-addr.arpa
+        hosted_zone_id: "{{ reverse_zone.zone_id }}"
+        record: "{{ eth0.interface.private_ip_address | ipaddr('revdns') }}"
+        type: PTR
+        private_zone: yes
+        ttl: 300
+        value: "midb.{{ vpc_shortname }}"
+        wait: yes
         
     - name: Add mid2 to mids group
       add_host:
@@ -302,23 +355,13 @@
     
     - route53:
         state: present
-        zone: "{{ vpc_longname }}"
-        record: "proxy.{{ vpc_longname }}"
-        type: A
-        private_zone: yes
-        ttl: 300
-        value: "{{ eth0.interface.private_ip_address }}"
-        wait: yes
-        
-    - route53:
-        state: present
         zone: in-addr.arpa
         hosted_zone_id: "{{ reverse_zone.zone_id }}"
-        record: "{{ eth0.interface.private_ip_address | ipaddr('revdns') }}"
+        record: "{{ eth1.interface.private_ip_address | ipaddr('revdns') }}"
         type: PTR
         private_zone: yes
         ttl: 300
-        value: "proxy.{{ vpc_longname }}"
+        value: "proxy.{{ vpc_shortname }}"
         wait: yes
         
     - name: Provision SAP-2 Router ec2 VM
@@ -441,6 +484,18 @@
         state: present
         zone: in-addr.arpa
         hosted_zone_id: "{{ rev_zone }}"
+        record: "{{ eth1.interface.private_ip_address | ipaddr('revdns') }}"
+        type: PTR
+        private_zone: yes
+        ttl: 300
+        value: "fdedr.{{ vpc_shortname }}"
+        wait: yes
+      when: dr_compartment
+
+    - route53:
+        state: present
+        zone: in-addr.arpa
+        hosted_zone_id: "{{ rev_zone }}"
         record: "{{ eth0.interface.private_ip_address | ipaddr('revdns') }}"
         type: PTR
         private_zone: yes
@@ -484,6 +539,29 @@
         aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
         single_nic: true
       when: dr_compartment
+
+    - route53:
+        state: present
+        zone: "{{ vpc_shortname }}"
+        record: "mida-dr.{{ vpc_shortname }}"
+        type: A
+        private_zone: yes
+        ttl: 300
+        value: "{{ eth0.interface.private_ip_address }}"
+        wait: yes
+      when: dr_compartment
+
+    - route53:
+        state: present
+        zone: in-addr.arpa
+        hosted_zone_id: "{{ rev_zone }}"
+        record: "{{ eth0.interface.private_ip_address | ipaddr('revdns') }}"
+        type: PTR
+        private_zone: yes
+        ttl: 300
+        value: "mida-dr.{{ vpc_shortname }}"
+        wait: yes
+      when: dr_compartment
       
     - name: Add dr mid1 to mids group
       add_host:
@@ -504,6 +582,30 @@
         aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
         single_nic: true
       when: dr_compartment
+
+    - route53:
+        state: present
+        zone: "{{ vpc_shortname }}"
+        record: "midb-dr.{{ vpc_shortname }}"
+        type: A
+        private_zone: yes
+        ttl: 300
+        value: "{{ eth0.interface.private_ip_address }}"
+        wait: yes
+      when: dr_compartment
+
+    - route53:
+        state: present
+        zone: in-addr.arpa
+        hosted_zone_id: "{{ rev_zone }}"
+        record: "{{ eth0.interface.private_ip_address | ipaddr('revdns') }}"
+        type: PTR
+        private_zone: yes
+        ttl: 300
+        value: "midb-dr.{{ vpc_shortname }}"
+        wait: yes
+      when: dr_compartment
+
       
     - name: Add dr mid2 to mids group
       add_host:
@@ -541,17 +643,6 @@
         private_zone: yes
         ttl: 300
         value: "{{ eth1.interface.private_ip_address }}"
-        wait: yes
-      when: dr_compartment
-    
-    - route53:
-        state: present
-        zone: "{{ vpc_longname }}"
-        record: "proxydr.{{ vpc_longname }}"
-        type: A
-        private_zone: yes
-        ttl: 300
-        value: "{{ eth0.interface.private_ip_address }}"
         wait: yes
       when: dr_compartment
         
@@ -680,7 +771,13 @@
         rules:
           - proto: -1
             ports: 0
-            cidr_ip: 172.64.0.0/12
+            group_name: mgmt-net-all
+          - proto: -1
+            ports: 0
+            cidr_ip: "{{ vpc_management_cidr  }}"
+          - proto: -1
+            ports: 0
+            cidr_ip: "{{ manaz1_cidr.split('.')[0:2] | join('.') }}.0.0/12"
       register: mgmt_net_all_dr
       when: dr_compartment
       
@@ -690,19 +787,19 @@
     - include_role:
         name: csr_automation
       vars:
-        customer_accout: "{{ customer_account }}"
+        customer_account: 720232237161
         vpc_name: "{{ vpc_env_name }}"
-        vgw_owner: "{{ vgw_owner }}"
+        vgw_owner: "System Team"
         region: "{{ vpc_region }}"
-        key_arn: "{{ key_arn }}"
+        key_arn: arn:aws:kms:eu-central-1:000987835229:key/240704ea-5c16-4075-9fd0-3aeaef52e94d
         management_access_key: "{{ management_access_key }}"
         management_secret_key: "{{ management_secret_key }}"
         customer_access_key: "{{ customer_access_key }}"
         customer_secret_key: "{{ customer_secret_key }}"
-        bucket_name: "{{ bucket_name }}"
-        stack_name: "{{ stack_name }}"
-        vgw_name: "{{ vgw_name }}"
-        key_alias: "{{ key_alias }}"
+        bucket_name: sandbox-csr-automation-vpnconfigs3bucket-1ul5mfqbrghku
+        stack_name: ac-csr-stack
+        vgw_name: ac-csr-vgw
+        key_alias: sandbox-csr-automation-key
 
 - name: Configure FDE Server
   hosts: FDE
