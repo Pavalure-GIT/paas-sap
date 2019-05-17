@@ -7,15 +7,15 @@ ha: false
 dr_ha: false
 
 #Non-DR Vars
-vpc_cidr: 172.17.64.0/21, 172.16.0.0/20, 172.16.16.0/22, 172.16.20.0/23
-vpc_env_name: "Dev-Example"
+vpc_cidr: 172.17.24.0/21, 172.16.0.0/20, 172.16.16.0/22, 172.16.20.0/23
+vpc_env_name: "Dev-Alex"
 vpc_region: us-east-1
 pubaz1_cidr: 172.16.16.0/25
 pubaz2_cidr: 172.16.16.128/25
 pubaz3_cidr: 172.16.17.0/25
-manaz1_cidr: 172.17.64.0/23
-manaz2_cidr: 172.17.66.0/23
-manaz3_cidr: 172.17.68.0/23
+manaz1_cidr: 172.17.24.0/23
+manaz2_cidr: 172.17.26.0/23
+manaz3_cidr: 172.17.28.0/23
 custaz1_cidr: 172.16.0.0/22
 custaz2_cidr: 172.16.4.0/22
 custaz3_cidr: 172.16.8.0/22
@@ -23,13 +23,15 @@ clustaz1_cidr: 172.16.18.0/24
 clustaz2_cidr: 172.16.19.0/24
 clustaz3_cidr: 172.16.20.0/24
 vpc_management_cidr: 10.4.0.0/22
-vpc_shortname: exa.aws.paas4sap.svcs.entsvcs.com
-vpc_longname: example.paas4sap.svcs.entsvcs.com
-key_name: 064692377866DevCustomerCompartment
+vpc_shortname: ac.aws.paas4sap.svcs.entsvcs.com
+vpc_longname: alextest.paas4sap.svcs.entsvcs.com
+key_name: SystemTeam
 
 #FDE
 fde_instance_type: c5.large
 fde_image: ami-3c062943
+customer_range: 172.16.0.0/21
+management_range: 172.17.64.0/21
 
 #SAPRouter
 proxy_instance_type: t2.xlarge
@@ -38,6 +40,15 @@ proxy_image: ami-3c062943
 #MidServers
 mid_instance_type: t2.small
 mid_image: ami-6871a115
+
+#CSR
+customer_account: 720232237161
+vgw_owner: "System Team"
+key_arn: arn:aws:kms:eu-central-1:000987835229:key/240704ea-5c16-4075-9fd0-3aeaef52e94d
+bucket_name: sandbox-csr-automation-vpnconfigs3bucket-1ul5mfqbrghku
+stack_name: ac-csr-stack
+vgw_name: ac-csr-vgw
+key_alias: sandbox-csr-automation-key
 
 #BUaaS
 buaas_nwr_srv_instance_type: c4.2xlarge

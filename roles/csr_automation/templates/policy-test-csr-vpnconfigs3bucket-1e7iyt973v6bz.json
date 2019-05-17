@@ -1,0 +1,112 @@
+{
+    "Version": "2008-10-17",
+    "Statement": [
+        {
+            "Sid": "DenyUnEncryptedObjectUploads",
+            "Effect": "Deny",
+            "Principal": "*",
+            "Action": "s3:PutObject",
+            "Resource": "arn:aws:s3:::test-csr-vpnconfigs3bucket-1e7iyt973v6bz/vpnconfigs/*",
+            "Condition": {
+                "StringNotEquals": {
+                    "s3:x-amz-server-side-encryption": "aws:kms"
+                }
+            }
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::588293285013:root"
+            },
+            "Action": [
+                "s3:GetObject",
+                "s3:PutObject",
+                "s3:PutObjectAcl"
+            ],
+            "Resource": "arn:aws:s3:::test-csr-vpnconfigs3bucket-1e7iyt973v6bz/vpnconfigs/*"
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::588293285013:root"
+            },
+            "Action": [
+                "s3:GetObject",
+                "s3:PutObject",
+                "s3:PutObjectAcl"
+            ],
+            "Resource": "arn:aws:s3:::test-csr-vpnconfigs3bucket-1e7iyt973v6bz/vpnconfigs/CSR1/*"
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::588293285013:root"
+            },
+            "Action": [
+                "s3:GetObject",
+                "s3:PutObject",
+                "s3:PutObjectAcl"
+            ],
+            "Resource": "arn:aws:s3:::test-csr-vpnconfigs3bucket-1e7iyt973v6bz/vpnconfigs/CSR2/*"
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::064692377866:root"
+            },
+            "Action": [
+                "s3:GetObject",
+                "s3:PutObject",
+                "s3:PutObjectAcl"
+            ],
+            "Resource": "arn:aws:s3:::test-csr-vpnconfigs3bucket-1e7iyt973v6bz/vpnconfigs/*"
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::064692377866:root"
+            },
+            "Action": [
+                "s3:GetObject",
+                "s3:PutObject",
+                "s3:PutObjectAcl"
+            ],
+            "Resource": "arn:aws:s3:::test-csr-vpnconfigs3bucket-1e7iyt973v6bz/vpnconfigs/CSR1/*"
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::064692377866:root"
+            },
+            "Action": [
+                "s3:GetObject",
+                "s3:PutObject",
+                "s3:PutObjectAcl"
+            ],
+            "Resource": "arn:aws:s3:::test-csr-vpnconfigs3bucket-1e7iyt973v6bz/vpnconfigs/CSR2/*"
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::{{ customer_account }}:root"
+            },
+            "Action": [
+                "s3:GetObject",
+                "s3:PutObject",
+                "s3:PutObjectAcl"
+            ],
+            "Resource": "arn:aws:s3:::test-csr-vpnconfigs3bucket-1e7iyt973v6bz/vpnconfigs/*"
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::470172651571:user/charlottevarley"
+            },
+            "Action": "s3:*",
+            "Resource": [
+                "arn:aws:s3:::test-csr-vpnconfigs3bucket-1e7iyt973v6bz",
+                "arn:aws:s3:::test-csr-vpnconfigs3bucket-1e7iyt973v6bz/*"
+            ]
+        }
+    ]
+}

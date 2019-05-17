@@ -1,0 +1,81 @@
+---
+
+- name: Replace s3 bucket policy with updated access
+  s3_bucket:
+    name: "{{ bucket_name }}"
+    policy: "{{ lookup('template','policy.json') }}"
+    state: present
+    aws_access_key: "{{ management_access_key }}"
+    aws_secret_key: "{{ management_secret_key }}"
+
+- aws_kms_facts:
+    filters:
+      alias: "{{ key_alias }}"
+    region: eu-central-1
+   # region: "{{ region }}"
+    aws_access_key: "{{ management_access_key }}"
+    aws_secret_key: "{{ management_secret_key }}"
+  register: kms
+
+- debug: var=kms
+
+- debug: var=kms['keys'][0].key_arn
+  register: key_arn
+
+- debug: var=key_arn
+
+- name: Update kms key policy for user access
+  aws_kms: 
+  args:
+    mode: grant
+    key_arn: "{{ key_arn }}"
+    #role_name: "Allow use of the key"
+    role_arn: "arn:aws:iam::{{ customer_account }}:root"
+    grant_types: "role"
+    aws_access_key: "{{ management_access_key }}"
+    aws_secret_key: "{{ management_secret_key }}"
+    region: eu-central-1
+    #region: "{{ region }}"
+
+- name: Create a CSR function stack, pass in the template via an URL
+  cloudformation:
+    stack_name: "{{ stack_name }}"
+    state: present
+    region: "{{ region }}"
+    disable_rollback: true
+    template_url: https://s3.amazonaws.com/solutions-reference/transit-vpc/latest/transit-vpc-second-account.template
+    aws_access_key: "{{ customer_access_key }}"
+    aws_secret_key: "{{ customer_secret_key }}"
+    template_parameters:
+      BucketName: "{{ bucket_name }}"
+      BucketPrefix: vpnconfigs/
+    tags:
+      Stack: ansible-cloudformation
+
+- name: Get vpc facts to retreive vpc_id
+  ec2_vpc_net_facts:
+    filters:
+      "tag:Name": "{{ vpc_name }}"
+    aws_access_key: "{{ customer_access_key }}"
+    aws_secret_key: "{{ customer_secret_key }}"
+    region: "{{ region }}"
+  register: vpc
+
+- debug: var=vpc.vpcs[0].vpc_id
+  register: vpc_id_value
+
+- debug: var=vpc_id_value
+
+- name: Create a new unattached vgw
+  ec2_vpc_vgw:
+     state: present
+     asn: 64513
+     region: "{{ region }}"
+     name: "{{ vgw_name }}"
+     type: ipsec.1
+     vpc_id: "{{ vpc.vpcs[0].vpc_id }}"
+     tags:
+       owner: "{{ vgw_owner }}"
+       transitvpc:spoke: 'true'
+     aws_access_key: "{{ customer_access_key }}"
+     aws_secret_key: "{{ customer_secret_key }}"

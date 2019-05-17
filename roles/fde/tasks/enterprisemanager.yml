@@ -106,6 +106,11 @@
     - /usr/sap/ccms
     - /usr/sap/ccms/apmintroscope
 
+
+- name: Refresh Repos
+  shell: /usr/sbin/registercloudguest --force-new
+
+
 - name: Change Owner on WILYEM directory
   file:
     path: /media/SAP/WILYEM
@@ -163,6 +168,9 @@
 - name: Start EM
   command: /usr/sap/ccms/apmintroscope/bin/EMCtrl.sh start
   become_user: sapadm
+<<<<<<< HEAD
+
+=======
   args:
     chdir: /usr/sap/ccms/apmintroscope/bin/
 
@@ -204,3 +212,4 @@
   command: ./saphostexec -install
   args:
     chdir: /media/SAP/SAPHOSTAGENT37_37-20009394
+>>>>>>> master
