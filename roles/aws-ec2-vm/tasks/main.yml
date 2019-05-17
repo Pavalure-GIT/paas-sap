@@ -7,6 +7,13 @@
     state: present
   register: eth0
 
+- debug: var=eth0
+
+- set_fact:
+     eth0_id: "{{ eth0.interface.id }}"
+
+- debug: var=eth0_id
+
 #eth1
 - ec2_eni:
     security_groups: "{{ aws_ec2_vm_eth1_groups }}"
@@ -15,6 +22,14 @@
     state: present
   register: eth1
   when: not single_nic
+
+- debug: var=eth1
+
+- set_fact:
+     eth1_id: "{{ eth1.interface.id }}"
+  when: not single_nic
+
+- debug: var=eth1_id
 
 - name: create "{{ aws_ec2_vm_Name }}"
   ec2:
@@ -41,3 +56,8 @@
     wait: true
   register: ec2_vm
   when: not single_nic
+
+- debug: var=ec2_vm
+
+- name: Additional Security Groups
+  include_tasks: additional_sgs.yml

@@ -178,7 +178,7 @@
   register: saprtr_mgt
 
 - ec2_group:
-    name: saprtr-mgt
+    name: saprtr-pub
     description: The interfaces of any SAP routers on any management networks must be assigned to this security group
     vpc_id: "{{ customer_network.vpc.id }}"
     region: "{{ aws_customer_vpc_region }}"
