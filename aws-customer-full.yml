@@ -63,6 +63,8 @@
         aws_ec2_vm_eth1_subnet: "{{ managementaz1.subnet.id }}"
         aws_ec2_vm_eth0_groups: "{{ cust_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ customeraz1.subnet.id }}"
+        aws_eth0_security_groups: "{{ fde_eth0_security_groups }}"
+        aws_eth1_security_groups: "{{ fde_eth1_security_groups }}"
         single_nic: false
         
     - name: Add FDE to fde group
@@ -125,6 +127,8 @@
         aws_ec2_vm_eth1_subnet: "{{ managementaz2.subnet.id }}"
         aws_ec2_vm_eth0_groups: "{{ cust_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ customeraz2.subnet.id }}"
+        aws_eth0_security_groups: "{{ fde_eth0_security_groups }}"
+        aws_eth1_security_groups: "{{ fde_eth1_security_groups }}"
         single_nic: false
       when: ha
       
@@ -145,6 +149,7 @@
         aws_ec2_vm_image: "{{ mid_image }}"
         aws_ec2_vm_eth0_groups: "{{ mgmt_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
+        aws_eth0_security_groups: "{{ mid_eth0_security_groups }}"
         single_nic: true
 
     - route53:
@@ -184,6 +189,7 @@
         aws_ec2_vm_image: "{{ mid_image }}"
         aws_ec2_vm_eth0_groups: "{{ mgmt_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
+        aws_eth0_security_groups: "{{ mid_eth0_security_groups }}"
         single_nic: true
 
     - route53:
@@ -223,6 +229,7 @@
         aws_ec2_vm_image: "{{ buaas_nwr_srv_image }}"
         aws_ec2_vm_eth0_groups: "{{ mgmt_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
+        aws_eth0_security_groups: "{{ buaas_eth0_security_groups }}"
         single_nic: true
       when: buaas
         
@@ -260,6 +267,7 @@
         aws_ec2_vm_image: "{{ buaas_nwr_con_image }}"
         aws_ec2_vm_eth0_groups: "{{ mgmt_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
+        aws_eth0_security_groups: "{{ buaas_eth0_security_groups }}"
         single_nic: true
       when: buaas
         
@@ -297,6 +305,7 @@
         aws_ec2_vm_image: "{{ buaas_cb_image }}"
         aws_ec2_vm_eth0_groups: "{{ mgmt_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
+        aws_eth0_security_groups: "{{ buaas_eth0_security_groups }}"
         single_nic: true
       when: buaas
         
@@ -336,6 +345,8 @@
         aws_ec2_vm_eth1_subnet: "{{ managementaz1.subnet.id }}"
         aws_ec2_vm_eth0_groups: "{{ pub_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ publicaz1.subnet.id }}"
+        aws_eth0_security_groups: "{{ sap_eth0_security_groups }}"
+        aws_eth1_security_groups: "{{ sap_eth1_security_groups }}"
         single_nic: false
         
     - name: Add saprouter to saprouter group
@@ -377,6 +388,8 @@
         aws_ec2_vm_eth1_subnet: "{{ managementaz2.subnet.id }}"
         aws_ec2_vm_eth0_groups: "{{ pub_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ publicaz2.subnet.id }}"
+        aws_eth0_security_groups: "{{ sap_eth0_security_groups }}"
+        aws_eth1_security_groups: "{{ sap_eth1_security_groups }}"
         single_nic: false
       when: ha
       
@@ -449,6 +462,8 @@
         aws_ec2_vm_eth1_subnet: "{{ managementaz1.subnet.id }}"
         aws_ec2_vm_eth0_groups: "{{ cust_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ customeraz1.subnet.id }}"
+        aws_eth0_security_groups: "{{ fde_eth0_security_groups }}"
+        aws_eth1_security_groups: "{{ fde_eth1_security_groups }}"
         single_nic: false
       when: dr_compartment
       
@@ -517,6 +532,8 @@
         aws_ec2_vm_eth1_subnet: "{{ managementaz2.subnet.id }}"
         aws_ec2_vm_eth0_groups: "{{ cust_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ customeraz2.subnet.id }}"
+        aws_eth0_security_groups: "{{ fde_eth0_security_groups }}"
+        aws_eth1_security_groups: "{{ fde_eth1_security_groups }}"
         single_nic: false
       when: dr_ha
       
@@ -537,6 +554,7 @@
         aws_ec2_vm_image: "{{ dr_mid_image }}"
         aws_ec2_vm_eth0_groups: "{{ mgmt_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
+        aws_eth0_security_groups: "{{ mid_eth0_security_groups }}"
         single_nic: true
       when: dr_compartment
 
@@ -580,6 +598,7 @@
         aws_ec2_vm_image: "{{ dr_mid_image }}"
         aws_ec2_vm_eth0_groups: "{{ mgmt_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
+        aws_eth0_security_groups: "{{ mid_eth0_security_groups }}"
         single_nic: true
       when: dr_compartment
 
@@ -626,6 +645,8 @@
         aws_ec2_vm_eth1_subnet: "{{ managementaz1.subnet.id }}"
         aws_ec2_vm_eth0_groups: "{{ pub_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ publicaz1.subnet.id }}"
+        aws_eth0_security_groups: "{{ sap_eth0_security_groups }}"
+        aws_eth1_security_groups: "{{ sap_eth1_security_groups }}"
         single_nic: false
       when: dr_compartment
       
@@ -671,6 +692,8 @@
         aws_ec2_vm_eth1_subnet: "{{ managementaz2.subnet.id }}"
         aws_ec2_vm_eth0_groups: "{{ pub_net_all.group_id }}"
         aws_ec2_vm_eth0_subnet: "{{ publicaz2.subnet.id }}"
+        aws_eth0_security_groups: "{{ sap_eth0_security_groups }}"
+        aws_eth1_security_groups: "{{ sap_eth1_security_groups }}"
         single_nic: false
       when: dr_ha
       
