@@ -2,43 +2,60 @@
 - name: Create DR Infrastructure
   hosts: localhost
   tasks:
+    #AWS customer infrastructure role called, this creates the required infrastructure for a DR customer compartment
     - name: Create VPC, Subnets, NAT Gateways, Route Tables, Security Groups and Route53 Zones
       include_role:
         name: aws-customer-infrastructure
       vars:
+        #A list of CIDR ranges for the VPC is passed in
         aws_customer_vpc_cidr: "{{ dr_vpc_cidr }}"
+        #The desired name for the VPC is given
         aws_customer_vpc_env_name: "{{ dr_vpc_env_name }}"
+        #The desired region is given
         aws_customer_vpc_region: "{{ dr_vpc_region }}"
+        #The CIDR range for each Public subnet is given
         publicaz1_cidr: "{{ dr_pubaz1_cidr }}"
         publicaz2_cidr: "{{ dr_pubaz2_cidr }}"
         publicaz3_cidr: "{{ dr_pubaz3_cidr }}"
+        #The CIDR range for each Management subnet is given
         managementaz1_cidr: "{{ dr_manaz1_cidr }}"
         managementaz2_cidr: "{{ dr_manaz2_cidr }}"
         managementaz3_cidr: "{{ dr_manaz3_cidr }}"
+        #The CIDR range for each Customer subnet is given
         customeraz1_cidr: "{{ dr_custaz1_cidr }}"
         customeraz2_cidr: "{{ dr_custaz2_cidr }}"
         customeraz3_cidr: "{{ dr_custaz3_cidr }}"
+        #The CIDR range for each Clustering/Reserved subnet is given
         clusteraz1_cidr: "{{ dr_clustaz1_cidr }}"
         clusteraz2_cidr: "{{ dr_clustaz2_cidr }}"
         clusteraz3_cidr: "{{ dr_clustaz3_cidr }}"
+        #The CIDR range of the attached management compartment is given
         aws_customer_vpc_management_cidr: "{{ vpc_management_cidr }}"
+        #The management dns zone is given as shortname
         aws_customer_vpc_shortname: "{{ vpc_shortname }}"
+        #The customer dns zone is given as longname
         aws_customer_vpc_longname: "{{ vpc_longname }}"
+        #create_zone is set to false as this is the DR compartment and DNS zones have already been created
         create_zone: false
+        #The single_az flag is used to indicate if additional AZ subnets need to created
         single_az: "{{ dr_single_availability_zone }}"
       when: dr_compartment
+    #The VPC ID of the created compartment is set as a variable so it can later be used for peering
     - name: Set VPC ID for DR Peering
       set_fact:
         drvpcid: "{{ customer_network.vpc.id }}"
       when: dr_compartment
+    #The AZ route table ID from the created compartment is set as a variable so it can later be used for peering
     - name: Set DR Management AZ1 Route Table ID for DR Peering
       set_fact:
         drmanaz1rt: "{{ managementaz1_route_table.route_table.route_table_id }}"
       when: dr_compartment
+    #The AZ route table ID from the created compartment is set as a variable so it can later be used for peering
     - name: Set DR Management AZ2 Route Table ID for DR Peering
       set_fact:
         drmanaz2rt: "{{ managementaz2_route_table.route_table.route_table_id }}"
       when: dr_compartment and not dr_single_availability_zone
+    #The AZ route table ID from the created compartment is set as a variable so it can later be used for peering
     - name: Set DR Management AZ3 Route Table ID for DR Peering
       set_fact:
         drmanaz3rt: "{{ managementaz3_route_table.route_table.route_table_id }}"
@@ -48,6 +65,7 @@
 - name: Provision Component Machines
   hosts: localhost
   tasks:
+    #Provision FDE VM, this machine has two network interfaces.
     - name: Provision FDE ec2 VM
       include_role:
         name: aws-ec2-vm
@@ -63,7 +81,41 @@
         aws_ec2_vm_eth0_subnet: "{{ customeraz1.subnet.id }}"
         single_nic: false
       when: dr_compartment
-      
+    #A management DNS entry is added to the management zone  
+    - route53:
+        state: present
+        zone: "{{ vpc_shortname }}"
+        record: "fdedr.{{ vpc_shortname }}"
+        type: A
+        private_zone: yes
+        ttl: 300
+        value: "{{ eth1.interface.private_ip_address }}"
+        wait: yes
+      when: dr_compartment
+    #A customer DNS entry is added to the customer zone
+    - route53:
+        state: present
+        zone: "{{ vpc_longname }}"
+        record: "fdedr.{{ vpc_longname }}"
+        type: A
+        private_zone: yes
+        ttl: 300
+        value: "{{ eth0.interface.private_ip_address }}"
+        wait: yes
+      when: dr_compartment
+    #Reverse DNS entries are added to the reverse zone    
+    - route53:
+        state: present
+        zone: in-addr.arpa
+        hosted_zone_id: "{{ rev_zone }}"
+        record: "{{ eth0.interface.private_ip_address | ipaddr('revdns') }}"
+        type: PTR
+        private_zone: yes
+        ttl: 300
+        value: "fdedr.{{ vpc_longname }}"
+        wait: yes
+      when: dr_compartment
+    #Provision FDE 2 VM, this machine has two network interfaces. This is created if HA is set to true
     - name: Provision FDE-2 ec2 VM
       include_role:
         name: aws-ec2-vm
@@ -79,41 +131,7 @@
         aws_ec2_vm_eth0_subnet: "{{ customeraz1.subnet.id }}"
         single_nic: false
       when: dr_ha
-
-    - route53:
-        state: present
-        zone: "{{ vpc_shortname }}"
-        record: "fdedr.{{ vpc_shortname }}"
-        type: A
-        private_zone: yes
-        ttl: 300
-        value: "{{ eth1.interface.private_ip_address }}"
-        wait: yes
-      when: dr_compartment
-
-    - route53:
-        state: present
-        zone: "{{ vpc_longname }}"
-        record: "fdedr.{{ vpc_longname }}"
-        type: A
-        private_zone: yes
-        ttl: 300
-        value: "{{ eth0.interface.private_ip_address }}"
-        wait: yes
-      when: dr_compartment
-        
-    - route53:
-        state: present
-        zone: in-addr.arpa
-        hosted_zone_id: "{{ rev_zone }}"
-        record: "{{ eth0.interface.private_ip_address | ipaddr('revdns') }}"
-        type: PTR
-        private_zone: yes
-        ttl: 300
-        value: "fdedr.{{ vpc_longname }}"
-        wait: yes
-      when: dr_compartment
-      
+    #MidServerA VM is created, only a management interface is created   
     - name: Provision MidServerA ec2 VM DR
       include_role:
         name: aws-ec2-vm
@@ -127,7 +145,7 @@
         aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
         single_nic: true
       when: dr_compartment
-        
+    #MidServerB VM is created, only a management interface is created     
     - name: Provision MidServerB ec2 VM DR
       include_role:
         name: aws-ec2-vm
@@ -141,7 +159,7 @@
         aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
         single_nic: true
       when: dr_compartment
-
+    #SAP Router VM is created
     - name: Provision SAP Router ec2 VM
       include_role:
         name: aws-ec2-vm
@@ -157,7 +175,7 @@
         aws_ec2_vm_eth0_subnet: "{{ publicaz1.subnet.id }}"
         single_nic: false
       when: dr_compartment
-      
+    #SAP Router VM is created  
     - name: Provision SAP Router ec2 VM
       include_role:
         name: aws-ec2-vm
@@ -173,7 +191,7 @@
         aws_ec2_vm_eth0_subnet: "{{ publicaz1.subnet.id }}"
         single_nic: false
       when: dr_ha
-
+    #An entry is added to the management DNS zone
     - route53:
         state: present
         zone: "{{ vpc_shortname }}"
@@ -184,18 +202,7 @@
         value: "{{ eth1.interface.private_ip_address }}"
         wait: yes
       when: dr_compartment
-    
-    - route53:
-        state: present
-        zone: "{{ vpc_longname }}"
-        record: "proxydr.{{ vpc_longname }}"
-        type: A
-        private_zone: yes
-        ttl: 300
-        value: "{{ eth0.interface.private_ip_address }}"
-        wait: yes
-      when: dr_compartment
-        
+    #A reverse entry is added to the reverse zone    
     - route53:
         state: present
         zone: in-addr.arpa
@@ -207,7 +214,7 @@
         value: "proxydr.{{ vpc_longname }}"
         wait: yes
       when: dr_compartment
-      
+    #Primary and DR VPCs are peered using peer role  
     - name: Peer VPCs
       include_role:
         name: peer
@@ -218,7 +225,7 @@
         vpc2: "{{ drvpcid }}"
         peer_name: "DR Peering"
       when: dr_compartment
-
+    #Primary Management Route Table AZ1 is updated to provide route to DR
     - name: Update Route Table Management AZ1
       ec2_vpc_route_table:
         vpc_id: "{{ existing_vpc_id }}"
@@ -230,7 +237,7 @@
           - dest: "{{ dr_manaz1_cidr }}"
             vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
       when: dr_compartment
-      
+    #Primary Management Route Table AZ2 is updated to provide route to DR
     - name: Update Route Table Management AZ2
       ec2_vpc_route_table:
         vpc_id: "{{ existing_vpc_id }}"
@@ -242,7 +249,7 @@
           - dest: "{{ dr_manaz2_cidr }}"
             vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
       when: dr_compartment and not dr_single_availability_zone
-      
+    #Primary Management Route Table AZ3 is updated to provide route to DR  
     - name: Update Route Table Management AZ3
       ec2_vpc_route_table:
         vpc_id: "{{ existing_vpc_id }}"
@@ -254,7 +261,7 @@
           - dest: "{{ dr_manaz3_cidr }}"
             vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
       when: dr_compartment and not dr_single_availability_zone
-      
+    #DR Management Route Table AZ1 is updated to provide route to Primary
     - name: Update DR Route Table Management AZ1
       ec2_vpc_route_table:
         vpc_id: "{{ drvpcid }}"
@@ -266,7 +273,7 @@
           - dest: "{{ existing_management_route_table_az1_cidr }}"
             vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
       when: dr_compartment
-      
+    #DR Management Route Table AZ2 is updated to provide route to Primary  
     - name: Update DR Route Table Management AZ2
       ec2_vpc_route_table:
         vpc_id: "{{ drvpcid }}"
@@ -278,7 +285,7 @@
           - dest: "{{ existing_management_route_table_az2_cidr }}"
             vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
       when: dr_compartment and not dr_single_availability_zone
-      
+    #DR Management Route Table AZ3 is updated to provide route to Primary  
     - name: Update DR Route Table Management AZ3
       ec2_vpc_route_table:
         vpc_id: "{{ drvpcid }}"
@@ -290,7 +297,7 @@
           - dest: "{{ existing_management_route_table_az3_cidr }}"
             vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
       when: dr_compartment and not dr_single_availability_zone
-
+    #Update Security group in DR to add rule allowing primary CIDR range in on all ports 
     - ec2_group:
         name: mgmt-net-all
         description: Every AWS interface in the VPCs AZ1 2 3 management networks must be assigned to this security group
