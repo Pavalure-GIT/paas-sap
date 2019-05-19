@@ -290,13 +290,19 @@
           - dest: "{{ existing_management_route_table_az3_cidr }}"
             vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
       when: dr_compartment and not dr_single_availability_zone
-      
+
     - ec2_group:
         name: mgmt-net-all
         description: Every AWS interface in the VPCs AZ1 2 3 management networks must be assigned to this security group
         vpc_id: "{{ drvpcid }}"
         region: "{{ dr_vpc_region }}"
         rules:
+          - proto: -1
+            ports: 0
+            group_name: mgmt-net-all
+          - proto: -1
+            ports: 0
+            cidr_ip: "{{ vpc_management_cidr  }}"
           - proto: -1
             ports: 0
             cidr_ip: 172.64.0.0/12
