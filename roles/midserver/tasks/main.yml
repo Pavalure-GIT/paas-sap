@@ -1,20 +1,26 @@
 # Automating MidServers
-
-- name: create directory
+#Create Directory for Mid Server agent
+- name: Create Directory
   file:
-    path: /servicenow/MidServerA
+    path: /servicenow/MidServer
     state: directory
   become: yes
-
-- name: pull down unzip from snow
+#Pull down zip from SNOW
+- name: pull down zip from snow
   get_url:
     url: https://install.service-now.com/glide/distribution/builds/package/mid/2018/01/03/mid.kingston-10-17-2017__patch1-12-12-2017_01-03-2018_0843.linux.x86-64.zip
     dest: /tmp 
     mode: 0777
-
+#Ensure unzip is installed
+- name: Install Unzip
+  yum:
+    name: unzip
+    state: present
+  become: yes
+# Unarchive zip to Mid Server directroy
 - unarchive:
     src: /tmp/mid.kingston-10-17-2017__patch1-12-12-2017_01-03-2018_0843.linux.x86-64.zip
-    dest: /servicenow/MidServerA
+    dest: /servicenow/MidServer
     remote_src: yes
   become: yes
 
