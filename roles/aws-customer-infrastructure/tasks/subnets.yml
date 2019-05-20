@@ -1,3 +1,4 @@
+#Create Cluster/Resereved Subnet AZ1
 - ec2_vpc_subnet:
     state: present
     vpc_id: "{{ customer_network.vpc.id }}"
@@ -7,6 +8,7 @@
     resource_tags:
       Name: "Cluster-net AZ1"
   register: clusteraz1
+#Create Cluster/Resereved Subnet AZ2
 - ec2_vpc_subnet:
     state: present
     vpc_id: "{{ customer_network.vpc.id }}"
@@ -17,6 +19,7 @@
       Name: "Cluster-net AZ2"
   register: clusteraz2
   when: not single_az
+#Create Cluster/Resereved Subnet AZ3
 - ec2_vpc_subnet:
     state: present
     vpc_id: "{{ customer_network.vpc.id }}"
@@ -27,6 +30,7 @@
       Name: "Cluster-net AZ3"
   register: clusteraz3
   when: not single_az
+#Create Customer Subnet AZ1
 - ec2_vpc_subnet:
     state: present
     vpc_id: "{{ customer_network.vpc.id }}"
@@ -36,6 +40,7 @@
     resource_tags:
       Name: "Customer-net AZ1"
   register: customeraz1
+#Create Customer Subnet AZ2
 - ec2_vpc_subnet:
     state: present
     vpc_id: "{{ customer_network.vpc.id }}"
@@ -46,6 +51,7 @@
       Name: "Customer-net AZ2"
   register: customeraz2
   when: not single_az
+#Create Customer Subnet AZ3
 - ec2_vpc_subnet:
     state: present
     vpc_id: "{{ customer_network.vpc.id }}"
@@ -56,6 +62,7 @@
       Name: "Customer-net AZ3"
   register: customeraz3
   when: not single_az
+#Create Management Subnet AZ1
 - ec2_vpc_subnet:
     state: present
     vpc_id: "{{ customer_network.vpc.id }}"
@@ -65,6 +72,7 @@
     resource_tags:
       Name: "Management-net AZ1"
   register: managementaz1
+#Create Management Subnet AZ2
 - ec2_vpc_subnet:
     state: present
     vpc_id: "{{ customer_network.vpc.id }}"
@@ -75,6 +83,7 @@
       Name: "Management-net AZ2"
   register: managementaz2
   when: not single_az
+#Create Management Subnet AZ3
 - ec2_vpc_subnet:
     state: present
     vpc_id: "{{ customer_network.vpc.id }}"
@@ -85,6 +94,7 @@
       Name: "Management-net AZ3"
   register: managementaz3
   when: not single_az
+#Create Public Subnet AZ1
 - ec2_vpc_subnet:
     state: present
     vpc_id: "{{ customer_network.vpc.id }}"
@@ -94,6 +104,7 @@
     resource_tags:
       Name: "Public-net AZ1"
   register: publicaz1
+#Create Public Subnet AZ2
 - ec2_vpc_subnet:
     state: present
     vpc_id: "{{ customer_network.vpc.id }}"
@@ -104,6 +115,7 @@
       Name: "Public-net AZ2"
   register: publicaz2
   when: not single_az
+#Create Public Subnet AZ3
 - ec2_vpc_subnet:
     state: present
     vpc_id: "{{ customer_network.vpc.id }}"
