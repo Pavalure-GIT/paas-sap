@@ -79,3 +79,13 @@
        transitvpc:spoke: 'true'
      aws_access_key: "{{ customer_access_key }}"
      aws_secret_key: "{{ customer_secret_key }}"
+  register: vgw
+
+- debug: var=vgw
+
+- ec2_vpc_route_table:
+    vpc_id: "{{ vgw.vgw.vpc_id }}"
+    region: "{{ region }}"
+    tags:
+      Name: Management AZ1
+    propagating_vgw_ids: "{{ vgw.vgw.id }}"

@@ -728,7 +728,7 @@
         key_alias: sandbox-csr-automation-key
 
 - name: Configure FDE Server
-  hosts: FDE
+  hosts: fde
   tasks:
     - name: Call role
       include_role:
@@ -762,7 +762,7 @@
         fde_ip: "{{ ansible_default_ipv4.address }}"
 
 - name: Configure SAP Router Server
-  hosts: SAPRouter
+  hosts: saprouter
   tasks:
     - name: Call SAP Router Role
       include_role:
