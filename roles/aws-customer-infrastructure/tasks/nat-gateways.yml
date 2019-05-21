@@ -1,9 +1,11 @@
+#Create AZ1 NAT Gateway in Public AZ1 Subnet
 - ec2_vpc_nat_gateway:
     state: present
     subnet_id: "{{ publicaz1.subnet.id }}"
     wait: yes
     region: "{{ aws_customer_vpc_region }}"
   register: az1_nat_gateway
+#Create AZ2 NAT Gateway in Public AZ2 Subnet - When not single AZ customer
 - ec2_vpc_nat_gateway:
     state: present
     subnet_id: "{{ publicaz2.subnet.id }}"
@@ -11,6 +13,7 @@
     region: "{{ aws_customer_vpc_region }}"
   register: az2_nat_gateway
   when: not single_az
+#Create AZ3 NAT Gateway in Public AZ3 Subnet - When not single AZ customer
 - ec2_vpc_nat_gateway:
     state: present
     subnet_id: "{{ publicaz3.subnet.id }}"

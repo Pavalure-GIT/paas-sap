@@ -63,38 +63,55 @@
   ignore_errors: yes
   when: terminate
 
-#- name: Find VGWs for Region
-#  ec2_vpc_vgw_facts:
-#    region: "{{ region }}"
-#  register: vgw_facts
+- name: Find VGWs for Region
+  ec2_vpc_vgw_facts:
+    region: "{{ region }}"
+  register: vgw_facts
 
-#- name: Locate Attached VGW
-#  set_fact:
-#    tags: "{{ item.tags }}"
-#  with_items: "{{ vgw_facts.virtual_gateways }}"
-#  when: item.vpc_attachments[0].vpc_id == "{{ vpc }}"
+- name: Gather facts about vpn connections
+  ec2_vpc_vpn_facts:
+    filters:
+      vpn-gateway-id: "{{ gateway_id }}"
+  register: connections
 
-#- name: Locate Name
-#  set_fact:
-#    vgw_name: "{{ item.value }}"
-#  with_items: "{{ tags }}"
-#  when:
-#    - tags is defined
-#    - item.key == "Name"
+- debug: var=connections
 
-#- name: Remove VGW
-#  ec2_vpc_vgw:
-#    region: "{{ region }}"
-#    vpc_id: "{{ vpc }}"
-#    name: "{{ vgw_name }}"
-#    state: absent
-#  when:
-#    - vgw_name is defined
-#    - terminate
+- name: Remove all VPN connections for a VGW
+  ec2_vpc_vpn:
+    state: absent
+    vpn_connection_id: "{{ item.vpn_connection_id }}"
+  with_items: "{{ connections.vpn_connections }}"
+
+- name: Remove tag from virtual private gateway
+  ec2_tag:
+    region: "{{ region }}"
+    resource: "{{ gateway_id }}"
+    state: absent
+    tags:
+      Name: cv-csr-vgw
+      owner: System Team
+      transitvpc:spoke: 'true'
+
+- pause:
+    minutes: 1
+
+- name: Remove VGW
+  ec2_vpc_vgw:
+    region: "{{ region }}"
+    vpc_id: "{{ vpc }}"
+    vpn_gateway_id: "{{ gateway_id }}"
+    state: absent
+    wait_timeout: 320
+  when:
+    - terminate
+
+- pause:
+    minutes: 1
 
 - ec2_vpc_net_facts:
     vpc_ids: "{{ vpc }}"
   register: vpc_facts
+
 
 - name: Remove the VPC
   ec2_vpc_net:
@@ -107,4 +124,3 @@
        Name: "{{ vpc_name }}"
   with_items: "{{ vpc_facts.vpcs }}"
   when: terminate
-

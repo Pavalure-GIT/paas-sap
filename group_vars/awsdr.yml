@@ -1,48 +1,65 @@
 #Options
 dr_compartment: true
+#dr_single_availability_zone is set to true if only a single AZ is required for the DR compartment
 dr_single_availability_zone: true
+#Setting ha to true will create a second FDE and SAP Router server in AZ2 for the DR compartment
 dr_ha: false
 
 #Non-DR Vars
+#Existing VPC Region for Primary
 existing_vpc_region: us-east-1
+#Existing VPC ID the DR will be peered to
 existing_vpc_id: vpc-0f2497e0bc942b933
+#Existing management route table IDs and CIDRs
 existing_management_route_table_az1_id: rtb-0fe0feb7097af3462
 existing_management_route_table_az1_cidr: 172.17.48.0/23
 existing_management_route_table_az2_id: rtb-0f6e701b92f237b62
 existing_management_route_table_az2_cidr: 172.17.50.0/23
 existing_management_route_table_az3_id: rtb-08d78cc5a480c2f86
 existing_management_route_table_az3_cidr: 172.17.52.0/23
+#Management VPC CIDR range
 vpc_management_cidr: 10.4.0.0/22
+#Existing Customer/Management DNS Zones
 vpc_shortname: devac.aws.paas4sap.svcs.entsvcs.com
 vpc_longname: devalex.paas4sap.svcs.entsvcs.com
+#ID of existing reverse DNS zone
 rev_zone: ZQTUMZX5ITUGB
+
+#Key name - This needs to exist on the subscription within the DR region
 key_name: 064692377866DevCustomerCompartment
 
-#MidServers-DR
+#MidServers-DR AMI and Instance Type
 dr_mid_image: ami-03291866
 mid_instance_type: t2.small
 
-#DR FDE
+#DR FDE AMI and Instance Type
 dr_fde_image: ami-cd98a0a8
 fde_instance_type: c5.large
 
-#DR SAPRouter
+#DR SAPRouter AMI and Instance Type
 dr_proxy_image: ami-cd98a0a8
 proxy_instance_type: t2.xlarge
 
 #DR Vars
+#CIDR ranges for the Customer DR VPC
 dr_vpc_cidr: 100.17.64.0/21, 100.16.0.0/20, 100.16.16.0/22, 100.16.20.0/23
+#Name to be given to Customer DR VPC
 dr_vpc_env_name: "DR-Dev-Example"
+#Region for Customer DR VPC
 dr_vpc_region: us-east-2
+#Public Subnet CIDR ranges for each AZ
 dr_pubaz1_cidr: 100.16.16.0/25
 dr_pubaz2_cidr: 100.16.16.128/25
 dr_pubaz3_cidr: 100.16.17.0/25
+#Management Subnet CIDR ranges for each AZ
 dr_manaz1_cidr: 100.17.64.0/23
 dr_manaz2_cidr: 100.17.66.0/23
 dr_manaz3_cidr: 100.17.68.0/23
+#Customer Subnet CIDR ranges for each AZ
 dr_custaz1_cidr: 100.16.0.0/22
 dr_custaz2_cidr: 100.16.4.0/22
 dr_custaz3_cidr: 100.16.8.0/22
+#Clustering/Reserved Subnet CIDR ranges for each AZ
 dr_clustaz1_cidr: 100.16.18.0/24
 dr_clustaz2_cidr: 100.16.19.0/24
 dr_clustaz3_cidr: 100.16.20.0/24

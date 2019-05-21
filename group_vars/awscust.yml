@@ -1,38 +1,61 @@
 #Options
 # Note when running DR - single_availability_zone = true then dr_single_availability_zone has to = true else the provision will fail.
+#single_availability_zone is set to true if only a single AZ is required for the customer
 single_availability_zone: true
+#busaas is set to true if BUaaS management servers are to be created, please note this requires the correct AMIs to be shared to the subscription in advance
 buaas: true
+#dr_compartment is set to true if a DR compartment is required, this will create the compartment and peer it to the primary compartment
 dr_compartment: false
+#dr_single_availability_zone is set to true if only a single AZ is required for the DR compartment
 dr_single_availability_zone: false
+#Setting ha to true will create a second FDE and SAP Router server in AZ2
 ha: false
+#Setting ha to true will create a second FDE and SAP Router server in AZ2 for the DR compartment
 dr_ha: false
 
 #Non-DR Vars
+#CIDR ranges for the Customer Primary VPC
 vpc_cidr: 172.17.24.0/21, 172.16.0.0/20, 172.16.16.0/22, 172.16.20.0/23
-vpc_env_name: "Dev-Test"
+#Name to be given to Customer Primary VPC
+vpc_env_name: "Dev-Charlotte"
+#Region for Customer Primary VPC
 vpc_region: us-east-1
+#Public Subnet CIDR ranges for each AZ
 pubaz1_cidr: 172.16.16.0/25
 pubaz2_cidr: 172.16.16.128/25
 pubaz3_cidr: 172.16.17.0/25
+#Management Subnet CIDR ranges for each AZ
 manaz1_cidr: 172.17.24.0/23
 manaz2_cidr: 172.17.26.0/23
 manaz3_cidr: 172.17.28.0/23
+#Customer Subnet CIDR ranges for each AZ
 custaz1_cidr: 172.16.0.0/22
 custaz2_cidr: 172.16.4.0/22
 custaz3_cidr: 172.16.8.0/22
+#Clustering/Reservered Subnet CIDR ranges for each AZ
 clustaz1_cidr: 172.16.18.0/24
 clustaz2_cidr: 172.16.19.0/24
 clustaz3_cidr: 172.16.20.0/24
+#Managemnt VPC CIDR range, this is required to setup security groups correctly
 vpc_management_cidr: 10.4.0.0/22
 vpc_shortname: ts.aws.paas4sap.svcs.entsvcs.com
 vpc_longname: test.paas4sap.svcs.entsvcs.com
+#This is the management DNS zone name, or shortname
+vpc_shortname: cv.aws.paas4sap.svcs.entsvcs.com
+#This is the customer DNS zone name, or longname
+vpc_longname: chartest.paas4sap.svcs.entsvcs.com
+#Key to be used for the provisioned machines, this must exist on the subscription and also the machine the automation is ran from, so it can be used for machine configuration
 key_name: SystemTeamAutomation
 
 #FDE
+#Instance type/size
 fde_instance_type: c5.large
+#Image to be used - this varies from region to region
 fde_image: ami-3c062943
+#Customer and Management ranges, used for FDE configuration
 customer_range: 172.16.0.0/21
 management_range: 172.17.64.0/21
+#Security groups - assigned per network interface
 fde_eth0_security_groups:
   - cust-net-all
   - proxy-dns-cst
@@ -41,8 +64,11 @@ fde_eth1_security_groups:
   - proxy-dns-mgt
 
 #SAPRouter
+#Instance type/size
 proxy_instance_type: t2.xlarge
+#Image to be used - this varies from region to region
 proxy_image: ami-3c062943
+#Security groups - assigned per network interface
 sap_eth0_security_groups:
   - pub-net-all
   - saprtr-pub
@@ -51,45 +77,69 @@ sap_eth1_security_groups:
   - saprtr-mgt
 
 #MidServers
+#Instance type/size
 mid_instance_type: t2.small
+#Image to be used - this varies from region to region
 mid_image: ami-6871a115
+#Security groups - assigned per network interface
 mid_eth0_security_groups:
   - mgmt-net-all
   - mid-mgt
 
+#CSR
+customer_account: 720232237161
+vgw_owner: "System Team"
+key_arn: arn:aws:kms:eu-central-1:000987835229:key/240704ea-5c16-4075-9fd0-3aeaef52e94d
+bucket_name: sandbox-csr-automation-vpnconfigs3bucket-1ul5mfqbrghku
+stack_name: ac-csr-stack
+vgw_name: ac-csr-vgw
+key_alias: sandbox-csr-automation-key
+
 #BUaaS
+#Instance types and AMIs for BUaaS - The AMIs need to be pre-shared from the BUaaS Team
 buaas_nwr_srv_instance_type: c4.2xlarge
 buaas_nwr_srv_image: ami-3c062943
 buaas_nwr_con_instance_type: t2.large
 buaas_nwr_con_image: ami-3c062943
 buaas_cb_instance_type: m4.2xlarge
 buaas_cb_image: ami-3c062943
+#Security groups - assigned per network interface
 buaas_eth0_security_groups:
   - mgmt-net-all
   - buaas-mgt
 
 #MidServers-DR
+#DR Image - For alternate region (Ohio)
 dr_mid_image: ami-03291866
 
 #DR FDE
+#DR Image - For alternate region (Ohio)
 dr_fde_image: ami-cd98a0a8
 
 #DR SAPRouter
+#DR Image - For alternate region (Ohio)
 dr_proxy_image: ami-cd98a0a8
 
 #DR Vars
+#CIDR ranges for the Customer DR VPC
 dr_vpc_cidr: 100.17.64.0/21, 100.16.0.0/20, 100.16.16.0/22, 100.16.20.0/23
+#Name to be given to Customer DR VPC
 dr_vpc_env_name: "DR-Dev-Example"
+#Region for Customer DR VPC
 dr_vpc_region: us-east-2
+#Public Subnet CIDR ranges for each AZ
 dr_pubaz1_cidr: 100.16.16.0/25
 dr_pubaz2_cidr: 100.16.16.128/25
 dr_pubaz3_cidr: 100.16.17.0/25
+#Management Subnet CIDR ranges for each AZ
 dr_manaz1_cidr: 100.17.64.0/23
 dr_manaz2_cidr: 100.17.66.0/23
 dr_manaz3_cidr: 100.17.68.0/23
+#Customer Subnet CIDR ranges for each AZ
 dr_custaz1_cidr: 100.16.0.0/22
 dr_custaz2_cidr: 100.16.4.0/22
 dr_custaz3_cidr: 100.16.8.0/22
+#Clustering/Reserved Subnet CIDR ranges for each AZ
 dr_clustaz1_cidr: 100.16.18.0/24
 dr_clustaz2_cidr: 100.16.19.0/24
 dr_clustaz3_cidr: 100.16.20.0/24
