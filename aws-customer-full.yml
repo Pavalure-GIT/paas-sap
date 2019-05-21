@@ -840,59 +840,52 @@
     - include_role:
         name: csr_automation
       vars:
-        customer_account: 720232237161
         vpc_name: "{{ vpc_env_name }}"
-        vgw_owner: "System Team"
         region: "{{ vpc_region }}"
-        key_arn: arn:aws:kms:eu-central-1:000987835229:key/240704ea-5c16-4075-9fd0-3aeaef52e94d
-        management_access_key: "{{ management_access_key }}"
-        management_secret_key: "{{ management_secret_key }}"
-        customer_access_key: "{{ customer_access_key }}"
-        customer_secret_key: "{{ customer_secret_key }}"
-        bucket_name: sandbox-csr-automation-vpnconfigs3bucket-1ul5mfqbrghku
-        stack_name: ac-csr-stack
-        vgw_name: ac-csr-vgw
-        key_alias: sandbox-csr-automation-key
+        #management_access_key: "{{ management_access_key }}"
+        #management_secret_key: "{{ management_secret_key }}"
+        #customer_access_key: "{{ customer_access_key }}"
+        #customer_secret_key: "{{ customer_secret_key }}"
 #FDE configuration ran on FDE hosts
-- name: Configure FDE Server
-  hosts: FDE
-  tasks:
-    - name: Call role
-      include_role:
-        name: fde
-      vars:
-        #The customer and management subnet CIDR ranges should cover multiple AZ's if deploying on AWS, for example 172.17.104.0/21 would cover multiple AZs
-        customer_subnet_cidr: "{{ customer_range }}"
-        customer_management_subnet_cidr: "{{ management_range }}"
-        #This is the IP of the LaMa instance for the associated management compartment
-        lama_ip: "10.4.0.41"
-        #Customer Lan (all AZ's) of customer
-        customer_lan: "172.16.0.0/12"
-        #Customer Lan (all AZ's) of customer
-        management_lan: "172.17.0.0/12"
-        #IPs of Dev/Test DNS Forwarders
-        dns_ip_dev: "10.4.0.5"
-        dns_ip_test: "10.2.0.5"
-        #DNS Zones for mangement, customer and reverse DNS
-        management_zone: "{{ vpc_shortname }}"
-        customer_zone: "{{ vpc_longname }}"
-        reverse_zone: "in-addr.arpa"
-        #Forwarder IPs for each zone, for Azure these are taken from the nameserver addresses for each zone. For AWS it is by default the x.x.x.2 of the CIDR, e.g. 172.17.104.2
-        management_forwarders: "80.20.3.1; 6.80.232.2; 87.56.3.2;"
-        customer_forwarders: "32.32.32.0; 6.80.232.2; 89.76.23.1;"
-        reverse_forwarders: "40.3.32.1; 80.20.3.1; 6.80.232.2;"
-        #Forwarder IP, if Azure then 168.63.129.16, if AWS then first IP in management range, e.g. 172.17.0.2
-        forwarder_ip: "168.63.129.16"
-        #FDE customer domain is the customer domain
-        fde_customer_domain: "{{ vpc_longname }}"
-        #Management IP of the FDE itself
-        fde_ip: "{{ ansible_default_ipv4.address }}"
+#- name: Configure FDE Server
+#  hosts: fde
+#  tasks:
+#    - name: Call role
+#      include_role:
+#        name: fde
+#      vars:
+#        #The customer and management subnet CIDR ranges should cover multiple AZ's if deploying on AWS, for example 172.17.104.0/21 would cover multiple AZs
+#        customer_subnet_cidr: "{{ customer_range }}"
+#        customer_management_subnet_cidr: "{{ management_range }}"
+#        #This is the IP of the LaMa instance for the associated management compartment
+#        lama_ip: "10.4.0.41"
+#        #Customer Lan (all AZ's) of customer
+#        customer_lan: "172.16.0.0/12"
+#        #Customer Lan (all AZ's) of customer
+#        management_lan: "172.17.0.0/12"
+#        #IPs of Dev/Test DNS Forwarders
+#        dns_ip_dev: "10.4.0.5"
+#        dns_ip_test: "10.2.0.5"
+#        #DNS Zones for mangement, customer and reverse DNS
+#        management_zone: "{{ vpc_shortname }}"
+#        customer_zone: "{{ vpc_longname }}"
+#        reverse_zone: "in-addr.arpa"
+#        #Forwarder IPs for each zone, for Azure these are taken from the nameserver addresses for each zone. For AWS it is by default the x.x.x.2 of the CIDR, e.g. 172.17.104.2
+#        management_forwarders: "80.20.3.1; 6.80.232.2; 87.56.3.2;"
+#        customer_forwarders: "32.32.32.0; 6.80.232.2; 89.76.23.1;"
+#        reverse_forwarders: "40.3.32.1; 80.20.3.1; 6.80.232.2;"
+#        #Forwarder IP, if Azure then 168.63.129.16, if AWS then first IP in management range, e.g. 172.17.0.2
+#        forwarder_ip: "168.63.129.16"
+#        #FDE customer domain is the customer domain
+#        fde_customer_domain: "{{ vpc_longname }}"
+#        #Management IP of the FDE itself
+#        fde_ip: "{{ ansible_default_ipv4.address }}"
 #SAP Router configuration ran on SAP Router hosts
-- name: Configure SAP Router Server
-  hosts: SAPRouter
-  tasks:
-    - name: Call SAP Router Role
-      include_role:
-        name: saprouter
-      vars:
-       management_subnet_cidr: 10.6.0.0/24
+#- name: Configure SAP Router Server
+#  hosts: saprouter
+#  tasks:
+#    - name: Call SAP Router Role
+#      include_role:
+#        name: saprouter
+#      vars:
+#       management_subnet_cidr: 10.6.0.0/24

@@ -1,4 +1,5 @@
 #Options
+# Note when running DR - single_availability_zone = true then dr_single_availability_zone has to = true else the provision will fail.
 #single_availability_zone is set to true if only a single AZ is required for the customer
 single_availability_zone: true
 #busaas is set to true if BUaaS management servers are to be created, please note this requires the correct AMIs to be shared to the subscription in advance
@@ -16,7 +17,7 @@ dr_ha: false
 #CIDR ranges for the Customer Primary VPC
 vpc_cidr: 172.17.24.0/21, 172.16.0.0/20, 172.16.16.0/22, 172.16.20.0/23
 #Name to be given to Customer Primary VPC
-vpc_env_name: "Dev-Charlotte"
+vpc_env_name: "Dev-Test"
 #Region for Customer Primary VPC
 vpc_region: us-east-1
 #Public Subnet CIDR ranges for each AZ
@@ -38,11 +39,11 @@ clustaz3_cidr: 172.16.20.0/24
 #Managemnt VPC CIDR range, this is required to setup security groups correctly
 vpc_management_cidr: 10.4.0.0/22
 #This is the management DNS zone name, or shortname
-vpc_shortname: cv.aws.paas4sap.svcs.entsvcs.com
+vpc_shortname: ts.aws.paas4sap.svcs.entsvcs.com
 #This is the customer DNS zone name, or longname
-vpc_longname: chartest.paas4sap.svcs.entsvcs.com
+vpc_longname: test.paas4sap.svcs.entsvcs.com
 #Key to be used for the provisioned machines, this must exist on the subscription and also the machine the automation is ran from, so it can be used for machine configuration
-key_name: SystemTeam
+key_name: SystemTeamAutomation
 
 #FDE
 #Instance type/size
