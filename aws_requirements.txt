@@ -1,3 +1,4 @@
+# Automation Ansible Python requirements. Used to generate a frozen set of requirements (spp-requirements.txt)
 
 # Automation Ansible Python requirements. Used to generate a frozen set of requirements (spp-requirements.txt).
 
