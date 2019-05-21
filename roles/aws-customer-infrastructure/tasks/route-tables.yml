@@ -1,4 +1,5 @@
 ---
+#Create Customer Route Table
 - ec2_vpc_route_table:
     vpc_id: "{{ customer_network.vpc.id  }}"
     region: "{{ aws_customer_vpc_region  }}"
@@ -9,7 +10,7 @@
       - "{{ customeraz2.subnet.id }}"
       - "{{ customeraz3.subnet.id }}"
   register: customer_route_table
-
+#Create Public Route Table
 - ec2_vpc_route_table:
     vpc_id: "{{ customer_network.vpc.id  }}"
     region: "{{ aws_customer_vpc_region  }}"
@@ -23,7 +24,7 @@
       - dest: 0.0.0.0/0
         gateway_id: "{{ igw.gateway_id }}"
   register: public_route_table
-
+#Create Management AZ1 Route Table
 - ec2_vpc_route_table:
     vpc_id: "{{ customer_network.vpc.id  }}"
     region: "{{ aws_customer_vpc_region  }}"
@@ -35,7 +36,7 @@
       - dest: 0.0.0.0/0
         gateway_id: "{{ az1_nat_gateway.nat_gateway_id }}"
   register: managementaz1_route_table
-
+#Create Management AZ2 Route Table
 - ec2_vpc_route_table:
     vpc_id: "{{ customer_network.vpc.id  }}"
     region: "{{ aws_customer_vpc_region  }}"
@@ -47,7 +48,7 @@
       - dest: 0.0.0.0/0
         gateway_id: "{{ az2_nat_gateway.nat_gateway_id }}"
   register: managementaz2_route_table
-
+#Create Management AZ3 Route Table
 - ec2_vpc_route_table:
     vpc_id: "{{ customer_network.vpc.id  }}"
     region: "{{ aws_customer_vpc_region  }}"

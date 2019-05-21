@@ -1,5 +1,5 @@
 ---
-#eth0
+#Create eth0 - Network Interface
 - ec2_eni:
     security_groups: "{{ aws_ec2_vm_eth0_groups }}"
     subnet_id: "{{ aws_ec2_vm_eth0_subnet }}"
@@ -7,7 +7,14 @@
     state: present
   register: eth0
 
-#eth1
+- debug: var=eth0
+
+- set_fact:
+     eth0_id: "{{ eth0.interface.id }}"
+
+- debug: var=eth0_id
+
+#Create eth1 - Network Interface
 - ec2_eni:
     security_groups: "{{ aws_ec2_vm_eth1_groups }}"
     subnet_id: "{{ aws_ec2_vm_eth1_subnet }}"
@@ -16,6 +23,15 @@
   register: eth1
   when: not single_nic
 
+- debug: var=eth1
+
+- set_fact:
+     eth1_id: "{{ eth1.interface.id }}"
+  when: not single_nic
+
+- debug: var=eth1_id
+
+#Create VM with Single NIC when single_nic is true
 - name: create "{{ aws_ec2_vm_Name }}"
   ec2:
     image: "{{ aws_ec2_vm_image }}"
@@ -29,6 +45,7 @@
   register: ec2_vm
   when: single_nic
   
+#Create VM with Both NICs when single_nic is false
 - name: create "{{ aws_ec2_vm_Name }}"
   ec2:
     image: "{{ aws_ec2_vm_image }}"
@@ -41,3 +58,9 @@
     wait: true
   register: ec2_vm
   when: not single_nic
+
+- debug: var=ec2_vm
+
+#Attach additonal Security Groups to VM
+- name: Additional Security Groups
+  include_tasks: additional_sgs.yml

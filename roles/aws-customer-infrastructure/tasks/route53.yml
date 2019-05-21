@@ -1,3 +1,4 @@
+#Create Route 53 Management DNS Zone
 - route53_zone:
     zone: "{{ aws_customer_vpc_shortname }}"
     vpc_id: "{{ customer_network.vpc.id }}"
@@ -5,7 +6,7 @@
     comment: mgmt
   register: management_zone
   when: create_zone
-  
+#Create Route 53 Customer DNS Zone
 - route53_zone:
     zone: "{{ aws_customer_vpc_longname }}"
     vpc_id: "{{ customer_network.vpc.id }}"
@@ -13,7 +14,7 @@
     comment: work
   register: customer_zone
   when: create_zone
-
+#Create Route 53 Reverse DNS Zone
 - route53_zone:
     zone: in-addr.arpa
     vpc_id: "{{ customer_network.vpc.id }}"

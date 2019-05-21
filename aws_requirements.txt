@@ -1,4 +1,7 @@
 # Automation Ansible Python requirements. Used to generate a frozen set of requirements (spp-requirements.txt)
+
+# Automation Ansible Python requirements. Used to generate a frozen set of requirements (spp-requirements.txt).
+
 #
 # Add to a fresh virtual environment with the command pip install -r spp-requirements.txt.src
 #
