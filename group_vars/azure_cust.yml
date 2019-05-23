@@ -1,7 +1,7 @@
 #Options
 dr_compartment: no
 ha_compartment: no
-buaas: yes
+buaas: no
 dr_ha_compartment: no 
 username: "ec2-user"
 vm_public_keys: "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAgKPo2E32TDYoeSsSJgqEVlShiApVwlcGh5b0PRbb8KVZ0jukdZTV/0Bx0dioTtQ+gLPqF46GS7kChzQH2h8Vtq52unbRDOzyxEa6O1ZT7QMIfPD088k1rm5quqXxsr/r3Id3IcqaxbHgv1N8A1upYqUIfVZ04fVfNjZsqKW3aZ9BxtrFf2jM1jKlTk0OJFFZkGDgPpe3EnbFPWgS/gRsIThTIgu6Ia7DHCQnHErxSjzkl8wf/ZLwrpcgbDyR+Bk3h6YUxx7SsRmshP+e9zm92vwLs0tgjJIvxkqdHB4EyTrMc2fOxtVi9hGj5vr3JY5UGCep1M6YR7V47nkUWAcKLw== AzureDevDR"
@@ -62,6 +62,6 @@ networker_publisher: "RedHat"
 networker_sku: "7-RAW"
 
 nmc_size: "Standard_A2_v2"
-nmc_image_offer: "Windows-Server-2012"
-nmc_publisher: "Microsoft"
-nmc_sku: "R2-Datacenter"
+nmc_image_offer: "RHEL"
+nmc_publisher: "RedHat"
+nmc_sku: "7-RAW"
