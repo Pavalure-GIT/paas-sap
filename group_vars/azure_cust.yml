@@ -48,3 +48,19 @@ mids_size: "Standard_B2s"
 mids_image_offer: "RHEL"
 mids_publisher: "RedHat"
 mids_sku: "7-RAW"
+
+#BUaaS
+cloudboost_size: "Standard_D8_v3"
+cloudboost_image_offer: "SLES-Standard"
+cloudboost_publisher: "SUSE"
+cloudboost_sku: "12-SP3"
+
+networker_size: "Standard_A8_v2"
+networker_image_offer: "RHEL"
+networker_publisher: "RedHat"
+networker_sku: "7-RAW"
+
+nmc_size: "Standard_A2_v2"
+nmc_image_offer: "Windows-Server-2012"
+nmc_publisher: "Microsoft"
+nmc_sku: "R2-Datacenter"
