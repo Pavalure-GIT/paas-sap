@@ -17,7 +17,10 @@
         customer_subnet: "{{ st_customer_subnet }}"
         management_subnet: "{{ st_management_subnet }}"
         gateway_subnet: "{{ st_gateway_subnet }}"
-        create_dns: true
+        management_dns: "{{ st_management_dns }}"
+        customer_dns: "{{ st_customer_dns }}"
+        management_reverse_dns: "{{ st_management_reverse_dns }}"
+        customer_reverse_dns: "{{ st_customer_reverse_dns }}"
         
 - name: Provision Component VMs
   vars_files:
@@ -118,8 +121,12 @@
         azure_vm_publisher: "{{ saprouter_publisher }}"
         azure_vm_sku: "{{ saprouter_sku }}"
         azure_vm_public_ssh: "{{vm_public_keys}}"
-        azure_vm_nic1: "Public"
-        azure_vm_nic2: "Management" #Must use quotes to define empty"
+        azure_vm_nic1_subnet: "Public"
+        azure_vm_nic2_subnet: "Management"
+        azure_vm_nic1_dns: ""
+        azure_vm_nic2_dns: "{{ st_management_dns }}"
+        azure_vm_nic1_reverse_dns: ""
+        azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_add_dns: true
     - name: Allocate ASG nic1 - Public
       include_role: 
@@ -151,9 +158,13 @@
         azure_vm_publisher: "{{ mids_publisher }}"
         azure_vm_sku: "{{ mids_sku }}"
         azure_vm_public_ssh: "{{ vm_public_keys }}"
-        azure_vm_nic1: "Management"
-        azure_vm_nic2: "" #Must use quotes to define empty
-        azure_vm_add_dns: false
+        azure_vm_nic1_subnet: "Management"
+        azure_vm_nic2_subnet: ""
+        azure_vm_nic1_dns: "{{ st_management_dns }}"
+        azure_vm_nic2_dns: ""
+        azure_vm_nic1_reverse_dns: "{{ st_management_reverse_dns }}"
+        azure_vm_nic2_reverse_dns: ""
+        azure_vm_add_dns: true
     - name: Allocate ASG nic1 - Management
       include_role: 
         name: azure-asg-allocate
@@ -177,9 +188,13 @@
         azure_vm_publisher: "{{ mids_publisher }}"
         azure_vm_sku: "{{ mids_sku }}"
         azure_vm_public_ssh: "{{ vm_public_keys }}"
-        azure_vm_nic1: "Management"
-        azure_vm_nic2: "" #Must use quotes to define empty
-        azure_vm_add_dns: false
+        azure_vm_nic1_subnet: "Management"
+        azure_vm_nic2_subnet: ""
+        azure_vm_nic1_dns: "{{ st_management_dns }}"
+        azure_vm_nic2_dns: ""
+        azure_vm_nic1_reverse_dns: "{{ st_management_reverse_dns }}"
+        azure_vm_nic2_reverse_dns: ""
+        azure_vm_add_dns: true
     - name: Allocate ASG nic1 - Management
       include_role: 
         name: azure-asg-allocate
@@ -202,8 +217,12 @@
         azure_vm_publisher: "{{ fde_publisher }}"
         azure_vm_sku: "{{ fde_sku }}"
         azure_vm_public_ssh: "{{ vm_public_keys }}"
-        azure_vm_nic1: "Customer"
-        azure_vm_nic2: "Management" #Must use quotes to define empty
+        azure_vm_nic1_subnet: "Customer"
+        azure_vm_nic2_subnet: "Management"
+        azure_vm_nic1_dns: "{{ st_customer_dns }}"
+        azure_vm_nic2_dns: "{{ st_management_dns }}"
+        azure_vm_nic1_reverse_dns: "{{ st_customer_reverse_dns }}"
+        azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_add_dns: true
     - name: Allocate ASG nic1 - Customer
       include_role: 
@@ -236,8 +255,12 @@
         azure_vm_publisher: "{{ saprouter_publisher }}"
         azure_vm_sku: "{{ saprouter_sku }}"
         azure_vm_public_ssh: "{{vm_public_keys}}"
-        azure_vm_nic1: "Public"
-        azure_vm_nic2: "Management" #Must use quotes to define empty"
+        azure_vm_nic1_subnet: "Public"
+        azure_vm_nic2_subnet: "Management"
+        azure_vm_nic1_dns: ""
+        azure_vm_nic2_dns: "{{ st_management_dns }}"
+        azure_vm_nic1_reverse_dns: ""
+        azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_add_dns: false
       when: ha_compartment
     - name: Allocate ASG nic1 - Public
@@ -273,8 +296,12 @@
         azure_vm_publisher: "{{ fde_publisher }}"
         azure_vm_sku: "{{ fde_sku }}"
         azure_vm_public_ssh: "{{ vm_public_keys }}"
-        azure_vm_nic1: "Customer"
-        azure_vm_nic2: "Management" #Must use quotes to define empty 
+        azure_vm_nic1_subnet: "Customer"
+        azure_vm_nic2_subnet: "Management"
+        azure_vm_nic1_dns: "{{ st_customer_dns }}"
+        azure_vm_nic2_dns: "{{ st_management_dns }}"
+        azure_vm_nic1_reverse_dns: "{{ st_customer_reverse_dns }}"
+        azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_add_dns: false
       when: ha_compartment
 
@@ -318,7 +345,10 @@
         customer_subnet: "{{ dr_customer_subnet }}"
         management_subnet: "{{ dr_management_subnet }}"
         gateway_subnet: "{{ dr_gateway_subnet }}"
-        create_dns: false
+        management_dns: ""
+        customer_dns: ""
+        management_reverse_dns: "{{ dr_management_reverse_dns }}"
+        customer_reverse_dns: "{{ dr_customer_reverse_dns }}"
       when: dr_compartment
         
 - name: Provision Component VMs
@@ -330,7 +360,7 @@
       include_role:
         name: azure-vm
       vars:
-        azure_vm_name: "SAPRouter"
+        azure_vm_name: "SAPRouter-dr"
         azure_vm_resource_group: "{{ dr_resource_group }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
         azue_vm_vnet: "{{ dr_virtual_network_name }}" 
@@ -339,8 +369,12 @@
         azure_vm_publisher: "{{ saprouter_publisher }}"
         azure_vm_sku: "{{ saprouter_sku }}"
         azure_vm_public_ssh: "{{vm_public_keys}}"
-        azure_vm_nic1: "Public"
-        azure_vm_nic2: "Management" #Must use quotes to define empty"
+        azure_vm_nic1_subnet: "Public"
+        azure_vm_nic2_subnet: "Management"
+        azure_vm_nic1_dns: ""
+        azure_vm_nic2_dns: "{{ st_management_dns }}"
+        azure_vm_nic1_reverse_dns: ""
+        azure_vm_nic2_reverse_dns: "{{ dr_management_reverse_dns }}"
         azure_vm_add_dns: true
       when: dr_compartment
 
@@ -351,7 +385,7 @@
         asgs:
           - { resource_group: "{{ dr_resource_group }}", name: saprtr-pub  }
           - { resource_group: "{{ dr_resource_group }}", name: pub-net-all }
-        azure_vm_nic: "SAPRouter-nic1"
+        azure_vm_nic: "SAPRouter-dr-nic1"
       when: dr_compartment
 
     - name: Allocate ASG nic2 - Management
@@ -361,14 +395,14 @@
         asgs:
           - { resource_group: "{{ dr_resource_group }}", name: saprtr-mgt  }
           - { resource_group: "{{ dr_resource_group }}", name: mgmt-net-all }
-        azure_vm_nic: "SAPRouter-nic2"
+        azure_vm_nic: "SAPRouter-dr-nic2"
       when: dr_compartment
 
     - name: Provison MidServerA
       include_role:
         name: azure-vm
       vars:
-        azure_vm_name: "MidServerA"
+        azure_vm_name: "MidServerA-dr"
         azure_vm_resource_group: "{{ dr_resource_group }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
         azue_vm_vnet: "{{ dr_virtual_network_name }}" 
@@ -377,8 +411,12 @@
         azure_vm_publisher: "{{ mids_publisher }}"
         azure_vm_sku: "{{ mids_sku }}"
         azure_vm_public_ssh: "{{ vm_public_keys }}"
-        azure_vm_nic1: "Management"
-        azure_vm_nic2: "" #Must use quotes to define empty
+        azure_vm_nic1_subnet: "Management"
+        azure_vm_nic2_subnet: ""
+        azure_vm_nic1_dns: "{{ st_management_dns }}"
+        azure_vm_nic2_dns: ""
+        azure_vm_nic1_reverse_dns: "{{ dr_management_reverse_dns }}"
+        azure_vm_nic2_reverse_dns: ""
         azure_vm_add_dns: true
       when: dr_compartment
     - name: Allocate ASG nic1 - Management
@@ -388,14 +426,14 @@
         asgs:
           #- { resource_group: "{{ dr_resource_group }}", name: mid-mgt  }
           - { resource_group: "{{ dr_resource_group }}", name: mgmt-net-all }
-        azure_vm_nic: "MidServerA-nic1"
+        azure_vm_nic: "MidServerA-dr-nic1"
       when: dr_compartment
 
     - name: Provison MidServerB
       include_role:
         name: azure-vm  
       vars:
-        azure_vm_name: "MidServerB"
+        azure_vm_name: "MidServerB-dr"
         azure_vm_resource_group: "{{ dr_resource_group }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
         azue_vm_vnet: "{{ dr_virtual_network_name }}" 
@@ -404,8 +442,12 @@
         azure_vm_publisher: "{{ mids_publisher }}"
         azure_vm_sku: "{{ mids_sku }}"
         azure_vm_public_ssh: "{{ vm_public_keys }}"
-        azure_vm_nic1: "Management"
-        azure_vm_nic2: "" #Must use quotes to define empty
+        azure_vm_nic1_subnet: "Management"
+        azure_vm_nic2_subnet: ""
+        azure_vm_nic1_dns: "{{ st_management_dns }}"
+        azure_vm_nic2_dns: ""
+        azure_vm_nic1_reverse_dns: "{{ dr_management_reverse_dns }}"
+        azure_vm_nic2_reverse_dns: ""
         azure_vm_add_dns: true
       when: dr_compartment
     - name: Allocate ASG nic1 - Management
@@ -415,14 +457,14 @@
         asgs:
           #- { resource_group: "{{ dr_resource_group }}", name: mid-mgt  }
           - { resource_group: "{{ dr_resource_group }}", name: mgmt-net-all }
-        azure_vm_nic: "MidServerB-nic1"
+        azure_vm_nic: "MidServerB-dr-nic1"
       when: dr_compartment
  
     - name: Provision FDE
       include_role:
         name: azure-vm  
       vars:
-        azure_vm_name: "FDE"
+        azure_vm_name: "FDE-dr"
         azure_vm_resource_group: "{{ dr_resource_group }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
         azue_vm_vnet: "{{ dr_virtual_network_name }}" 
@@ -431,8 +473,12 @@
         azure_vm_publisher: "{{ fde_publisher }}"
         azure_vm_sku: "{{ fde_sku }}"
         azure_vm_public_ssh: "{{ vm_public_keys }}"
-        azure_vm_nic1: "Customer"
-        azure_vm_nic2: "Management" #Must use quotes to define empty
+        azure_vm_nic1_subnet: "Customer"
+        azure_vm_nic2_subnet: "Management"
+        azure_vm_nic1_dns: "{{ st_customer_dns }}"
+        azure_vm_nic2_dns: "{{ st_management_dns }}"
+        azure_vm_nic1_reverse_dns: "{{ dr_customer_reverse_dns }}"
+        azure_vm_nic2_reverse_dns: "{{ dr_management_reverse_dns }}"
         azure_vm_add_dns: true
       when: dr_compartment
     - name: Allocate ASG nic1 - Customer
@@ -442,7 +488,7 @@
         asgs:
           - { resource_group: "{{ dr_resource_group }}", name: proxy-dns-cst  }
           - { resource_group: "{{ dr_resource_group }}", name: cust-net-all }
-        azure_vm_nic: "FDE-nic1"
+        azure_vm_nic: "FDE-dr-nic1"
       when: dr_compartment
     - name: Allocate ASG nic2 - Management
       include_role: 
@@ -451,7 +497,7 @@
         asgs:
           - { resource_group: "{{ dr_resource_group }}", name: proxy-dns-mgt  }
           - { resource_group: "{{ dr_resource_group }}", name: mgmt-net-all }
-        azure_vm_nic: "FDE-nic2"
+        azure_vm_nic: "FDE-dr-nic2"
       when: dr_compartment
 
     ##Duplicating provisions for HA requirements     
@@ -459,7 +505,7 @@
       include_role:
         name: azure-vm
       vars:
-        azure_vm_name: "SAPRouter-HA"
+        azure_vm_name: "SAPRouter-HA-dr"
         azure_vm_resource_group: "{{ dr_resource_group }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
         azue_vm_vnet: "{{ dr_virtual_network_name }}" 
@@ -468,8 +514,12 @@
         azure_vm_publisher: "{{ saprouter_publisher }}"
         azure_vm_sku: "{{ saprouter_sku }}"
         azure_vm_public_ssh: "{{vm_public_keys}}"
-        azure_vm_nic1: "Public"
-        azure_vm_nic2: "Management" #Must use quotes to define empty"
+        azure_vm_nic1_subnet: "Public"
+        azure_vm_nic2_subnet: "Management"
+        azure_vm_nic1_dns: ""
+        azure_vm_nic2_dns: "{{ st_management_dns }}"
+        azure_vm_nic1_reverse_dns: ""
+        azure_vm_nic2_reverse_dns: "{{ dr_management_reverse_dns }}"
         azure_vm_add_dns: false
       when: dr_compartment and dr_ha_compartment
     - name: Allocate ASG nic1 - Public
@@ -479,7 +529,7 @@
         asgs:
           - { resource_group: "{{ dr_resource_group }}", name: saprtr-pub  }
           - { resource_group: "{{ dr_resource_group }}", name: pub-net-all }
-        azure_vm_nic: "SAPRouter-HA-nic1"
+        azure_vm_nic: "SAPRouter-HA-dr-nic1"
       when: dr_compartment and dr_ha_compartment
 
     - name: Allocate ASG nic2 - Management
@@ -489,14 +539,14 @@
         asgs:
           - { resource_group: "{{ dr_resource_group }}", name: saprtr-mgt  }
           - { resource_group: "{{ dr_resource_group }}", name: mgmt-net-all }
-        azure_vm_nic: "SAPRouter-HA-nic2"
+        azure_vm_nic: "SAPRouter-HA-dr-nic2"
       when: dr_compartment and dr_ha_compartment
  
     - name: Provision FDE
       include_role:
         name: azure-vm  
       vars:
-        azure_vm_name: "FDE-HA"
+        azure_vm_name: "FDE-HA-dr"
         azure_vm_resource_group: "{{ dr_resource_group }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
         azue_vm_vnet: "{{ dr_virtual_network_name }}" 
@@ -505,8 +555,12 @@
         azure_vm_publisher: "{{ fde_publisher }}"
         azure_vm_sku: "{{ fde_sku }}"
         azure_vm_public_ssh: "{{ vm_public_keys }}"
-        azure_vm_nic1: "Customer"
-        azure_vm_nic2: "Management" #Must use quotes to define empty
+        azure_vm_nic1_subnet: "Customer"
+        azure_vm_nic2_subnet: "Management"
+        azure_vm_nic1_dns: "{{ st_customer_dns }}"
+        azure_vm_nic2_dns: "{{ st_management_dns }}"
+        azure_vm_nic1_reverse_dns: "{{ dr_customer_reverse_dns }}"
+        azure_vm_nic2_reverse_dns: "{{ dr_management_reverse_dns }}"
         azure_vm_add_dns: false
       when: dr_compartment and dr_ha_compartment
     - name: Allocate ASG nic1 - Customer
@@ -516,7 +570,7 @@
         asgs:
           - { resource_group: "{{ dr_resource_group }}", name: proxy-dns-cst  }
           - { resource_group: "{{ dr_resource_group }}", name: cust-net-all }
-        azure_vm_nic: "FDE-HA-nic1"
+        azure_vm_nic: "FDE-HA-dr-nic1"
       when: dr_compartment and dr_ha_compartment
 
     - name: Allocate ASG nic2 - Management
@@ -526,7 +580,7 @@
         asgs:
           - { resource_group: "{{ dr_resource_group }}", name: proxy-dns-mgt  }
           - { resource_group: "{{ dr_resource_group }}", name: mgmt-net-all }
-        azure_vm_nic: "FDE-HA-nic2"
+        azure_vm_nic: "FDE-HA-dr-nic2"
       when: dr_compartment and dr_ha_compartment
     
     - azure_rm_virtualnetworkpeering:

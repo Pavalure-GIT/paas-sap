@@ -30,24 +30,30 @@
 
 - include_tasks: subnets.yml 
 
-- name: Create DNS Zone
+- name: Create Management DNS
   azure_rm_dnszone:
     state: present
     resource_group: "{{ resource_group }}"
-    name: "{{dns_name['Public']}}"
-  when: create_dns
+    name: "{{ management_dns }}"
+  when: management_dns != ""
 
 - name: Create Customer DNS
   azure_rm_dnszone:
     state: present
     resource_group: "{{ resource_group }}"
-    name: "{{dns_name['Customer']}}"
-  when: create_dns
+    name: "{{ customer_dns }}"
+  when: customer_dns != ""
 
-- name: Create Managment DNS
+- name: Create Managment Reverse DNS
   azure_rm_dnszone:
     state: present
     resource_group: "{{ resource_group }}"
-    name: "{{dns_name['Management']}}"
-  when: create_dns
+    name: "{{ management_reverse_dns }}"
+  when: management_reverse_dns != ""
 
+- name: Create Customer Reverse DNS
+  azure_rm_dnszone:
+    state: present
+    resource_group: "{{ resource_group }}"
+    name: "{{ customer_reverse_dns }}"
+  when: customer_reverse_dns != ""

@@ -1,6 +1,6 @@
 #Populating prefix: Always use the VM name, unless VM is 'SAPRouter' then use proxy. 
 - set_fact:      
-      dns_prefix: "{{ ( azure_vm_name == 'SAPRouter') | ternary( 'proxy',azure_vm_name ) }}" 
+      dns_prefix: "{{ ( azure_vm_name == 'SAPRouter') | ternary( 'proxy',azure_vm_name ) }}"
 
 #Adding nic1 result to the DNS, zonename is derived on a lookup from the subnet
 #the NIC is created with
@@ -9,11 +9,35 @@
     state: present
     resource_group: "{{azure_vm_dns_resource_group}}" 
     relative_name: "{{dns_prefix}}" 
-    zone_name: "{{dns_name[azure_vm_nic1]}}"
+    zone_name: "{{ azure_vm_nic1_dns }}"
     record_type: "A" 
     time_to_live: 300
     records: 
       - entry: "{{nic1.state.ip_configuration.private_ip_address}}"
+  when: azure_vm_nic1_dns != ""
+
+- set_fact:
+    provision_infra_dns_rzone_record__record: "{{ (nic1.state.ip_configuration.private_ip_address|ipaddr('revdns')).split('.')[0] }}"
+  when: azure_vm_nic1_dns != "" and azure_vm_nic1_reverse_dns != ""
+
+- set_fact:
+    provision_infra_dns_rzone_record__record: "{{ provision_infra_dns_rzone_record__record ~ '.' ~ (nic1.state.ip_configuration.private_ip_address|ipaddr('revdns')).split('.')[item_octet] }}"
+  loop: "{{ range(1, 4 - (azure_vm_nic1_reverse_dns.split('.')|length - 2)|int, 1)|list }}"
+  loop_control:
+    loop_var: item_octet
+  when: azure_vm_nic1_dns != "" and azure_vm_nic1_reverse_dns != ""
+
+- name: Add nic1 to Reverse DNS
+  azure_rm_dnsrecordset:
+    state: present
+    resource_group: "{{azure_vm_resource_group}}"
+    relative_name: "{{provision_infra_dns_rzone_record__record}}"
+    zone_name: "{{ azure_vm_nic1_reverse_dns }}"
+    record_type: "PTR"
+    time_to_live: 3600
+    records:
+      - entry: "{{dns_prefix}}.{{ azure_vm_nic1_dns }}"
+  when: azure_vm_nic1_dns != "" and azure_vm_nic1_reverse_dns != ""
 
 #Adding nic2 result to the DNS, zonename is derived on a lookup from the subnet
 #the NIC is created with. (Only if nic2 is defined, aka exists)
@@ -22,9 +46,33 @@
     state: present
     resource_group:  "{{azure_vm_dns_resource_group}}" 
     relative_name: "{{dns_prefix}}" 
-    zone_name: "{{dns_name[azure_vm_nic2]}}"
+    zone_name: "{{ azure_vm_nic2_dns }}"
     record_type: "A"
     time_to_live: 300
     records: 
       - entry: "{{nic2.state.ip_configuration.private_ip_address}}"
-  when: nic2.state is defined
+  when: azure_vm_nic2_dns != ""
+
+- set_fact:
+    provision_infra_dns_rzone_record__record: "{{ (nic2.state.ip_configuration.private_ip_address|ipaddr('revdns')).split('.')[0] }}"
+  when: azure_vm_nic2_dns != "" and azure_vm_nic2_reverse_dns != ""
+
+- set_fact:
+    provision_infra_dns_rzone_record__record: "{{ provision_infra_dns_rzone_record__record ~ '.' ~ (nic2.state.ip_configuration.private_ip_address|ipaddr('revdns')).split('.')[item_octet] }}"
+  loop: "{{ range(1, 4 - (azure_vm_nic2_reverse_dns.split('.')|length - 2)|int, 1)|list }}"
+  loop_control:
+    loop_var: item_octet
+  when: azure_vm_nic2_dns != "" and azure_vm_nic2_reverse_dns != ""
+
+- name: Add nic2 to Reverse DNS
+  azure_rm_dnsrecordset:
+    state: present
+    resource_group: "{{azure_vm_resource_group}}"
+    relative_name: "{{provision_infra_dns_rzone_record__record}}"
+    zone_name: "{{ azure_vm_nic2_reverse_dns }}"
+    record_type: "PTR"
+    time_to_live: 3600
+    records:
+      - entry: "{{dns_prefix}}.{{ azure_vm_nic2_dns }}"
+  when: azure_vm_nic2_dns != "" and azure_vm_nic2_reverse_dns != ""
+ 

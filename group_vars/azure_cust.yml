@@ -16,10 +16,10 @@ st_public_subnet: "172.64.16.0/25"
 st_customer_subnet: "172.64.0.0/22"
 st_management_subnet: "172.65.24.0/23"
 st_gateway_subnet: "172.79.0.0/28"
-dns_name:
-  Public: "124.in-addr.arpa"
-  Customer: "proto-customer.dxc.paas4sap.svcs.entsvcs.com"
-  Management: "proto.azure.paas4sap.svcs.entsvcs"
+st_management_dns: ts.aws.paas4sap.svcs.entsvcs.com
+st_customer_dns: test.paas4sap.svcs.entsvcs.com
+st_management_reverse_dns: 24.65.172.in-addr.arpa
+st_customer_reverse_dns: 0.64.172.in-addr.arpa
 
 #DR
 dr_resource_group: "P4S-Prototype-AutomationDR"
@@ -31,6 +31,8 @@ dr_public_subnet: "100.64.16.0/25"
 dr_customer_subnet: "100.64.0.0/22"
 dr_management_subnet: "100.65.24.0/23"
 dr_gateway_subnet: "100.79.0.0/28"
+dr_customer_reverse_dns: 0.64.100.in-addr.arpa
+dr_management_reverse_dns: 24.65.100.in-addr.arpa
   
 #FDE
 fde_size: "Standard_B4ms"
