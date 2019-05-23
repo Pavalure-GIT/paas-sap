@@ -27,6 +27,99 @@
       - group_vars/azure_cust.yml 
   hosts: localhost 
   tasks:
+    - name: Provision BUaaScloudboost
+      include_role:
+        name: azure-vm
+      vars:
+        azure_vm_name: "cloudboost"
+        azure_vm_resource_group: "{{ st_resource_group }}"
+        azure_vm_dns_resource_group: "{{ st_resource_group }}"
+        azue_vm_vnet: "{{ st_virtual_network_name }}" 
+        azure_vm_size: "{{ cloudboost_size }}"
+        azure_vm_image_offer: "{{ cloudboost_image_offer }}"
+        azure_vm_publisher: "{{ cloudboost_publisher }}"
+        azure_vm_sku: "{{ cloudboost_sku }}"
+        azure_vm_public_ssh: "{{vm_public_keys}}"
+        azure_vm_nic1_subnet: "Management"
+        azure_vm_nic2_subnet: ""
+        azure_vm_nic1_dns: "{{ st_management_dns }}"
+        azure_vm_nic2_dns: ""
+        azure_vm_nic1_reverse_dns: "{{ st_management_reverse_dns }}"
+        azure_vm_nic2_reverse_dns: ""
+        azure_vm_add_dns: true
+      when: buaas
+    - name: Allocate ASG nic1 - Public
+      include_role: 
+        name: azure-asg-allocate
+      vars:
+        asgs:
+          - { resource_group: "{{ st_resource_group }}", name: buaas-mgt }
+          - { resource_group: "{{ st_resource_group }}", name: mgmt-net-all }
+        azure_vm_nic: "cloudboost-nic1"
+      when: buaas
+
+    - name: Provision BUaaS networker
+      include_role:
+        name: azure-vm
+      vars:
+        azure_vm_name: "networker"
+        azure_vm_resource_group: "{{ st_resource_group }}"
+        azure_vm_dns_resource_group: "{{ st_resource_group }}"
+        azue_vm_vnet: "{{ st_virtual_network_name }}"
+        azure_vm_size: "{{ networker_size }}"
+        azure_vm_image_offer: "{{ networker_image_offer }}"
+        azure_vm_publisher: "{{ networker_publisher }}"
+        azure_vm_sku: "{{ networker_sku }}"
+        azure_vm_public_ssh: "{{vm_public_keys}}"
+        azure_vm_nic1_subnet: "Management"
+        azure_vm_nic2_subnet: ""
+        azure_vm_nic1_dns: "{{ st_management_dns }}"
+        azure_vm_nic2_dns: ""
+        azure_vm_nic1_reverse_dns: "{{ st_management_reverse_dns }}"
+        azure_vm_nic2_reverse_dns: ""
+        azure_vm_add_dns: true
+      when: buaas
+    - name: Allocate ASG nic1 - Public
+      include_role:
+        name: azure-asg-allocate
+      vars:
+        asgs:
+          - { resource_group: "{{ st_resource_group }}", name: buaas-mgt }
+          - { resource_group: "{{ st_resource_group }}", name: mgmt-net-all }
+        azure_vm_nic: "networker-nic1"
+      when: buaas
+
+    - name: Provision BUaaS nmc
+      include_role:
+        name: azure-vm
+      vars:
+        azure_vm_name: "nmc"
+        azure_vm_resource_group: "{{ st_resource_group }}"
+        azure_vm_dns_resource_group: "{{ st_resource_group }}"
+        azue_vm_vnet: "{{ st_virtual_network_name }}"
+        azure_vm_size: "{{ nmc_size }}"
+        azure_vm_image_offer: "{{ nmc_image_offer }}"
+        azure_vm_publisher: "{{ nmc_publisher }}"
+        azure_vm_sku: "{{ nmc_sku }}"
+        azure_vm_public_ssh: "{{vm_public_keys}}"
+        azure_vm_nic1_subnet: "Management"
+        azure_vm_nic2_subnet: ""
+        azure_vm_nic1_dns: "{{ st_management_dns }}"
+        azure_vm_nic2_dns: ""
+        azure_vm_nic1_reverse_dns: "{{ st_management_reverse_dns }}"
+        azure_vm_nic2_reverse_dns: ""
+        azure_vm_add_dns: true
+      when: buaas
+    - name: Allocate ASG nic1 - Public
+      include_role:
+        name: azure-asg-allocate
+      vars:
+        asgs:
+          - { resource_group: "{{ st_resource_group }}", name: buaas-mgt }
+          - { resource_group: "{{ st_resource_group }}", name: mgmt-net-all }
+        azure_vm_nic: "nmc-nic1"
+      when: buaas
+        
     - name: Provision SAP Router
       include_role:
         name: azure-vm
