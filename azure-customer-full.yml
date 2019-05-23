@@ -141,7 +141,6 @@
           - { resource_group: "{{ st_resource_group }}", name: mgmt-net-all }
         azure_vm_nic: "FDE-nic2"
 
-###BUaaS
     - name: Provision BUaaScloudboost
       include_role:
         name: azure-vm
@@ -158,6 +157,7 @@
         azure_vm_nic1: "Managemment"
         azure_vm_nic2: "" #Must use quotes to define empty
         azure_vm_add_dns: true
+      when: buaas
     - name: Allocate ASG nic1 - Management
       include_role:
         name: azure-asg-allocate
@@ -165,7 +165,8 @@
         asgs:
           - { resource_group: "{{ st_resource_group }}", name: buaas-mgt  }
           - { resource_group: "{{ st_resource_group }}", name: mgmt-net-all }
-        azure_vm_nic: "buaas-nic1"
+        azure_vm_nic: "cloudboost-nic1"
+      when: buaas
 
     - name: Provision BUaaSnetworker
       include_role:
@@ -183,6 +184,7 @@
         azure_vm_nic1: "Managemment"
         azure_vm_nic2: "" #Must use quotes to define empty
         azure_vm_add_dns: true
+      when: buaas
     - name: Allocate ASG nic1 - Management
       include_role:
         name: azure-asg-allocate
@@ -190,7 +192,8 @@
         asgs:
           - { resource_group: "{{ st_resource_group }}", name: buaas-mgt  }
           - { resource_group: "{{ st_resource_group }}", name: mgmt-net-all }
-        azure_vm_nic: "buaas-nic1"
+        azure_vm_nic: "networker-nic1"
+      when: buaas
 
     - name: Provision BUaaSnmc
       include_role:
@@ -208,6 +211,7 @@
         azure_vm_nic1: "Managemment"
         azure_vm_nic2: "" #Must use quotes to define empty
         azure_vm_add_dns: true
+      when: buaas
     - name: Allocate ASG nic1 - Management
       include_role:
         name: azure-asg-allocate
@@ -215,9 +219,8 @@
         asgs:
           - { resource_group: "{{ st_resource_group }}", name: buaas-mgt  }
           - { resource_group: "{{ st_resource_group }}", name: mgmt-net-all }
-        azure_vm_nic: "buaas-nic1"
-
-
+        azure_vm_nic: "nmc-nic1"
+      when: buaas
 
     ##Duplicating provisions for HA requirements     
     - name: Provision SAP Router
