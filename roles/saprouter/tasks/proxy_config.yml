@@ -3,6 +3,7 @@
 # the lines below add the static route immediately
 - name: Add static route
   command: "{{ static_route }}"
+  ignore_errors: yes
 
 # Add static route as part of start up command
 - name: change permissions
@@ -16,9 +17,10 @@
   lineinfile:
     path: /etc/init.d/after.local
     line: '{{ static_route }}'
-
+  ignore_errors: yes
+ 
 - name: Refresh Repos
-  command: /usr/sbin/registercloudguest --force-new
+  shell: /usr/sbin/registercloudguest --force-new
 
 - name: pull zypper
   zypper_repository:
