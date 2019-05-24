@@ -11,7 +11,7 @@
 #- aws_kms_facts:
 #    filters:
 #      alias: "{{ key_alias }}"
-   # region: "{{ region }}"
+   # region: "{{ vpc_region }}"
 #    aws_access_key: "{{ management_access_key }}"
 #    aws_secret_key: "{{ management_secret_key }}"
 #  register: kms
@@ -33,13 +33,13 @@
 #    grant_types: "role"
 #    aws_access_key: "{{ management_access_key }}"
 #    aws_secret_key: "{{ management_secret_key }}"
-#    region: "{{ region }}"
+#    region: "{{ vpc_region }}"
 
 - name: Create a CSR function stack, pass in the template via an URL
   cloudformation:
     stack_name: "{{ stack_name }}"
     state: present
-    region: "{{ region }}"
+    region: "{{ vpc_region }}"
     disable_rollback: true
     template_url: https://s3.amazonaws.com/solutions-reference/transit-vpc/latest/transit-vpc-second-account.template
     aws_access_key: "{{ customer_access_key }}"
@@ -53,10 +53,10 @@
 - name: Get vpc facts to retreive vpc_id
   ec2_vpc_net_facts:
     filters:
-      "tag:Name": "{{ vpc_name }}"
+      "tag:Name": "{{ vpc_env_name }}"
     aws_access_key: "{{ customer_access_key }}"
     aws_secret_key: "{{ customer_secret_key }}"
-    region: "{{ region }}"
+    region: "{{ vpc_region }}"
   register: vpc
 
 - debug: var=vpc.vpcs[0].vpc_id
@@ -68,7 +68,7 @@
   ec2_vpc_vgw:
      state: present
      asn: 64513
-     region: "{{ region }}"
+     region: "{{ vpc_region }}"
      name: "{{ vgw_name }}"
      type: ipsec.1
      vpc_id: "{{ vpc.vpcs[0].vpc_id }}"
@@ -83,7 +83,10 @@
 
 - ec2_vpc_route_table:
     vpc_id: "{{ vgw.vgw.vpc_id }}"
-    region: "{{ region }}"
+    region: "{{ vpc_region }}"
     tags:
       Name: Management AZ1
     propagating_vgw_ids: "{{ vgw.vgw.id }}"
+
+- pause:
+    minutes: 5

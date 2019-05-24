@@ -4,7 +4,7 @@
     name: "{{ azure_vm_name }}-nic1"
     resource_group: "{{azure_vm_resource_group}}"
     virtual_network: "{{azue_vm_vnet}}"
-    subnet_name: "{{azure_vm_nic1}}"
+    subnet_name: "{{azure_vm_nic1_subnet}}"
     state: present
   register: nic1
 
@@ -14,9 +14,9 @@
     name: "{{ azure_vm_name }}-nic2"
     resource_group: "{{azure_vm_resource_group}}"
     virtual_network: "{{azue_vm_vnet}}"
-    subnet_name: "{{azure_vm_nic2}}"
+    subnet_name: "{{azure_vm_nic2_subnet}}"
     state: present
-  when: (azure_vm_nic2 != "" ) #Check to see if two NIC's are required
+  when: (azure_vm_nic2_subnet != "" ) #Check to see if two NIC's are required
   register: nic2
 
 #Provisioning a VM with one NIC, dependant on the output of the NIC creation
