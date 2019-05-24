@@ -17,7 +17,7 @@ dr_ha: false
 #CIDR ranges for the Customer Primary VPC
 vpc_cidr: 172.17.24.0/21, 172.16.0.0/20, 172.16.16.0/22, 172.16.20.0/23
 #Name to be given to Customer Primary VPC
-vpc_env_name: "Dev-Test"
+vpc_env_name: "Dev-Test1"
 #Region for Customer Primary VPC
 vpc_region: us-east-1
 #Public Subnet CIDR ranges for each AZ
