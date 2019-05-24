@@ -1,21 +1,28 @@
 ---
-
 - name: AWS Teardown
   hosts: localhost
   tasks:
     - name: Call Teardown Role
       include_role:
         name: aws-teardown
+      vars:
+        vpc: vpc-0b8713cbb0c433e2d
+        region: us-east-1
+        list: true
+        terminate: true
+        requester: true
+        route53_zones:
+          ts.aws.paas4sap.svcs.entsvcs.com. : 'ZSHRVXTBHAXOO'
+          chartest.paas4sap.svcs.entsvcs.com. : 'Z27TMR51WPQIO3'
+          in-addr.arpa. : 'Z1AFM7QDCH0ACL'
+        vpc_name: Dev-Test
+        gateway_id: 'vgw-0faa34c1a3edf92e1'
+        # Below variables are for the DR Teardown, if dr is set to true the teardown will run a second time to teardown DR.
+        dr: false
+        dr_vpc: vpc-0098216e76fcec52c
+        dr_vpc_name: DR-Dev-Example
+        dr_region: us-east-2
+        dr_list: true
+        dr_terminate: true
+        dr_requester: false
         
-#- name: AWS DR Teardown
-#  hosts: localhost
-#  tasks:
-#    - name: Call Teardown Role
-#      include_role:
-#        name: aws-teardown
-#      vars:
-#        vpc: vpc-0fee2cc1e99a93569
-#        region: us-east-2
-#        list: true
-#        terminate: true
-#        requester: false

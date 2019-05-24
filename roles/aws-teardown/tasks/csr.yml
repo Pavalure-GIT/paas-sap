@@ -1,0 +1,52 @@
+- name: Delete the CSR cloudformation stack
+  cloudformation:
+    stack_name: "cv-csr-stack"
+    state: "absent"
+
+- name: Find VGWs for Region
+  ec2_vpc_vgw_facts:
+    region: "{{ region }}"
+    vpn_gateway_ids: "{{ gateway_id }}"
+  register: vgw_facts
+
+- debug: var=vgw_facts
+
+- name: Gather facts about vpn connections
+  ec2_vpc_vpn_facts:
+    filters:
+      vpn-gateway-id: "{{ gateway_id }}"
+  register: connections
+
+- debug: var=connections
+
+- name: Remove all VPN connections for a VGW
+  ec2_vpc_vpn:
+    state: absent
+    vpn_connection_id: "{{ item.vpn_connection_id }}"
+  with_items: "{{ connections.vpn_connections }}"
+
+- name: Remove tag from virtual private gateway
+  ec2_tag:
+    region: "{{ region }}"
+    resource: "{{ gateway_id }}"
+    state: absent
+    tags:
+      Name: cv-csr-vgw
+      owner: System Team
+      transitvpc:spoke: 'true'
+
+- pause:
+    minutes: 1
+
+- name: Remove VGW
+  ec2_vpc_vgw:
+    region: "{{ region }}"
+    vpc_id: "{{ vpc }}"
+    vpn_gateway_id: "{{ gateway_id }}"
+    state: absent
+    wait_timeout: 320
+  when:
+    - terminate
+
+- pause:
+    minutes: 5

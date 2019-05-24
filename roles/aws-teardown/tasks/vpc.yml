@@ -1,3 +1,23 @@
+#- name: Find Peer ID from Requester VPC
+#  ec2_vpc_peering_facts:
+#    region: "{{ region }}"
+#    filters:
+#      requester-vpc-info.vpc-id: "{{ vpc }}"
+#  register: peering
+#  when: requester
+
+#- name: List VPC Peer  
+#  debug:
+#    msg: "{{ peering.result[0].vpc_peering_connection_id }}"
+#  when: requester and list
+  
+#- name: Delete VPC Peer
+#  ec2_vpc_peer:
+#   region: "{{ region }}"
+#   peering_id: "{{ peering.result[0].vpc_peering_connection_id }}"
+#   state: absent
+#  when: requester and terminate
+
 - ec2_vpc_subnet_facts:
     filters:
       vpc-id: "{{ vpc }}"
@@ -63,55 +83,20 @@
   ignore_errors: yes
   when: terminate
 
-- name: Find VGWs for Region
-  ec2_vpc_vgw_facts:
+- ec2_vpc_net_facts:
     region: "{{ region }}"
-  register: vgw_facts
+  register: test
 
-- name: Gather facts about vpn connections
-  ec2_vpc_vpn_facts:
-    filters:
-      vpn-gateway-id: "{{ gateway_id }}"
-  register: connections
-
-- debug: var=connections
-
-- name: Remove all VPN connections for a VGW
-  ec2_vpc_vpn:
-    state: absent
-    vpn_connection_id: "{{ item.vpn_connection_id }}"
-  with_items: "{{ connections.vpn_connections }}"
-
-- name: Remove tag from virtual private gateway
-  ec2_tag:
-    region: "{{ region }}"
-    resource: "{{ gateway_id }}"
-    state: absent
-    tags:
-      Name: cv-csr-vgw
-      owner: System Team
-      transitvpc:spoke: 'true'
-
-- pause:
-    minutes: 1
-
-- name: Remove VGW
-  ec2_vpc_vgw:
-    region: "{{ region }}"
-    vpc_id: "{{ vpc }}"
-    vpn_gateway_id: "{{ gateway_id }}"
-    state: absent
-    wait_timeout: 320
-  when:
-    - terminate
-
-- pause:
-    minutes: 1
+- debug: var=test
 
 - ec2_vpc_net_facts:
     vpc_ids: "{{ vpc }}"
+    region: "{{ region }}"
   register: vpc_facts
 
+
+- pause:
+    minutes: 3
 
 - name: Remove the VPC
   ec2_vpc_net:
@@ -124,3 +109,4 @@
        Name: "{{ vpc_name }}"
   with_items: "{{ vpc_facts.vpcs }}"
   when: terminate
+

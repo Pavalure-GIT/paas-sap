@@ -1,11 +1,14 @@
-# TearDown
+#Tear down the non-dr customer build
+- include: non-dr.yml
 
-- {include: natgateways.yml }
-
-- {include: ec2.yml }
-
-- include: route53.yml
-  with_dict: "{{ route53_zones }}"
-
-- {include: vpc.yml }
+#Run the teardown a second time for DR
+- include: dr.yml
+  vars:
+    vpc: "{{ dr_vpc }}"
+    vpc_name: "{{ dr_vpc_name }}"
+    region: "{{ dr_region }}"
+    list: "{{ dr_list }}"
+    terminate: "{{ dr_terminate }}"
+    requester: "{{ dr_requester }}"
+  when: dr == true
 
