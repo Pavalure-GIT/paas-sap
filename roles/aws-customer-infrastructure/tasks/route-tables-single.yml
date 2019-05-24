@@ -32,3 +32,5 @@
       - dest: 0.0.0.0/0
         gateway_id: "{{ az1_nat_gateway.nat_gateway_id }}"
   register: managementaz1_route_table
+
+- debug: var=managementaz1_route_table
