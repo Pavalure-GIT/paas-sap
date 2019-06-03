@@ -44,6 +44,11 @@
       set_fact:
         vpcid: "{{ customer_network.vpc.id }}"
       when: dr_compartment
+    #The customer route table ID from the created compartment is set as a variable so it can later be used for peering to DR, if DR flag is set to true
+    - name: Set Customer Route Table ID for DR Peering
+      set_fact:
+        custrt: "{{ customer_route_table.route_table.route_table_id }}"
+      when: dr_compartment
     #The AZ route table ID from the created compartment is set as a variable so it can later be used for peering to DR, if DR flag is set to true
     - name: Set Management AZ1 Route Table ID for DR Peering
       set_fact:
@@ -86,6 +91,13 @@
         aws_eth0_security_groups: "{{ fde_eth0_security_groups }}"
         aws_eth1_security_groups: "{{ fde_eth1_security_groups }}"
         single_nic: false
+        aws_ec2_vm_volumes:
+          - device_name: /dev/sda1
+            volume_type: gp2
+            volume_size: 30
+          - device_name: /dev/sdb
+            volume_type: gp2
+            volume_size: 50
     #The created instance is added to the FDE hosts group, so it can later be configured.    
     - name: Add FDE to fde group
       add_host:
@@ -150,6 +162,13 @@
         aws_eth0_security_groups: "{{ fde_eth0_security_groups }}"
         aws_eth1_security_groups: "{{ fde_eth1_security_groups }}"
         single_nic: false
+        aws_ec2_vm_volumes:
+          - device_name: /dev/sda1
+            volume_type: gp2
+            volume_size: 30
+          - device_name: /dev/sdb
+            volume_type: gp2
+            volume_size: 50
       when: ha
     #The created instance is added to the FDE hosts group, so it can later be configured.
     - name: Add FDE to fde-2 group
@@ -254,6 +273,13 @@
         aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
         aws_eth0_security_groups: "{{ buaas_eth0_security_groups }}"
         single_nic: true
+        aws_ec2_vm_volumes:
+          - device_name: /dev/sda1
+            volume_type: gp2
+            volume_size: 500
+          - device_name: /dev/sdb
+            volume_type: gp2
+            volume_size: 500
       when: buaas
     #An entry is added to the management DNS zone    
     - route53:
@@ -292,6 +318,13 @@
         aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
         aws_eth0_security_groups: "{{ buaas_eth0_security_groups }}"
         single_nic: true
+        aws_ec2_vm_volumes:
+          - device_name: /dev/sda1
+            volume_type: gp2
+            volume_size: 40
+          - device_name: /dev/sdb
+            volume_type: gp2
+            volume_size: 40
       when: buaas
     #An entry is added to the management DNS zone    
     - route53:
@@ -330,6 +363,13 @@
         aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
         aws_eth0_security_groups: "{{ buaas_eth0_security_groups }}"
         single_nic: true
+        aws_ec2_vm_volumes:
+          - device_name: /dev/sda1
+            volume_type: gp2
+            volume_size: 50
+          - device_name: /dev/sdb
+            volume_type: gp2
+            volume_size: 500
       when: buaas
     #An entry is added to the management DNS zone
     - route53:
@@ -457,6 +497,11 @@
       set_fact:
         drvpcid: "{{ customer_network.vpc.id }}"
       when: dr_compartment
+    #The customer route table ID from the created compartment is set as a variable so it can later be used for peering
+    - name: Set DR Management AZ1 Route Table ID for DR Peering
+      set_fact:
+        drcustrt: "{{ customer_route_table.route_table.route_table_id }}"
+      when: dr_compartment
     #The AZ route table ID from the created compartment is set as a variable so it can later be used for peering
     - name: Set DR Management AZ1 Route Table ID for DR Peering
       set_fact:
@@ -494,6 +539,13 @@
         aws_eth0_security_groups: "{{ fde_eth0_security_groups }}"
         aws_eth1_security_groups: "{{ fde_eth1_security_groups }}"
         single_nic: false
+        aws_ec2_vm_volumes:
+          - device_name: /dev/sda1
+            volume_type: gp2
+            volume_size: 30
+          - device_name: /dev/sdb
+            volume_type: gp2
+            volume_size: 50
       when: dr_compartment
     #The created instance is added to the FDE hosts group, so it can later be configured.  
     - name: Add dr fde to fde group
@@ -563,6 +615,13 @@
         aws_ec2_vm_eth0_subnet: "{{ customeraz2.subnet.id }}"
         aws_eth0_security_groups: "{{ fde_eth0_security_groups }}"
         aws_eth1_security_groups: "{{ fde_eth1_security_groups }}"
+        aws_ec2_vm_volumes:
+          - device_name: /dev/sda1
+            volume_type: gp2
+            volume_size: 30
+          - device_name: /dev/sdb
+            volume_type: gp2
+            volume_size: 50
         single_nic: false
       when: dr_ha
     #The created instance is added to the FDE hosts group, so it can later be configured.  
@@ -743,6 +802,18 @@
         vpc2: "{{ drvpcid }}"
         peer_name: "DR Peering"
       when: dr_compartment
+    #Primary Customer Route Table is updated to provide route to DR
+    - name: Update Route Table Customer
+      ec2_vpc_route_table:
+        vpc_id: "{{ vpcid }}"
+        region: "{{ vpc_region }}"
+        route_table_id: "{{ custrt }}"
+        tags:
+          Name: Customer
+        routes:
+          - dest: "{{ dr_manaz1_cidr }}"
+            vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
+      when: dr_compartment
     #Primary Management Route Table AZ1 is updated to provide route to DR
     - name: Update Route Table Management AZ1
       ec2_vpc_route_table:
@@ -779,6 +850,18 @@
           - dest: "{{ dr_manaz3_cidr }}"
             vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
       when: dr_compartment and not single_availability_zone
+    #Customer Route Table is updated to provide route to Primary  
+    - name: Update DR Route Table Customer
+      ec2_vpc_route_table:
+        vpc_id: "{{ drvpcid }}"
+        region: "{{ dr_vpc_region }}"
+        route_table_id: "{{ drcustrt }}"
+        tags:
+          Name: Customer
+        routes:
+          - dest: "{{ manaz1_cidr }}"
+            vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
+      when: dr_compartment
     #DR Management Route Table AZ1 is updated to provide route to Primary  
     - name: Update DR Route Table Management AZ1
       ec2_vpc_route_table:
