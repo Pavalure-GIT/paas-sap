@@ -3,10 +3,10 @@
     name: bind
     state: present
     disable_gpg_check: yes
-#  environment:
-#    http_proxy: "http://{{ proxy_domain }}:8080"
-#    #    https_proxy: "http://{{ proxy_domain }}:8080"
-#    #    no_proxy: "localhost, 127.0.0.1"
+  environment:
+    http_proxy: "http://{{ proxy_domain }}:8080"
+    https_proxy: "http://{{ proxy_domain }}:8080"
+    no_proxy: "localhost, 127.0.0.1"
 
 - name: copy named.conf
   copy:
@@ -107,9 +107,3 @@
     path: /etc/resolv.conf
     regexp: '^nameserver'
     line: 'nameserver {{ fde_ip }}'
-
-- name: modify named.conf - customer-management-lan
-  lineinfile:
-    path: /etc/named.conf
-    regexp: '^     customer-management-lan'
-    line: '     {{ customer_managenent_lan }};'

@@ -6,6 +6,7 @@
       include_role:
         name: fde
       vars:
+        proxy_domain: 172.17.112.106
         #The customer and management subnet CIDR ranges should cover multiple AZ's if deploying on AWS, for example 172.17.104.0/21 would cover multiple AZs
         customer_subnet_cidr: "172.16.32.0/22"
         customer_management_subnet_cidr: "172.17.32.0/22"
@@ -19,20 +20,20 @@
         dns_ip_dev: "10.4.0.5"
         dns_ip_test: "10.2.0.5"
         #DNS Zones for mangement, customer and reverse DNS
-        management_zone: "tst.example.com"
-        customer_zone: "test-customer.example.com"
-        reverse_zone: "172.in-addr.arpa"
+        management_zone: "dev.aws.paas4sap.svcs.entsvcs.com"
+        customer_zone: "dev-customer.dxc.paas4sap.svcs.entsvcs.com"
+        reverse_zone: "in-addr.arpa"
         #Forwarder IPs for each zone, for Azure these are taken from the nameserver addresses for each zone. For AWS it is by default the x.x.x.2 of the CIDR, e.g. 172.17.104.2
-        management_forwarders: "80.20.3.1; 6.80.232.2; 87.56.3.2;"
-        customer_forwarders: "32.32.32.0; 6.80.232.2; 89.76.23.1;"
-        reverse_forwarders: "40.3.32.1; 80.20.3.1; 6.80.232.2;"
+        management_forwarders: "172.17.104.2;"
+        customer_forwarders: "172.17.104.2;"
+        reverse_forwarders: "172.17.104.2;"
         #Forwarder IP, if Azure then 168.63.129.16, if AWS then first IP in management range, e.g. 172.17.0.2
-        forwarder_ip: "168.63.129.16"
+        forwarder_ip: "172.17.104.2"
         #FDE customer domain is the customer domain
-        fde_customer_domain: "test-customer.example.com"
+        fde_customer_domain: "dev.aws.paas4sap.svcs.entsvcs.com."
         #Management IP of the FDE itself
-        fde_ip: "10.2.2.2"
+        fde_ip: "172.17.113.175"
         fde_virualhostname: test123
   environment:
     AWS_ACCESS_KEY: 
-    AWS_SECRET_KEY:
+    AWS_SECRET_KEY: 

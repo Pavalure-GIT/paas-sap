@@ -1,5 +1,5 @@
 #Configure squid proxy for LaMa
-- { include: squid.yml, become: yes }  
+- { include: squid.yml, become: yes }
 
 #Configure DNS forwarder
 - { include: dnsforwarder.yml, become: yes }

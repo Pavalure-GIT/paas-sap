@@ -1,16 +1,32 @@
+- name: Refresh Repos
+  shell: /usr/sbin/registercloudguest --force-new
+  environment:
+    http_proxy: "http://{{ proxy_domain }}:8080"
+    https_proxy: "http://{{ proxy_domain }}:8080"
+    no_proxy: "localhost, 127.0.0.1"
+
+- stat:
+    path: /etc/zypp/repos.d/server_proxy.repo
+  register: stat_result
+
 - zypper_repository:
     repo: 'https://download.opensuse.org/repositories/server:proxy/SLE_12_SP3/server:proxy.repo'
-#  environment:
-#    http_proxy: "http://{{ proxy_domain }}:8080"
-#    https_proxy: "http://{{ proxy_domain }}:8080"
-#    no_proxy: "localhost, 127.0.0.1"
-  ignore_errors: yes
+  environment:
+    http_proxy: "http://{{ proxy_domain }}:8080"
+    https_proxy: "http://{{ proxy_domain }}:8080"
+    no_proxy: "localhost, 127.0.0.1"
+  when: stat_result.stat.exists == False
 
 - name: install squid
   zypper:
     name: squid
     state: present
     disable_gpg_check: yes
+  environment:
+    http_proxy: "http://{{ proxy_domain }}:8080"
+    https_proxy: "http://{{ proxy_domain }}:8080"
+    no_proxy: "localhost, 127.0.0.1"
+  retries: 3
 
 - name: copy squid.conf
   copy:
