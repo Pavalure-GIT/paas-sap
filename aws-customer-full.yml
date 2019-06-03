@@ -91,6 +91,13 @@
         aws_eth0_security_groups: "{{ fde_eth0_security_groups }}"
         aws_eth1_security_groups: "{{ fde_eth1_security_groups }}"
         single_nic: false
+        aws_ec2_vm_volumes:
+          - device_name: /dev/sda1
+            volume_type: gp2
+            volume_size: 30
+          - device_name: /dev/sdb
+            volume_type: gp2
+            volume_size: 50
     #The created instance is added to the FDE hosts group, so it can later be configured.    
     - name: Add FDE to fde group
       add_host:
@@ -155,6 +162,13 @@
         aws_eth0_security_groups: "{{ fde_eth0_security_groups }}"
         aws_eth1_security_groups: "{{ fde_eth1_security_groups }}"
         single_nic: false
+        aws_ec2_vm_volumes:
+          - device_name: /dev/sda1
+            volume_type: gp2
+            volume_size: 30
+          - device_name: /dev/sdb
+            volume_type: gp2
+            volume_size: 50
       when: ha
     #The created instance is added to the FDE hosts group, so it can later be configured.
     - name: Add FDE to fde-2 group
@@ -259,6 +273,13 @@
         aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
         aws_eth0_security_groups: "{{ buaas_eth0_security_groups }}"
         single_nic: true
+        aws_ec2_vm_volumes:
+          - device_name: /dev/sda1
+            volume_type: gp2
+            volume_size: 500
+          - device_name: /dev/sdb
+            volume_type: gp2
+            volume_size: 500
       when: buaas
     #An entry is added to the management DNS zone    
     - route53:
@@ -297,6 +318,13 @@
         aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
         aws_eth0_security_groups: "{{ buaas_eth0_security_groups }}"
         single_nic: true
+        aws_ec2_vm_volumes:
+          - device_name: /dev/sda1
+            volume_type: gp2
+            volume_size: 40
+          - device_name: /dev/sdb
+            volume_type: gp2
+            volume_size: 40
       when: buaas
     #An entry is added to the management DNS zone    
     - route53:
@@ -335,6 +363,13 @@
         aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
         aws_eth0_security_groups: "{{ buaas_eth0_security_groups }}"
         single_nic: true
+        aws_ec2_vm_volumes:
+          - device_name: /dev/sda1
+            volume_type: gp2
+            volume_size: 50
+          - device_name: /dev/sdb
+            volume_type: gp2
+            volume_size: 500
       when: buaas
     #An entry is added to the management DNS zone
     - route53:
@@ -504,6 +539,13 @@
         aws_eth0_security_groups: "{{ fde_eth0_security_groups }}"
         aws_eth1_security_groups: "{{ fde_eth1_security_groups }}"
         single_nic: false
+        aws_ec2_vm_volumes:
+          - device_name: /dev/sda1
+            volume_type: gp2
+            volume_size: 30
+          - device_name: /dev/sdb
+            volume_type: gp2
+            volume_size: 50
       when: dr_compartment
     #The created instance is added to the FDE hosts group, so it can later be configured.  
     - name: Add dr fde to fde group
@@ -573,6 +615,13 @@
         aws_ec2_vm_eth0_subnet: "{{ customeraz2.subnet.id }}"
         aws_eth0_security_groups: "{{ fde_eth0_security_groups }}"
         aws_eth1_security_groups: "{{ fde_eth1_security_groups }}"
+        aws_ec2_vm_volumes:
+          - device_name: /dev/sda1
+            volume_type: gp2
+            volume_size: 30
+          - device_name: /dev/sdb
+            volume_type: gp2
+            volume_size: 50
         single_nic: false
       when: dr_ha
     #The created instance is added to the FDE hosts group, so it can later be configured.  

@@ -42,6 +42,7 @@
     key_name: "{{ aws_ec2_vm_key_name }}"
     region: "{{ aws_ec2_vm_region }}"
     wait: true
+    volumes: "{{ aws_ec2_vm_volumes }}"
   register: ec2_vm
   when: single_nic
   
@@ -56,6 +57,7 @@
     key_name: "{{ aws_ec2_vm_key_name }}"
     region: "{{ aws_ec2_vm_region }}"
     wait: true
+    volumes: "{{ aws_ec2_vm_volumes }}"
   register: ec2_vm
   when: not single_nic
 
@@ -64,3 +66,4 @@
 #Attach additonal Security Groups to VM
 - name: Additional Security Groups
   include_tasks: additional_sgs.yml
+
