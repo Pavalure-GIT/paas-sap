@@ -39,36 +39,7 @@
         create_zone: true
         #The single_az flag is used to indicate if additional AZ subnets need to created
         single_az: "{{ single_availability_zone }}"
-    #The VPC ID of the created compartment is set as a variable so it can later be used for peering to DR, if DR flag is set to true
-    - name: Set VPC ID for DR Peering
-      set_fact:
-        vpcid: "{{ customer_network.vpc.id }}"
-      when: dr_compartment
-    #The customer route table ID from the created compartment is set as a variable so it can later be used for peering to DR, if DR flag is set to true
-    - name: Set Customer Route Table ID for DR Peering
-      set_fact:
-        custrt: "{{ customer_route_table.route_table.route_table_id }}"
-      when: dr_compartment
-    #The AZ route table ID from the created compartment is set as a variable so it can later be used for peering to DR, if DR flag is set to true
-    - name: Set Management AZ1 Route Table ID for DR Peering
-      set_fact:
-        manaz1rt: "{{ managementaz1_route_table.route_table.route_table_id }}"
-      when: dr_compartment
-    ##The AZ route table ID from the created compartment is set as a variable so it can later be used for peering to DR, if DR flag is set to true
-    - name: Set Management AZ2 Route Table ID for DR Peering
-      set_fact:
-        manaz2rt: "{{ managementaz2_route_table.route_table.route_table_id }}"
-      when: dr_compartment and not single_availability_zone
-    #The AZ route table ID from the created compartment is set as a variable so it can later be used for peering to DR, if DR flag is set to true
-    - name: Set Management AZ3 Route Table ID for DR Peering
-      set_fact:
-        manaz3rt: "{{ managementaz3_route_table.route_table.route_table_id }}"
-      when: dr_compartment and not single_availability_zone
-    #The AZ reverse zone ID from the created compartment is set as a variable so it can later be used for peering to DR, if DR flag is set to true
-    - name: Set Reverse Zone for DR
-      set_fact:
-        rev_zone: "{{ reverse_zone.zone_id }}"
-      when: dr_compartment
+        dr: false
 
 - name: Provision Component Machines
   hosts: localhost
@@ -491,33 +462,8 @@
         aws_customer_vpc_longname: "{{ vpc_longname }}"
         create_zone: false
         single_az: "{{ dr_single_availability_zone }}"
+        dr: true
       when: dr_compartment
-    #The VPC ID of the created compartment is set as a variable so it can later be used for peering
-    - name: Set VPC ID for DR Peering
-      set_fact:
-        drvpcid: "{{ customer_network.vpc.id }}"
-      when: dr_compartment
-    #The customer route table ID from the created compartment is set as a variable so it can later be used for peering
-    - name: Set DR Management AZ1 Route Table ID for DR Peering
-      set_fact:
-        drcustrt: "{{ customer_route_table.route_table.route_table_id }}"
-      when: dr_compartment
-    #The AZ route table ID from the created compartment is set as a variable so it can later be used for peering
-    - name: Set DR Management AZ1 Route Table ID for DR Peering
-      set_fact:
-        drmanaz1rt: "{{ managementaz1_route_table.route_table.route_table_id }}"
-      when: dr_compartment
-    #The AZ route table ID from the created compartment is set as a variable so it can later be used for peering
-    - name: Set DR Management AZ2 Route Table ID for DR Peering
-      set_fact:
-        drmanaz2rt: "{{ managementaz2_route_table.route_table.route_table_id }}"
-      when: dr_compartment and not dr_single_availability_zone
-    #The AZ route table ID from the created compartment is set as a variable so it can later be used for peering
-    - name: Set DR Management AZ3 Route Table ID for DR Peering
-      set_fact:
-        drmanaz3rt: "{{ managementaz3_route_table.route_table.route_table_id }}"
-      when: dr_compartment and not dr_single_availability_zone
-
 
 - name: Provision Component Machines
   hosts: localhost
@@ -825,6 +771,8 @@
         routes:
           - dest: "{{ dr_manaz1_cidr }}"
             vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
+          - dest: 0.0.0.0/0
+            gateway_id: "{{ az1ngw }}"
       when: dr_compartment
     #Primary Management Route Table AZ2 is updated to provide route to DR  
     - name: Update Route Table Management AZ2
@@ -837,6 +785,8 @@
         routes:
           - dest: "{{ dr_manaz2_cidr }}"
             vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
+          - dest: 0.0.0.0/0
+            gateway_id: "{{ az2ngw }}"
       when: dr_compartment and not single_availability_zone
     #Primary Management Route Table AZ3 is updated to provide route to DR  
     - name: Update Route Table Management AZ3
@@ -849,6 +799,8 @@
         routes:
           - dest: "{{ dr_manaz3_cidr }}"
             vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
+          - dest: 0.0.0.0/0
+            gateway_id: "{{ az3ngw }}"
       when: dr_compartment and not single_availability_zone
     #Customer Route Table is updated to provide route to Primary  
     - name: Update DR Route Table Customer
@@ -873,6 +825,8 @@
         routes:
           - dest: "{{ manaz1_cidr }}"
             vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
+          - dest: 0.0.0.0/0
+            gateway_id: "{{ draz1ngw }}"
       when: dr_compartment
     #DR Management Route Table AZ2 is updated to provide route to Primary  
     - name: Update DR Route Table Management AZ2
@@ -885,6 +839,8 @@
         routes:
           - dest: "{{ manaz2_cidr }}"
             vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
+          - dest: 0.0.0.0/0
+            gateway_id: "{{ draz2ngw }}"
       when: dr_compartment and not dr_single_availability_zone
     #DR Management Route Table AZ3 is updated to provide route to Primary  
     - name: Update DR Route Table Management AZ3
@@ -897,6 +853,8 @@
         routes:
           - dest: "{{ manaz3_cidr }}"
             vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
+          - dest: 0.0.0.0/0
+            gateway_id: "{{ draz3ngw }}"
       when: dr_compartment and not dr_single_availability_zone
     #Update Security group in DR to add rule allowing primary CIDR range in on all ports  
     - ec2_group:
