@@ -3,7 +3,7 @@
 #single_availability_zone is set to true if only a single AZ is required for the customer
 single_availability_zone: true
 #busaas is set to true if BUaaS management servers are to be created, please note this requires the correct AMIs to be shared to the subscription in advance
-buaas: true
+buaas: false
 #dr_compartment is set to true if a DR compartment is required, this will create the compartment and peer it to the primary compartment
 dr_compartment: true
 #dr_single_availability_zone is set to true if only a single AZ is required for the DR compartment
