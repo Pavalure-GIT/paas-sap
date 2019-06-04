@@ -86,7 +86,24 @@
     region: "{{ vpc_region }}"
     tags:
       Name: Management AZ1
+    routes:
+      - dest: "{{ dr_manaz1_cidr }}"
+        vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
+      - dest: 0.0.0.0/0
+        gateway_id: "{{ az1ngw }}"
     propagating_vgw_ids: "{{ vgw.vgw.id }}"
+  when: dr_compartment
+
+- ec2_vpc_route_table:
+    vpc_id: "{{ vgw.vgw.vpc_id }}"
+    region: "{{ vpc_region }}"
+    tags:
+      Name: Management AZ1
+    routes:
+      - dest: 0.0.0.0/0
+        gateway_id: "{{ az1_nat_gateway.nat_gateway_id }}"
+    propagating_vgw_ids: "{{ vgw.vgw.id }}"
+  when: not dr_compartment
 
 - pause:
     minutes: 5

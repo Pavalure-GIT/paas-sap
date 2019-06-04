@@ -1,0 +1,44 @@
+#The VPC ID of the created compartment is set as a variable so it can later be used for peering to DR
+- name: Set VPC ID for DR Peering
+  set_fact:
+    vpcid: "{{ customer_network.vpc.id }}"
+#Set IGW ID for compartment so it can later be used for peering to DR
+- name: Set IGW ID for DR Peering
+  set_fact:
+    igwid: "{{ igw.gateway_id }}"
+#Set NATGW AZ1 ID for compartment so it can later be used for peering to DR
+- name: Set NAT GW AZ1 ID for DR Peering
+  set_fact:
+    az1ngw: "{{ az1_nat_gateway.nat_gateway_id  }}"
+#Set NATGW AZ2 ID for compartment so it can later be used for peering to DR
+- name: Set NAT GW AZ2 ID for DR Peering
+  set_fact:
+    az2ngw: "{{ az2_nat_gateway.nat_gateway_id  }}"
+  when: not single_availability_zone
+#Set NATGW AZ3 ID for compartment so it can later be used for peering to DR
+- name: Set NAT GW AZ3 ID for DR Peering
+  set_fact:
+    az3ngw: "{{ az3_nat_gateway.nat_gateway_id  }}"
+  when: not single_availability_zone
+#The customer route table ID from the created compartment is set as a variable so it can later be used for peering to DR
+- name: Set Customer Route Table ID for DR Peering
+  set_fact:
+    custrt: "{{ customer_route_table.route_table.route_table_id }}"
+#The AZ route table ID from the created compartment is set as a variable so it can later be used for peering to DR
+- name: Set Management AZ1 Route Table ID for DR Peering
+  set_fact:
+    manaz1rt: "{{ managementaz1_route_table.route_table.route_table_id }}"
+#The AZ route table ID from the created compartment is set as a variable so it can later be used for peering to DR
+- name: Set Management AZ2 Route Table ID for DR Peering
+  set_fact:
+    manaz2rt: "{{ managementaz2_route_table.route_table.route_table_id }}"
+  when: not single_availability_zone
+#The AZ route table ID from the created compartment is set as a variable so it can later be used for peering to DR
+- name: Set Management AZ3 Route Table ID for DR Peering
+  set_fact:
+    manaz3rt: "{{ managementaz3_route_table.route_table.route_table_id }}"
+  when: not single_availability_zone
+#The AZ reverse zone ID from the created compartment is set as a variable so it can later be used for peering to DR
+- name: Set Reverse Zone for DR
+  set_fact:
+    rev_zone: "{{ reverse_zone.zone_id }}"
