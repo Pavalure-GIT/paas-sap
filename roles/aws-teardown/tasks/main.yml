@@ -1,5 +1,7 @@
 #Tear down the non-dr customer build
 - include: non-dr.yml
+  vars:
+    requester: true
 
 #Run the teardown a second time for DR
 - include: dr.yml
@@ -9,6 +11,6 @@
     region: "{{ dr_region }}"
     list: "{{ dr_list }}"
     terminate: "{{ dr_terminate }}"
-    requester: "{{ dr_requester }}"
+    requester: false
   when: dr == true
 
