@@ -62,6 +62,7 @@ pipeline{
 		"in-addr.arpa.": "${params.in_addr_arpa}"
 	},
 	"vpc_name": "${params.vpc_name}",
+    "gateway_id": "${params.gateway_id}",
     "dr": "${params.dr}",
     "dr_vpc_id": "${params.dr_vpc_id}",
     "dr_vpc_name": "${params.dr_vpc_name}",
