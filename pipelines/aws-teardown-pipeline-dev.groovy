@@ -68,7 +68,6 @@ pipeline{
     "dr_region": "${params.dr_region}",
     dr_list: "${true}",
     "dr_terminate": "${params.dr_terminate}"
-	""
 }'
     """
             }
