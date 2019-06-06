@@ -42,6 +42,9 @@ pipeline{
         stage('Tear down AWS'){
                         //stop logging, export env variable for aws cli in virutal env, pull down vars file and kick off build
             steps{
+
+                configFileProvider([configFile(fileId: 'aws-cust-teardown-david', targetLocation: 'group_vars/aws-cust-teardown-david.yml')]) {
+                }
                 sh """
                 set +x
                 virtualenv .
@@ -50,27 +53,8 @@ pipeline{
                 export AWS_ACCESS_KEY_ID=${env.AWS_ACCESS_KEY}
                 export AWS_SECRET_ACCESS_KEY=${env.AWS_SECRET_KEY}
                 export AWS_DEFAULT_REGION=${env.AWS_DEFAULT_REGION}
-                ansible-playbook aws-teardown.yml --extra-vars '{
-	"vpc":"${params.vpc_id}",
-	"region":"${params.region}",
-	"list":"${params.list}",
-	"terminate":"${params.terminate}",
-	"requester":"${params.requester}",
-	"route53_zones": {
-		"${params.vpc_shortname}": "${params.vpc_shortname_id}",
-		"${params.vpc_longname}": "${params.vpc_longname_id}",
-		"in-addr.arpa.": "${params.in_addr_arpa}"
-	},
-	"vpc_name": "${params.vpc_name}",
-    "gateway_id": "${params.gateway_id}",
-    "dr": "${params.dr}",
-    "dr_vpc_id": "${params.dr_vpc_id}",
-    "dr_vpc_name": "${params.dr_vpc_name}",
-    "dr_region": "${params.dr_region}",
-    dr_list: "${true}",
-    "dr_terminate": "${params.dr_terminate}"
-}'
-    """
+                ansible-playbook aws-teardown.yml --extra-vars @group_vars/aws-cust-teardown-david.yml
+                """
             }
         }
     }
