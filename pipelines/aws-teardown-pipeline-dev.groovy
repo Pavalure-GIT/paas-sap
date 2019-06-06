@@ -23,7 +23,7 @@ pipeline{
 
 
     }
-     //get keys from vault
+    //get keys from vault
     environment {
         AWS_ACCESS_KEY = vault path: 'secret/720232237161/automation/aws/access_key', key: 'value', vaultUrl: 'http://10.4.0.11:8200', credentialsId: 'jenkinsreadvaulttoken'
         AWS_SECRET_KEY = vault path: 'secret/720232237161/automation/aws/secret_key', key: 'value', vaultUrl: 'http://10.4.0.11:8200', credentialsId: 'jenkinsreadvaulttoken'
@@ -65,7 +65,8 @@ pipeline{
     "dr": "${params.dr}",
     "dr_vpc_id": "${params.dr_vpc_id}",
     "dr_vpc_name": "${params.dr_vpc_name}",
-    "dr_region": "${params.dr_list}",
+    "dr_region": "${params.dr_region}",
+    dr_list: "${true}",
     "dr_terminate": "${params.dr_terminate}"
 	""
 }'
