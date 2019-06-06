@@ -13,6 +13,14 @@ pipeline{
       string defaultValue: 'xxxxxx.aws.paas4sap.svcs.entsvcs.com', description: 'enter vpc long name. Value can be found with the vars file used to build the VPC or use the VPC-ID to find longname in route53', name: 'vpc_longname', trim: true
       string defaultValue: 'Z19T3FXREVEDR9', description: 'enter vpc long name id. Use the VPC-ID to find longname ID in route53', name: 'vpc_longname_id', trim: true
       string defaultValue: 'Z19T3DERRVEDR9', description: 'in-addr.arpa VPC-ID to find longname ID in route53', name: 'in_addr_arpa', trim: true
+      string defaultValue: 'vgw-0f73c280059aa00d2', description: 'gateway ID', name: 'gateway_id', trim: true
+      choice choices: ['true', 'false'], description: 'tear down DR', name: 'dr', trim: true
+      string defaultValue: 'vpc-0af9bf39247934d58', description: 'Enter the DR VPC ID', name: 'dr_vpc_id', trim: true
+      string defaultValue: 'DR-Dev-Example', description: 'Enter the VPC Name here', name: 'dr_vpc_name', trim: true
+      string defaultValue: 'us-east-2', description: 'Enter the region here', name: 'dr_region', trim: true
+      choice choices: ['false','true'], description: 'dr list', name: 'dr_list'
+      choice choices: ['false', 'true'], description: 'dr terminate', name: 'dr_terminate'
+
 
     }
      //get keys from vault
@@ -53,12 +61,17 @@ pipeline{
 		"${params.vpc_longname}": "${params.vpc_longname_id}",
 		"in-addr.arpa.": "${params.in_addr_arpa}"
 	},
-	"vpc_name": "${params.vpc_name}"
+	"vpc_name": "${params.vpc_name}",
+    "dr": "${params.dr}",
+    "dr_vpc_id": "${params.dr_vpc_id}",
+    "dr_vpc_name": "${params.dr_vpc_name}",
+    "dr_region": "${params.dr_list}",
+    "dr_terminate": "${params.dr_terminate}"
+	""
 }'
-                """
+    """
             }
         }
-
     }
 
     
