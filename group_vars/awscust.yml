@@ -5,9 +5,9 @@ single_availability_zone: true
 #busaas is set to true if BUaaS management servers are to be created, please note this requires the correct AMIs to be shared to the subscription in advance
 buaas: false
 #dr_compartment is set to true if a DR compartment is required, this will create the compartment and peer it to the primary compartment
-dr_compartment: true
+dr_compartment: false
 #dr_single_availability_zone is set to true if only a single AZ is required for the DR compartment
-dr_single_availability_zone: true
+dr_single_availability_zone: false
 #Setting ha to true will create a second FDE and SAP Router server in AZ2
 ha: false
 #Setting ha to true will create a second FDE and SAP Router server in AZ2 for the DR compartment
