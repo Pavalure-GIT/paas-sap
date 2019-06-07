@@ -26,6 +26,8 @@ pipeline{
             environment {
                 AWS_ACCESS_KEY = vault path: "secret/${params.subscription}/automation/aws/access_key", key: 'value', vaultUrl: 'http://10.165.0.11:8200', credentialsId: 'jenkinsreadvaulttoken'
                 AWS_SECRET_KEY = vault path: "secret/${params.subscription}/automation/aws/secret_key", key: 'value', vaultUrl: 'http://10.165.0.11:8200', credentialsId: 'jenkinsreadvaulttoken'
+                media_access_key= vault path: "secret/470172651571/automation/aws/access_key", key: 'value', vaultUrl: 'http://10.165.0.11:8200', credentialsId: 'jenkinsreadvaulttoken'
+                media_secret_key= vault path: "secret/470172651571/automation/aws/secret_key", key: 'value', vaultUrl: 'http://10.165.0.11:8200', credentialsId: 'jenkinsreadvaulttoken'
                 AWS_DEFAULT_REGION = 'us-east-1'
             }
 
