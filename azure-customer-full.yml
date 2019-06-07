@@ -1,4 +1,4 @@
-
+#This creates the Infrastructure
 - name: Azure Compartment Configuration
   vars_files:
       - group_vars/azure_cust.yml
@@ -21,7 +21,8 @@
         customer_dns: "{{ st_customer_dns }}"
         management_reverse_dns: "{{ st_management_reverse_dns }}"
         customer_reverse_dns: "{{ st_customer_reverse_dns }}"
-        
+
+#Create BUaaS servers        
 - name: Provision Component VMs
   vars_files:
       - group_vars/azure_cust.yml 
@@ -34,7 +35,7 @@
         azure_vm_name: "cloudboost"
         azure_vm_resource_group: "{{ st_resource_group }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
-        azue_vm_vnet: "{{ st_virtual_network_name }}" 
+        azure_vm_vnet: "{{ st_virtual_network_name }}" 
         azure_vm_size: "{{ cloudboost_size }}"
         azure_vm_image_offer: "{{ cloudboost_image_offer }}"
         azure_vm_publisher: "{{ cloudboost_publisher }}"
@@ -48,6 +49,7 @@
         azure_vm_nic2_reverse_dns: ""
         azure_vm_add_dns: true
       when: buaas
+#This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Public
       include_role: 
         name: azure-asg-allocate
@@ -65,7 +67,7 @@
         azure_vm_name: "networker"
         azure_vm_resource_group: "{{ st_resource_group }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
-        azue_vm_vnet: "{{ st_virtual_network_name }}"
+        azure_vm_vnet: "{{ st_virtual_network_name }}"
         azure_vm_size: "{{ networker_size }}"
         azure_vm_image_offer: "{{ networker_image_offer }}"
         azure_vm_publisher: "{{ networker_publisher }}"
@@ -79,6 +81,7 @@
         azure_vm_nic2_reverse_dns: ""
         azure_vm_add_dns: true
       when: buaas
+#This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Public
       include_role:
         name: azure-asg-allocate
@@ -96,7 +99,7 @@
         azure_vm_name: "nmc"
         azure_vm_resource_group: "{{ st_resource_group }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
-        azue_vm_vnet: "{{ st_virtual_network_name }}"
+        azure_vm_vnet: "{{ st_virtual_network_name }}"
         azure_vm_size: "{{ nmc_size }}"
         azure_vm_image_offer: "{{ nmc_image_offer }}"
         azure_vm_publisher: "{{ nmc_publisher }}"
@@ -110,6 +113,7 @@
         azure_vm_nic2_reverse_dns: ""
         azure_vm_add_dns: true
       when: buaas
+#This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Public
       include_role:
         name: azure-asg-allocate
@@ -127,7 +131,7 @@
         azure_vm_name: "SAPRouter"
         azure_vm_resource_group: "{{ st_resource_group }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
-        azue_vm_vnet: "{{ st_virtual_network_name }}" 
+        azure_vm_vnet: "{{ st_virtual_network_name }}" 
         azure_vm_size: "{{ saprouter_size }}"
         azure_vm_image_offer: "{{ saprouter_image_offer }}"
         azure_vm_publisher: "{{ saprouter_publisher }}"
@@ -140,6 +144,7 @@
         azure_vm_nic1_reverse_dns: ""
         azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_add_dns: true
+#This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Public
       include_role: 
         name: azure-asg-allocate
@@ -164,7 +169,7 @@
         azure_vm_name: "MidServerA"
         azure_vm_resource_group: "{{ st_resource_group }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
-        azue_vm_vnet: "{{ st_virtual_network_name }}" 
+        azure_vm_vnet: "{{ st_virtual_network_name }}" 
         azure_vm_size: "{{ mids_size }}"
         azure_vm_image_offer: "{{ mids_image_offer }}"
         azure_vm_publisher: "{{ mids_publisher }}"
@@ -177,6 +182,7 @@
         azure_vm_nic1_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_nic2_reverse_dns: ""
         azure_vm_add_dns: true
+#This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Management
       include_role: 
         name: azure-asg-allocate
@@ -194,7 +200,7 @@
         azure_vm_name: "MidServerB"
         azure_vm_resource_group: "{{ st_resource_group }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
-        azue_vm_vnet: "{{ st_virtual_network_name }}" 
+        azure_vm_vnet: "{{ st_virtual_network_name }}" 
         azure_vm_size: "{{ mids_size }}"
         azure_vm_image_offer: "{{ mids_image_offer }}"
         azure_vm_publisher: "{{ mids_publisher }}"
@@ -207,6 +213,7 @@
         azure_vm_nic1_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_nic2_reverse_dns: ""
         azure_vm_add_dns: true
+#This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Management
       include_role: 
         name: azure-asg-allocate
@@ -223,7 +230,7 @@
         azure_vm_name: "FDE"
         azure_vm_resource_group: "{{ st_resource_group }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
-        azue_vm_vnet: "{{ st_virtual_network_name }}" 
+        azure_vm_vnet: "{{ st_virtual_network_name }}" 
         azure_vm_size: "{{ fde_size }}"
         azure_vm_image_offer: "{{ fde_image_offer }}"
         azure_vm_publisher: "{{ fde_publisher }}"
@@ -236,6 +243,7 @@
         azure_vm_nic1_reverse_dns: "{{ st_customer_reverse_dns }}"
         azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_add_dns: true
+#This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Customer
       include_role: 
         name: azure-asg-allocate
@@ -261,7 +269,7 @@
         azure_vm_name: "SAPRouter-HA"
         azure_vm_resource_group: "{{ st_resource_group }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
-        azue_vm_vnet: "{{ st_virtual_network_name }}" 
+        azure_vm_vnet: "{{ st_virtual_network_name }}" 
         azure_vm_size: "{{ saprouter_size }}"
         azure_vm_image_offer: "{{ saprouter_image_offer }}"
         azure_vm_publisher: "{{ saprouter_publisher }}"
@@ -275,6 +283,7 @@
         azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_add_dns: false
       when: ha_compartment
+#This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Public
       include_role: 
         name: azure-asg-allocate
@@ -294,7 +303,9 @@
           - { resource_group: "{{ st_resource_group }}", name: mgmt-net-all }
         azure_vm_nic: "SAPRouter-HA-nic2"
       when: ha_compartment
- 
+
+#Note this machine has two nics 
+
     - name: Provision FDE
       include_role:
         name: azure-vm  
@@ -302,7 +313,7 @@
         azure_vm_name: "FDE-HA"
         azure_vm_resource_group: "{{ st_resource_group }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
-        azue_vm_vnet: "{{ st_virtual_network_name }}" 
+        azure_vm_vnet: "{{ st_virtual_network_name }}" 
         azure_vm_size: "{{ fde_size }}"
         azure_vm_image_offer: "{{ fde_image_offer }}"
         azure_vm_publisher: "{{ fde_publisher }}"
@@ -338,6 +349,7 @@
       when: ha_compartment       
 
 ##########################DR###########################
+#this will build the DR compartment if enabled in the vars file, ensure you select a different region from the primary compartment and select the correct virtal machine image for that region.
 
 - name: Azure Compartment Configuration
   vars_files:
@@ -375,7 +387,7 @@
         azure_vm_name: "SAPRouter-dr"
         azure_vm_resource_group: "{{ dr_resource_group }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
-        azue_vm_vnet: "{{ dr_virtual_network_name }}" 
+        azure_vm_vnet: "{{ dr_virtual_network_name }}" 
         azure_vm_size: "{{ saprouter_size }}"
         azure_vm_image_offer: "{{ saprouter_image_offer }}"
         azure_vm_publisher: "{{ saprouter_publisher }}"
@@ -389,6 +401,8 @@
         azure_vm_nic2_reverse_dns: "{{ dr_management_reverse_dns }}"
         azure_vm_add_dns: true
       when: dr_compartment
+
+#Note, this machine has 2 nics
 
     - name: Allocate ASG nic1 - Public
       include_role: 
@@ -417,7 +431,7 @@
         azure_vm_name: "MidServerA-dr"
         azure_vm_resource_group: "{{ dr_resource_group }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
-        azue_vm_vnet: "{{ dr_virtual_network_name }}" 
+        azure_vm_vnet: "{{ dr_virtual_network_name }}" 
         azure_vm_size: "{{ mids_size }}"
         azure_vm_image_offer: "{{ mids_image_offer }}"
         azure_vm_publisher: "{{ mids_publisher }}"
@@ -448,7 +462,7 @@
         azure_vm_name: "MidServerB-dr"
         azure_vm_resource_group: "{{ dr_resource_group }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
-        azue_vm_vnet: "{{ dr_virtual_network_name }}" 
+        azure_vm_vnet: "{{ dr_virtual_network_name }}" 
         azure_vm_size: "{{ mids_size }}"
         azure_vm_image_offer: "{{ mids_image_offer }}"
         azure_vm_publisher: "{{ mids_publisher }}"
@@ -471,6 +485,8 @@
           - { resource_group: "{{ dr_resource_group }}", name: mgmt-net-all }
         azure_vm_nic: "MidServerB-dr-nic1"
       when: dr_compartment
+
+#Note, this machine has 2nics
  
     - name: Provision FDE
       include_role:
@@ -479,7 +495,7 @@
         azure_vm_name: "FDE-dr"
         azure_vm_resource_group: "{{ dr_resource_group }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
-        azue_vm_vnet: "{{ dr_virtual_network_name }}" 
+        azure_vm_vnet: "{{ dr_virtual_network_name }}" 
         azure_vm_size: "{{ fde_size }}"
         azure_vm_image_offer: "{{ fde_image_offer }}"
         azure_vm_publisher: "{{ fde_publisher }}"
@@ -512,7 +528,7 @@
         azure_vm_nic: "FDE-dr-nic2"
       when: dr_compartment
 
-    ##Duplicating provisions for HA requirements     
+#Note   ####################### ##Duplicating provisions for HA requirements#########################     
     - name: Provision SAP Router
       include_role:
         name: azure-vm
@@ -520,7 +536,7 @@
         azure_vm_name: "SAPRouter-HA-dr"
         azure_vm_resource_group: "{{ dr_resource_group }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
-        azue_vm_vnet: "{{ dr_virtual_network_name }}" 
+        azure_vm_vnet: "{{ dr_virtual_network_name }}" 
         azure_vm_size: "{{ saprouter_size }}"
         azure_vm_image_offer: "{{ saprouter_image_offer }}"
         azure_vm_publisher: "{{ saprouter_publisher }}"
@@ -561,7 +577,7 @@
         azure_vm_name: "FDE-HA-dr"
         azure_vm_resource_group: "{{ dr_resource_group }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
-        azue_vm_vnet: "{{ dr_virtual_network_name }}" 
+        azure_vm_vnet: "{{ dr_virtual_network_name }}" 
         azure_vm_size: "{{ fde_size }}"
         azure_vm_image_offer: "{{ fde_image_offer }}"
         azure_vm_publisher: "{{ fde_publisher }}"
