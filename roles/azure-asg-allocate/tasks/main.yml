@@ -3,6 +3,7 @@
     msg: "{{ asgs }}"
     
 - name: asg stuff
+#Using Paul Thomas's Application Security Groups module to Assign ASG's to a NIC
   azure_rm_networkinterface_asg:
     subscription_id: '{{ lookup("env", "AZURE_SUBSCRIPTION_ID") }}'
     client_id: '{{ lookup("env", "AZURE_CLIENT_ID") }}'

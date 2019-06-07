@@ -21,6 +21,7 @@
 
 - include_tasks: route-tables.yml
 
+#Note,this is done using an ARM template(asg-nsg-config.json)
 - name: Create asg's and nsg's
   azure_rm_deployment:
     state: present
@@ -35,6 +36,7 @@
     state: present
     resource_group: "{{ resource_group }}"
     name: "{{ management_dns }}"
+#when mangement_dns = none, this will only create if theres one specified otherwise it will not create it.
   when: management_dns != ""
 
 - name: Create Customer DNS

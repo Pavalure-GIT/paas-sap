@@ -2,6 +2,7 @@
   azure_rm_routetable:
     name: "ManagementRouteTable"
     resource_group: "{{ resource_group }}"
+#this will ignore the BGP route if set to yes
     disable_bgp_route_propagation: no
     state: present
 
