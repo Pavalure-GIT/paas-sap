@@ -6,12 +6,10 @@
     hosted_zone_id: "{{ item.value }}"
   register: records
 
-#Set Zone Name
 - name: Set Zone Name
   set_fact:
     zone_name: "{{ item.key }}"
 
-#List type A records from given zone
 - name: Get the A records from "{{ item.key }}"
   route53:
       state: get
@@ -21,7 +19,6 @@
       type: A
   with_items: "{{ records.ResourceRecordSets }}"
 
-#Remove type A records from given zone
 - name: Remove A records for "{{ zone_name }}"
   route53:
     state: delete
@@ -34,7 +31,6 @@
   with_items: "{{ records.ResourceRecordSets }}"
   when: terminate
 
-#List PTR type records from given zone
 - name: Get the PTR records from "{{ zone_name }}"
   route53:
       state: get
@@ -44,7 +40,6 @@
       type: PTR
   with_items: "{{ records.ResourceRecordSets }}"
 
-#Remove PTR type records from given zone
 - name: Remove PTR records for "{{ zone_name }}"
   route53:
     state: delete
@@ -57,7 +52,6 @@
   with_items: "{{ records.ResourceRecordSets }}"
   when: terminate
 
-#Remove given hosted zone
 - name: Remove "{{ zone_name }}" from route53
   route53_zone:
     zone: "{{ zone_name }}"

@@ -1,61 +1,49 @@
-#When requester is set to true find the peering connection ID
-- name: Find Peer ID from Requester VPC
-  ec2_vpc_peering_facts:
-    region: "{{ region }}"
-    filters:
-      requester-vpc-info.vpc-id: "{{ vpc }}"
-  register: peering
-  when: requester
+#- name: Find Peer ID from Requester VPC
+#  ec2_vpc_peering_facts:
+#    region: "{{ region }}"
+#    filters:
+#      requester-vpc-info.vpc-id: "{{ vpc }}"
+#  register: peering
+#  when: requester
 
-#List the Peering connection to be removed
-- name: List VPC Peer  
-  debug:
-    msg: "{{ peering.result[0].vpc_peering_connection_id }}"
-  when: requester and list
+#- name: List VPC Peer  
+#  debug:
+#    msg: "{{ peering.result[0].vpc_peering_connection_id }}"
+#  when: requester and list
+  
+#- name: Delete VPC Peer
+#  ec2_vpc_peer:
+#   region: "{{ region }}"
+#   peering_id: "{{ peering.result[0].vpc_peering_connection_id }}"
+#   state: absent
+#  when: requester and terminate
 
-#Delete VPC Peering connection
-- name: Delete VPC Peer
-  ec2_vpc_peer:
-   region: "{{ region }}"
-   peering_id: "{{ peering.result[0].vpc_peering_connection_id }}"
-   state: absent
-  when: requester and terminate
-
-#Get list of subnets for given VPC/region
 - ec2_vpc_subnet_facts:
     filters:
       vpc-id: "{{ vpc }}"
-    region: "{{ region }}"
   register: subnets
 
-#Remove list of subnets for given VPC/region
 - ec2_vpc_subnet:
     state: absent
     vpc_id: "{{ vpc }}"
-    region: "{{ region }}"
     cidr: "{{ item.cidr_block }}"
   with_items: "{{ subnets.subnets }}"
   when: 
     - item.vpc_id == "{{ vpc }}"
     - terminate
 
-#Get list of security groups for given VPC/region
 - ec2_group_facts:
     filters:
       vpc-id: "{{ vpc }}"
-    region: "{{ region }}"
   register: security_groups
 
-#Remove list of security groups for given VPC/region
 - ec2_group:
     state: absent
     group_id: "{{ item.group_id }}"
-    region: "{{ region }}"
   with_items: "{{ security_groups.security_groups }}"
   ignore_errors: yes
   when: terminate
 
-#Get list of NACLs for given VPC/region
 - name: Get All NACLs
   register: all_nacls
   ec2_vpc_nacl_facts:
@@ -63,24 +51,20 @@
     filters:
       vpc-id: "{{ vpc }}"
 
-#Remove list of NACLs for given VPC/region
 - name: Delete nacl
   ec2_vpc_nacl:
     nacl_id: "{{ item.nacl_id }}"
     state: absent
-    region: "{{ region }}"
   with_items: "{{ all_nacls.nacls }}"
   ignore_errors: yes
   when: terminate
 
-#Remove VPCs Internet Gateway
 - ec2_vpc_igw:
     vpc_id: "{{ vpc }}"
     region: "{{ region }}"
     state: absent
   when: terminate
 
-#Get list of Route Tables in given VPC/region
 - name: Get facts on the route tables in the VPC
   ec2_vpc_route_table_facts:
     region: "{{ region }}"
@@ -88,7 +72,6 @@
       vpc-id: "{{ vpc }}"
   register: route_tables
 
-#Remove list of Route Tables in given VPC/region
 - name: Remove the route table
   ec2_vpc_route_table:
     vpc_id: "{{ vpc }}"
@@ -100,25 +83,21 @@
   ignore_errors: yes
   when: terminate
 
-#Get VPC facts
 - ec2_vpc_net_facts:
     region: "{{ region }}"
   register: test
 
-#Debug VPC facts
 - debug: var=test
 
-#Get VPC facts
 - ec2_vpc_net_facts:
     vpc_ids: "{{ vpc }}"
     region: "{{ region }}"
   register: vpc_facts
 
-#Wait for 3 minutes to ensure components have been removed
+
 - pause:
     minutes: 3
 
-#Remove the VPC
 - name: Remove the VPC
   ec2_vpc_net:
     name: "{{ vpc_name }}"
