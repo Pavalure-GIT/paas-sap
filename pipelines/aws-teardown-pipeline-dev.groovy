@@ -40,9 +40,6 @@ pipeline{
         stage('Tear down AWS'){
                         //stop logging, export env variable for aws cli in virutal env, pull down vars file and kick off build
             steps{
-
-                configFileProvider([configFile(fileId: 'aws-cust-teardown-david', targetLocation: 'group_vars/aws-cust-teardown-david.yml')]) {
-                }
                 sh """
                 set +x
                 virtualenv .
@@ -62,16 +59,16 @@ pipeline{
 		"${params.vpc_longname}": "${params.vpc_longname_id}",
 		"in-addr.arpa.": "${params.in_addr_arpa}"
 	},
-	"vpc_name": "${params.vpc_name}"
+	"vpc_name": "${params.vpc_name}",
 	"gateway_id": "${params.gateway_id}",
 	"dr": "${params.dr}",
 	"dr_vpc": "${params.dr_vpc_id}",
 	"dr_vpc_name": "${params.dr_vpc_name}",
 	"dr_region": "${params.dr_region}",
 	"dr_list": "${params.dr_list}",
-	"dr_terminate": ${params.dr_terminate}
+	"dr_terminate": "${params.dr_terminate}"
 }'
-                """
+    """
             }
         }
     }
