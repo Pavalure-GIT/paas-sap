@@ -91,11 +91,8 @@ key_arn: arn:aws:kms:eu-central-1:000987835229:key/240704ea-5c16-4075-9fd0-3aeae
 bucket_name: sandbox-csr-automation-vpnconfigs3bucket-1ul5mfqbrghku
 stack_name: ts-csr-stack
 vgw_name: ts-csr-vgw
+vgw_tag: test_transitvpc
 key_alias: sandbox-csr-automation-key
-management_access_key: ''
-management_secret_key: ''
-customer_access_key: ''
-customer_secret_key: ''
 
 #BUaaS
 #Instance types and AMIs for BUaaS - The AMIs need to be pre-shared from the BUaaS Team
