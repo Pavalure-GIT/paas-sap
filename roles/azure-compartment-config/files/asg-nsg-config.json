@@ -748,12 +748,12 @@
                       "destinationAddressPrefixes": [],
                       "sourceApplicationSecurityGroups": [
                           {
-                              "id":"[variables('asg-cust')]"
+                              "id":"[variables('asg-cust-id')]"
                           }
                       ],
                       "destinationApplicationSecurityGroups": [
                           {
-                              "id":"[variables('asg-cust')]"
+                              "id":"[variables('asg-cust-id')]"
                           }
                       ]
                   }
@@ -773,12 +773,12 @@
                     "destinationAddressPrefixes": [],
                     "sourceApplicationSecurityGroups": [
                         {
-                            "id":"[variables('asg-saprtr-pub')]"
+                            "id":"[variables('asg-saprtr-pub-id')]"
                         }
                     ],
                     "destinationApplicationSecurityGroups": [
                         {
-                            "id":"[variables('asg-cust')]"
+                            "id":"[variables('asg-cust-id')]"
                         }
                     ]
                 }
@@ -798,12 +798,12 @@
                     "destinationAddressPrefixes": [],
                     "sourceApplicationSecurityGroups": [
                         {
-                            "id":"[variables('asg-saprtr-pub')]"
+                            "id":"[variables('asg-saprtr-pub-id')]"
                         }
                     ],
                     "destinationApplicationSecurityGroups": [
                         {
-                            "id":"[variables('asg-cust')]"
+                            "id":"[variables('asg-cust-id')]"
                         }
                     ]
                 }
