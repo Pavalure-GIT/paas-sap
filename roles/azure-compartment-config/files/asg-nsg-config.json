@@ -811,7 +811,7 @@
             {
                 "name": "cust-deny",
                 "properties": {
-                    "protocol": "Any",
+                    "protocol": "*",
                     "sourcePortRange": "*",
                     "destinationPortRange": "*",
                     "access": "Deny",
