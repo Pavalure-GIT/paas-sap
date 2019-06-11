@@ -957,7 +957,8 @@
       "location": "[parameters('location')]",
       "dependsOn": [
         "[variables('pub-net-all-id')]",
-        "[variables('saprtr-mgt-id')]"
+        "[variables('saprtr-mgt-id')]",
+        "[variables('asg-pub-id')]"
       ],
       "properties": {
           "securityRules": [
