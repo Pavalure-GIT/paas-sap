@@ -270,7 +270,7 @@
               "name": "300",
               "properties": {
                   "description": "BuaaS DPA-agent    to DPA-server proxied reporting flows",
-                  "protocol": "TCP",
+                  "protocol": "Tcp",
                   "sourcePortRange": "*",
                   "destinationPortRange": "3741",
                   "sourceAddressPrefix": "10.4.0.0/22",
@@ -292,7 +292,7 @@
               "name": "Port_8080",
               "properties": {
                   "description": "BuaaS DPA-agent    to DPA-server proxied reporting flows",
-                  "protocol": "TCP",
+                  "protocol": "Tcp",
                   "sourcePortRange": "*",
                   "destinationPortRange": "9002",
                   "sourceAddressPrefix": "10.4.0.0/22",
@@ -314,7 +314,7 @@
               "name": "320",
               "properties": {
                   "description": "BUaaS flows from   DPA-agent/proxy in mgmt.-VPC to the BUaaS-newtorker server in customer-VPC.",
-                  "protocol": "TCP",
+                  "protocol": "Tcp",
                   "sourcePortRange": "*",
                   "destinationPortRange": "7937-9936",
                   "sourceAddressPrefix": "10.4.0.0/22",
@@ -336,7 +336,7 @@
               "name": "330",
               "properties": {
                   "description": "BUaaS flows from  BUaaS to BUaaS in customer-VPC.",
-                  "protocol": "TCP",
+                  "protocol": "Tcp",
                   "sourcePortRange": "*",
                   "destinationPortRange": "7443",
                   "access": "Allow",
@@ -362,7 +362,7 @@
               "name": "400",
               "properties": {
                   "description": "outbound web proxy",
-                  "protocol": "TCP",
+                  "protocol": "Tcp",
                   "sourcePortRange": "*",
                   "destinationPortRange": "8080",
                   "access": "Allow",
@@ -388,7 +388,7 @@
               "name": "500",
               "properties": {
                   "description": "Intra-VPC flows   between SAP servers.",
-                  "protocol": "TCP",
+                  "protocol": "Tcp",
                   "sourcePortRange": "*",
                   "destinationPortRange": "3900-3999",
                   "access": "Allow",
@@ -414,7 +414,7 @@
               "name": "510",
               "properties": {
                   "description": "Allow LAMA access from management VPC",
-                  "protocol": "TCP",
+                  "protocol": "Tcp",
                   "sourcePortRange": "*",
                   "destinationPortRange": "1128",
                   "sourceAddressPrefix": "10.4.0.0/22",
@@ -436,7 +436,7 @@
               "name": "520",
               "properties": {
                   "description": "Allow LAMA access   from management VPC",
-                  "protocol": "TCP",
+                  "protocol": "Tcp",
                   "sourcePortRange": "*",
                   "destinationPortRange": "1129",
                   "sourceAddressPrefix": "10.4.0.0/22",
@@ -458,7 +458,7 @@
               "name": "530",
               "properties": {
                   "description": "Allow iSCSI access from management VPC",
-                  "protocol": "TCP",
+                  "protocol": "Tcp",
                   "sourcePortRange": "*",
                   "destinationPortRange": "3260",
                   "sourceAddressPrefix": "10.4.0.0/22",
@@ -480,7 +480,7 @@
               "name": "540",
               "properties": {
                   "description": "Allow SAP discovery   from management VPC",
-                  "protocol": "TCP",
+                  "protocol": "Tcp",
                   "sourcePortRange": "*",
                   "destinationPortRange": "50013-59914",
                   "sourceAddressPrefix": "10.4.0.0/22",
@@ -502,7 +502,7 @@
               "name": "550",
               "properties": {
                   "description": "Allow NFS connections from management VPC",
-                  "protocol": "TCP",
+                  "protocol": "Tcp",
                   "sourcePortRange": "*",
                   "destinationPortRange": "2049",
                   "sourceAddressPrefix": "10.4.0.0/22",
@@ -524,7 +524,7 @@
               "name": "560",
               "properties": {
                   "description": "Allow Sybase connections from management VPC",
-                  "protocol": "TCP",
+                  "protocol": "Tcp",
                   "sourcePortRange": "*",
                   "destinationPortRange": "3600-3699",
                   "access": "Allow",
@@ -550,7 +550,7 @@
               "name": "700",
               "properties": {
                   "description": "Allows inbound proxy connections from mgmt. VPC",
-                  "protocol": "TCP",
+                  "protocol": "Tcp",
                   "sourcePortRange": "*",
                   "destinationPortRange": "3128",
                   "sourceAddressPrefix": "10.4.0.0/22",
@@ -572,7 +572,7 @@
               "name": "710",
               "properties": {
                   "description": "Allows   inbound SAP-proxy connections from mgmt. VPC",
-                  "protocol": "TCP",
+                  "protocol": "Tcp",
                   "sourcePortRange": "*",
                   "destinationPortRange": "3299",
                   "sourceAddressPrefix": "10.4.0.0/22",
@@ -616,7 +616,7 @@
               "name": "730",
               "properties": {
                   "description": "Allows inbound DNS   connections from mgmt. VPC",
-                  "protocol": "TCP",
+                  "protocol": "Tcp",
                   "sourcePortRange": "*",
                   "destinationPortRange": "53",
                   "sourceAddressPrefix": "10.4.0.0/22",
@@ -674,7 +674,7 @@
               "name": "740",
               "properties": {
                   "description": "Allows FRUN access from mgtm VPC.",
-                  "protocol": "TCP",
+                  "protocol": "Tcp",
                   "sourcePortRange": "*",
                   "destinationPortRange": "1128",
                   "sourceAddressPrefix": "10.4.0.0/22",
@@ -696,7 +696,7 @@
               "name": "750",
               "properties": {
                   "description": "Allows FRUN access from mgtm VPC.",
-                  "protocol": "TCP",
+                  "protocol": "Tcp",
                   "sourcePortRange": "*",
                   "destinationPortRange": "1129",
                   "sourceAddressPrefix": "10.4.0.0/22",
@@ -761,7 +761,7 @@
               {
                 "name": "cust-allow-supr",
                 "properties": {
-                    "protocol": "TCP",
+                    "protocol": "Tcp",
                     "sourcePortRange": "3299",
                     "destinationPortRange": "3299",
                     "access": "Allow",
@@ -786,7 +786,7 @@
             {
                 "name": "cust-allow-nipping",
                 "properties": {
-                    "protocol": "TCP",
+                    "protocol": "Tcp",
                     "sourcePortRange": "3298",
                     "destinationPortRange": "3298",
                     "access": "Allow",
