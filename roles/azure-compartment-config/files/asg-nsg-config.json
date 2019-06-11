@@ -964,31 +964,6 @@
         "properties": {
             "securityRules": [
                 {
-                    "name": "100",
-                    "properties": {
-                        "protocol": "*",
-                        "sourcePortRange": "*",
-                        "destinationPortRange": "*",
-                        "access": "Allow",
-                        "priority": 100,
-                        "direction": "Inbound",
-                        "sourcePortRanges": [],
-                        "destinationPortRanges": [],
-                        "sourceAddressPrefixes": [],
-                        "destinationAddressPrefixes": [],
-                        "sourceApplicationSecurityGroups": [
-                            {
-                                "id":"[variables('pub-net-all-id')]"
-                            }
-                        ],
-                        "destinationApplicationSecurityGroups": [
-                            {
-                                "id":"[variables('pub-net-all-id')]"
-                            }
-                        ]
-                    }
-                },
-                {
                     "name": "pub-allow-all",
                     "properties": {
                         "protocol": "*",
