@@ -15,6 +15,10 @@
       "mgmt-net-all-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('mgmt-net-all'))]",
       "asg-pub": "asg-pub",
       "asg-pub-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('asg-pub'))]",
+      "asg-cust": "asg-cust",
+      "asg-cust-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('asg-cust'))]",
+      "asg-saprtr-pub": "asg-saprtr-pub",
+      "asg-saprtr-pub-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('asg-saprtr-pub'))]",
       "buaas-mgt": "buaas-mgt",
       "buaas-mgt-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('buaas-mgt'))]",
       "saprtr-mgt": "saprtr-mgt",
@@ -146,6 +150,22 @@
       {
         "comments": "Application Security Group: [variable('asg-pub')]",
         "name": "[variables('asg-pub')]",
+        "type": "Microsoft.Network/applicationSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Application Security Group: [variable('asg-cust')]",
+        "name": "[variables('asg-cust')]",
+        "type": "Microsoft.Network/applicationSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Application Security Group: [variable('asg-saprtr-pub')]",
+        "name": "[variables('asg-saprtr-pub')]",
         "type": "Microsoft.Network/applicationSecurityGroups",
         "apiVersion": "2017-10-01",
         "location": "[parameters('location')]",
@@ -707,12 +727,14 @@
         "dependsOn": [
         "[variables('mgmt-net-all-id')]",
         "[variables('cust-net-all-id')]",
-        "[variables('proxy-dns-cst-id')]"
+        "[variables('proxy-dns-cst-id')]",
+        "[variables('asg-cust-id')]",
+        "[variables('asg-saprtr-pub-id')]"
         ],
         "properties": {
           "securityRules": [
               {
-                  "name": "100",
+                  "name": "cust-allow-all",
                   "properties": {
                       "protocol": "*",
                       "sourcePortRange": "*",
@@ -726,117 +748,81 @@
                       "destinationAddressPrefixes": [],
                       "sourceApplicationSecurityGroups": [
                           {
-                              "id":"[variables('mgmt-net-all-id')]"
+                              "id":"[variables('asg-cust')]"
                           }
                       ],
                       "destinationApplicationSecurityGroups": [
                           {
-                              "id":"[variables('cust-net-all-id')]"
+                              "id":"[variables('asg-cust')]"
                           }
                       ]
                   }
               },
               {
-                  "name": "410",
-                  "properties": {
-                      "description": "Allows inbound proxy   connections from customer enterprise",
-                      "protocol": "TCP",
-                      "sourcePortRange": "*",
-                      "destinationPortRange": "3128",
-                      "sourceAddressPrefix": "0.0.0.0",
-                      "access": "Allow",
-                      "priority": 410,
-                      "direction": "Inbound",
-                      "sourcePortRanges": [],
-                      "destinationPortRanges": [],
-                      "sourceAddressPrefixes": [],
-                      "destinationAddressPrefixes": [],
-                      "destinationApplicationSecurityGroups": [
-                          {
-                              "id":"[variables('proxy-dns-cst-id')]"
-                          }
-                      ]
-                  }
-              },
-              {
-                  "name": "420",
-                  "properties": {
-                      "description": "Allows inbound DNS   connections from customer enterprise",
-                      "protocol": "UDP",
-                      "sourcePortRange": "*",
-                      "destinationPortRange": "53",
-                      "sourceAddressPrefix": "0.0.0.0",
-                      "access": "Allow",
-                      "priority": 420,
-                      "direction": "Inbound",
-                      "sourcePortRanges": [],
-                      "destinationPortRanges": [],
-                      "sourceAddressPrefixes": [],
-                      "destinationAddressPrefixes": [],
-                      "destinationApplicationSecurityGroups": [
-                          {
-                              "id":"[variables('proxy-dns-cst-id')]"
-                          }
-                      ]
-                  }
-              },
-              {
-                  "name": "430",
-                  "properties": {
-                      "description": "Allows inbound DNS   connections from customer enterprise",
-                      "protocol": "TCP",
-                      "sourcePortRange": "*",
-                      "destinationPortRange": "53",
-                      "sourceAddressPrefix": "0.0.0.0",
-                      "access": "Allow",
-                      "priority": 430,
-                      "direction": "Inbound",
-                      "sourcePortRanges": [],
-                      "destinationPortRanges": [],
-                      "sourceAddressPrefixes": [],
-                      "destinationAddressPrefixes": [],
-                      "destinationApplicationSecurityGroups": [
-                          {
-                              "id":"[variables('proxy-dns-cst-id')]"
-                          }
-                      ]
-                  }
-              },
-              {
-                  "name": "cleanup_rule",
-                  "properties": {
-                      "description": "Azure-only \"cleanup\" rule to drop all traffic not explicitly permitted in previous rules.",
-                      "protocol": "*",
-                      "sourcePortRange": "*",
-                      "destinationPortRange": "*",
-                      "sourceAddressPrefix": "*",
-                      "destinationAddressPrefix": "*",
-                      "access": "Allow",
-                      "priority": 4096,
-                      "direction": "Inbound",
-                      "sourcePortRanges": [],
-                      "destinationPortRanges": [],
-                      "sourceAddressPrefixes": [],
-                      "destinationAddressPrefixes": []
-                  }
-              },
-              {
-                  "name": "allow_outbound",
-                  "properties": {
-                      "protocol": "*",
-                      "sourcePortRange": "*",
-                      "destinationPortRange": "*",
-                      "sourceAddressPrefix": "*",
-                      "destinationAddressPrefix": "*",
-                      "access": "Allow",
-                      "priority": 4096,
-                      "direction": "Outbound",
-                      "sourcePortRanges": [],
-                      "destinationPortRanges": [],
-                      "sourceAddressPrefixes": [],
-                      "destinationAddressPrefixes": []
-                  }
-              }
+                "name": "cust-allow-supr",
+                "properties": {
+                    "protocol": "TCP",
+                    "sourcePortRange": "3299",
+                    "destinationPortRange": "3299",
+                    "access": "Allow",
+                    "priority": 110,
+                    "direction": "Inbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [],
+                    "sourceAddressPrefixes": [],
+                    "destinationAddressPrefixes": [],
+                    "sourceApplicationSecurityGroups": [
+                        {
+                            "id":"[variables('asg-saprtr-pub')]"
+                        }
+                    ],
+                    "destinationApplicationSecurityGroups": [
+                        {
+                            "id":"[variables('asg-cust')]"
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "cust-allow-nipping",
+                "properties": {
+                    "protocol": "TCP",
+                    "sourcePortRange": "3298",
+                    "destinationPortRange": "3298",
+                    "access": "Allow",
+                    "priority": 120,
+                    "direction": "Inbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [],
+                    "sourceAddressPrefixes": [],
+                    "destinationAddressPrefixes": [],
+                    "sourceApplicationSecurityGroups": [
+                        {
+                            "id":"[variables('asg-saprtr-pub')]"
+                        }
+                    ],
+                    "destinationApplicationSecurityGroups": [
+                        {
+                            "id":"[variables('asg-cust')]"
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "cust-deny",
+                "properties": {
+                    "protocol": "Any",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "*",
+                    "access": "Deny",
+                    "priority": 4096,
+                    "direction": "Inbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [],
+                    "sourceAddressPrefixes": [],
+                    "destinationAddressPrefixes": []
+                }
+            }
           ],
           "defaultSecurityRules": [
               {
@@ -990,49 +976,9 @@
                 },
                 
                 {
-                    "name": "RDP",
+                    "name": "pub-deny",
                     "properties": {
-                        "description": "temporary RDP server",
-                        "protocol": "*",
-                        "sourcePortRange": "*",
-                        "destinationPortRange": "3389",
-                        "sourceAddressPrefix": "*",
-                        "destinationAddressPrefix": "VirtualNetwork",
-                        "access": "Allow",
-                        "priority": 101,
-                        "direction": "Inbound",
-                        "sourcePortRanges": [],
-                        "destinationPortRanges": [],
-                        "sourceAddressPrefixes": [],
-                        "destinationAddressPrefixes": []
-                    }
-                },
-                {
-                    "name": "200",
-                    "properties": {
-                        "description": "Allows SAP router to   accept incoming connections from SAP HQ",
-                        "protocol": "TCP",
-                        "sourcePortRange": "*",
-                        "destinationPortRange": "3299",
-                        "sourceAddressPrefix": "0.0.0.0",
-                        "access": "Allow",
-                        "priority": 200,
-                        "direction": "Inbound",
-                        "sourcePortRanges": [],
-                        "destinationPortRanges": [],
-                        "sourceAddressPrefixes": [],
-                        "destinationAddressPrefixes": [],
-                        "destinationApplicationSecurityGroups": [
-                            {
-                                "id":"[variables('saprtr-pub-id')]"
-                            }
-                        ]
-                    }
-                },
-                {
-                    "name": "cleanup_rule",
-                    "properties": {
-                        "description": " Azure-only \"cleanup\" rule to drop all traffic not explicitly permitted in previous rules.",
+                        "description": "",
                         "protocol": "*",
                         "sourcePortRange": "*",
                         "destinationPortRange": "*",
@@ -1041,23 +987,6 @@
                         "access": "Deny",
                         "priority": 4096,
                         "direction": "Inbound",
-                        "sourcePortRanges": [],
-                        "destinationPortRanges": [],
-                        "sourceAddressPrefixes": [],
-                        "destinationAddressPrefixes": []
-                    }
-                },
-                {
-                    "name": "allow_outbound",
-                    "properties": {
-                        "protocol": "*",
-                        "sourcePortRange": "*",
-                        "destinationPortRange": "*",
-                        "sourceAddressPrefix": "*",
-                        "destinationAddressPrefix": "*",
-                        "access": "Allow",
-                        "priority": 4096,
-                        "direction": "Outbound",
                         "sourcePortRanges": [],
                         "destinationPortRanges": [],
                         "sourceAddressPrefixes": [],
