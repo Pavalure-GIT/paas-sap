@@ -776,7 +776,7 @@
                         {
                             "id":"[variables('proxy-dns-cst-id')]"
                         }
-                    ],
+                    ]
                 }
             },
             {
