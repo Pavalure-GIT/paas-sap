@@ -1,11 +1,4 @@
 - ec2_group:
-    name: SAP-cst
-    description: The interfaces of any SAP servers on any customer networks must be assigned to this security group
-    vpc_id: "{{ customer_network.vpc.id }}"
-    region: "{{ aws_customer_vpc_region }}"
-  register: SAP_cst
-
-- ec2_group:
     name: SAP-mgt
     description: The interfaces of any SAP servers on any management networks must be assigned to this security group
     vpc_id: "{{ customer_network.vpc.id }}"
@@ -32,6 +25,9 @@
       - proto: tcp
         ports: 1129
         cidr_ip: "{{ aws_customer_vpc_management_cidr  }}"
+      - proto: tcp
+        ports: 3200-3299
+        cidr_ip: "{{ aws_customer_vpc_management_cidr  }}"
   register: SAP_mgt
 
 - ec2_group:
@@ -47,18 +43,20 @@
         ports: 9002
         cidr_ip: "{{ aws_customer_vpc_management_cidr  }}"
       - proto: tcp
-        ports: 3389
-        cidr_ip: "{{ aws_customer_vpc_management_cidr  }}"
-      - proto: tcp
         ports: 7937 - 9936
         cidr_ip: "{{ aws_customer_vpc_management_cidr  }}"
-      - proto: tcp
-        ports: 7937 - 9936
-        cidr_ip: 172.17.0.0/16
-      - proto: tcp
-        ports: 7443
-        group_name: buaas-mgt
   register: buaas_mgt
+
+- ec2_group:
+    name: saprtr-pub
+    description: The interfaces of any SAP routers on any management networks must be assigned to this security group
+    vpc_id: "{{ customer_network.vpc.id }}"
+    region: "{{ aws_customer_vpc_region }}"
+    rules:
+      - proto: tcp
+        ports: 3299
+        cidr_ip: 0.0.0.0/0
+  register: saprtr_pub
 
 - ec2_group:
     name: cust-net-all
@@ -69,6 +67,12 @@
       - proto: -1
         ports: 0
         group_name: cust-net-all
+      - proto: tcp
+        ports: 3299
+        group_name: saprtr-pub
+      - proto: tcp
+        ports: 3298
+        group_name: saprtr-pub
   register: cust_net_all
 
 - ec2_group:
@@ -97,9 +101,27 @@
       - proto: -1
         ports: 0
         cidr_ip: 100.64.0.0/12
-      - proto: -1
-        ports: 0
+      - proto: tcp
+        ports: 22
         cidr_ip: "{{ aws_customer_vpc_management_cidr  }}"
+      - proto: tcp
+        ports: 3389
+        cidr_ip: "{{ aws_customer_vpc_management_cidr  }}"
+      - proto: tcp
+        ports: 3389
+        cidr_ip: "{{ aws_customer_vpc_management_dxc_cidr }}"
+      - proto: tcp
+        ports: 3389 
+        cidr_ip: "{{ aws_customer_vpc_management_dxc_cidr }}"
+      - proto: tcp
+        ports: 8080
+        cidr_ip: "{{ aws_customer_vpc_management_cidr  }}"
+      - proto: icmp
+        ports: -1
+        cidr_ip: "{{ aws_customer_vpc_management_cidr  }}"
+      - proto: tcp
+        ports: 873
+        cidr_ip: 100.64.0.0/12
   register: mgmt_net_all
 
 - ec2_group:
@@ -124,6 +146,9 @@
       - proto: udp
         ports: 53
         cidr_ip: 0.0.0.0/0
+      - proto: TCP
+        ports: 50013
+        cidr_ip: "{{ aws_customer_vpc_management_cidr  }}"
   register: proxy_dns_cst
 
 - ec2_group:
@@ -150,6 +175,9 @@
       - proto: tcp
         ports: 1129
         cidr_ip: "{{ aws_customer_vpc_management_cidr  }}"
+      - proto: tcp
+        ports: 50013
+        cidr_ip: "{{ aws_customer_vpc_management_cidr  }}"
   register: proxy_dns_mgt
 
 - ec2_group:
@@ -164,6 +192,10 @@
     description: Every AWS interface in the VPCs AZ1 2 3 public networks must be assigned to this security group
     vpc_id: "{{ customer_network.vpc.id }}"
     region: "{{ aws_customer_vpc_region }}"
+    rules:
+      - proto: -1
+        ports: 0
+        group_name: pub-net-all
   register: pub_net_all
 
 - ec2_group:
@@ -175,15 +207,18 @@
       - proto: tcp
         ports: 8080
         group_name: mgmt-net-all
+      - proto: tcp
+        ports: 8081
+        group_name: mgmt-net-all
   register: saprtr_mgt
 
 - ec2_group:
-    name: saprtr-pub
-    description: The interfaces of any SAP routers on any management networks must be assigned to this security group
+    name: SAP-cst
+    description: The interfaces of any SAP servers on any customer networks must be assigned to this security group
     vpc_id: "{{ customer_network.vpc.id }}"
     region: "{{ aws_customer_vpc_region }}"
     rules:
       - proto: tcp
-        ports: 3299
-        cidr_ip: 0.0.0.0/0
-  register: saprtr_mgt
+        ports: 6001
+        group_name: proxy-dns-cst
+  register: SAP_cst
