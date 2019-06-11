@@ -181,13 +181,6 @@
   register: proxy_dns_mgt
 
 - ec2_group:
-    name: proxy-internet
-    description: Proxy to allow internet connectivity over the management network
-    vpc_id: "{{ customer_network.vpc.id }}"
-    region: "{{ aws_customer_vpc_region }}"
-  register: proxy_internet
-
-- ec2_group:
     name: pub-net-all
     description: Every AWS interface in the VPCs AZ1 2 3 public networks must be assigned to this security group
     vpc_id: "{{ customer_network.vpc.id }}"
