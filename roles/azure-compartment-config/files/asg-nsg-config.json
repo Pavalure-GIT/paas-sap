@@ -13,6 +13,8 @@
   "variables": {
     "mgmt-net-all": "mgmt-net-all",
     "mgmt-net-all-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('mgmt-net-all'))]",
+    "asg-pub": "asg-pub",
+    "asg-pub-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('asg-pub'))]",
     "buaas-mgt": "buaas-mgt",
     "buaas-mgt-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('buaas-mgt'))]",
     "saprtr-mgt": "saprtr-mgt",
@@ -45,6 +47,14 @@
     "nsg-pub-id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsg-pub'))]"    
   },
   "resources": [
+    {
+        "comments": "Application Security Group: [variable('asg-pub')]",
+        "name": "[variables('asg-pub')]",
+        "type": "Microsoft.Network/applicationSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+    },
     {
       "comments": "Application Security Group: [variable('mgmt-net-all')]",
       "name": "[variables('mgmt-net-all')]",
@@ -976,6 +986,31 @@
                       ]
                   }
               },
+              {
+                "name": "pub-allow-all",
+                "properties": {
+                    "protocol": "*",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "*",
+                    "access": "Allow",
+                    "priority": 100,
+                    "direction": "Inbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [],
+                    "sourceAddressPrefixes": [],
+                    "destinationAddressPrefixes": [],
+                    "sourceApplicationSecurityGroups": [
+                        {
+                            "id":"[variables('asg-pub-id')]"
+                        }
+                    ],
+                    "destinationApplicationSecurityGroups": [
+                        {
+                            "id":"[variables('asg-pub-id')]"
+                        }
+                    ]
+                }
+            },
               {
                   "name": "RDP",
                   "properties": {
