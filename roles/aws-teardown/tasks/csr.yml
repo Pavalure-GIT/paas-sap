@@ -1,7 +1,7 @@
 #Remove the cloudformation stack created by the CSR spoke
 - name: Delete the CSR cloudformation stack
   cloudformation:
-    stack_name: "cv-csr-stack"
+    stack_name: "{{ stack_name }}"
     state: "absent"
     region: "{{ region }}"
 
@@ -41,9 +41,8 @@
     resource: "{{ gateway_id }}"
     state: absent
     tags:
-      Name: cv-csr-vgw
-      owner: System Team
-      transitvpc:spoke: 'true'
+      Name: "{{ vgw_name }}"
+      "{{ csr_tag }}": 'true'
 
 #Pause for 1 minute while the tag is removed
 - pause:
