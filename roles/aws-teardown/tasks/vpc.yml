@@ -1,24 +1,24 @@
-#When requester is set to true find the peering connection ID
+#When dr is set to true find the peering connection ID
 - name: Find Peer ID from Requester VPC
   ec2_vpc_peering_facts:
     region: "{{ region }}"
     filters:
       requester-vpc-info.vpc-id: "{{ vpc }}"
   register: peering
-  when: requester
+  when: dr == true
 
 #List the Peering connection to be removed
 - name: List VPC Peer  
   debug:
     msg: "{{ peering.result[0].vpc_peering_connection_id }}"
-  when: requester and list
+  when: dr == true
 
 #Delete VPC Peering connection
 - name: Delete VPC Peer
   ec2_vpc_peer:
-   region: "{{ region }}"
-   peering_id: "{{ peering.result[0].vpc_peering_connection_id }}"
-   state: absent
+    region: "{{ region }}"
+    peering_id: "{{ peering.result[0].vpc_peering_connection_id }}"
+    state: absent
   when: requester and terminate
 
 #Get list of subnets for given VPC/region
