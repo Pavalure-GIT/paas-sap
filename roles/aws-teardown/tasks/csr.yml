@@ -3,6 +3,7 @@
   cloudformation:
     stack_name: "{{ stack_name }}"
     state: "absent"
+    region: "{{ region }}"
 
 #Get list of Virtual Gateways for the given region
 - name: Find VGWs for Region
