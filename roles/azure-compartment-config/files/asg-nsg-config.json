@@ -818,9 +818,9 @@
                     "priority": 4096,
                     "direction": "Inbound",
                     "sourcePortRanges": [],
-                    "destinationPortRanges": [],
-                    "sourceAddressPrefixes": [],
-                    "destinationAddressPrefixes": []
+                    "destinationPortRanges": ["*"],
+                    "sourceAddressPrefixes": ["*"],
+                    "destinationAddressPrefixes": ["*"]
                 }
             }
           ],
