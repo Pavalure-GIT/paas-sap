@@ -358,7 +358,7 @@
                   "destinationAddressPrefixes": [],
                   "destinationApplicationSecurityGroups": [
                       {
-                          "id": "[variables('asg-mgmt')]"
+                          "id": "[variables('asg-mgmt-id')]"
                       }
                   ]
               }
