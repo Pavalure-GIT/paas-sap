@@ -12,8 +12,7 @@
   debug:
     msg: "{{ peering.result[0].vpc_peering_connection_id }}"
   when: dr == true
-  
-		
+
 #Delete VPC Peering connection
 - name: Delete VPC Peer
   ec2_vpc_peer:
