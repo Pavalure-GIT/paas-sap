@@ -1,9 +1,11 @@
+#Get list of ec2 machines in VPC
 - ec2_instance_facts:
     region: "{{ region }}"
     filters:
       vpc-id: "{{ vpc }}"
   register: ec2_machines
 
+#Print list of machines in VPC when list is set to true
 - debug:
     msg: "{{ item_id.instance_id }}" 
   with_items: "{{ ec2_machines.instances }}"
@@ -11,6 +13,7 @@
        loop_var: item_id
   when: list
        
+#Terminate each ec2 instance in VPC when terminate is set to true
 - ec2:
     state: 'absent'
     instance_ids: '{{ item_id.instance_id }}'
@@ -20,16 +23,19 @@
        loop_var: item_id
   when: terminate
 
+#Wait for 30 seconds to ensure mahcines have been removed before attempting to remove Network interfaces
 - pause:
     seconds: 30
   when: terminate 
-       
+
+#Get list of EC2 Network interfaces in VPC        
 - ec2_eni_facts:
     region: "{{ region }}"
     filters:
       vpc-id: "{{ vpc }}"
   register: net_interfaces
   
+#Print list of Network Interfaces when list is set to true  
 - debug:
     msg: "{{ item_id.id }}" 
   with_items: "{{ net_interfaces.network_interfaces }}"
@@ -37,6 +43,7 @@
        loop_var: item_id
   when: list
        
+#Remove each Network Interface in the VPC when terminate is set to true
 - ec2_eni:
     region: "{{ region }}"
     eni_id: "{{ item_id.id }}"

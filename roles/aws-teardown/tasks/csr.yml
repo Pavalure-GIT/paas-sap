@@ -1,30 +1,39 @@
+#Remove the cloudformation stack created by the CSR spoke
 - name: Delete the CSR cloudformation stack
   cloudformation:
     stack_name: "{{ stack_name }}"
     state: "absent"
 
+#Get list of Virtual Gateways for the given region
 - name: Find VGWs for Region
   ec2_vpc_vgw_facts:
     region: "{{ region }}"
     vpn_gateway_ids: "{{ gateway_id }}"
   register: vgw_facts
 
+#Print list of Virtual Gateways
 - debug: var=vgw_facts
 
+#List VPN connections for given region
 - name: Gather facts about vpn connections
   ec2_vpc_vpn_facts:
     filters:
       vpn-gateway-id: "{{ gateway_id }}"
+    region: "{{ region }}"
   register: connections
 
+#Print list of VPN connections
 - debug: var=connections
 
+#Remove VPN connections
 - name: Remove all VPN connections for a VGW
   ec2_vpc_vpn:
     state: absent
     vpn_connection_id: "{{ item.vpn_connection_id }}"
+    region: "{{ region }}"
   with_items: "{{ connections.vpn_connections }}"
 
+#Remove tag from VGW
 - name: Remove tag from virtual private gateway
   ec2_tag:
     region: "{{ region }}"
@@ -34,9 +43,11 @@
       Name: "{{ vgw_name }}"
       "{{ csr_tag }}": 'true'
 
+#Pause for 1 minute while the tag is removed
 - pause:
     minutes: 1
 
+#Remove VGW
 - name: Remove VGW
   ec2_vpc_vgw:
     region: "{{ region }}"
@@ -47,5 +58,6 @@
   when:
     - terminate
 
+#Pause for 5 minutes while VPN tunnels are removed
 - pause:
     minutes: 5

@@ -1,4 +1,4 @@
-#Teardown non-dr
+#Teardown non-dr - This removes Primary VPC, EC2 etc. Also removes DNS zones/entries and CSR spoke.
 
 - include: natgateways.yml
 

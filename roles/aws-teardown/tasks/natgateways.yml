@@ -1,9 +1,11 @@
+#Get List of NAT Gateways for given VPC
 - ec2_vpc_nat_gateway_facts:
     filters:
       vpc-id: "{{ vpc }}"
     region: "{{ region }}"
   register: nat_gateways
 
+#List NAT Gateways when list is true
 - debug:
     msg: "{{ item_id.nat_gateway_id }}"
   with_items: "{{ nat_gateways.result }}"
@@ -11,6 +13,7 @@
        loop_var: item_id
   when: list
        
+#Remove each NAT Gateway in the VPC when terminate is set to true
 - ec2_vpc_nat_gateway:
     state: absent
     wait: yes
