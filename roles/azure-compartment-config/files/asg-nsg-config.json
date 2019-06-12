@@ -222,12 +222,12 @@
                      "destinationAddressPrefixes": [],
                      "sourceApplicationSecurityGroups": [
                          {
-                             "id":"[variables('asg-mgmt')]"
+                             "id":"[variables('asg-mgmt-id')]"
                          }
                      ],
                      "destinationApplicationSecurityGroups": [
                          {
-                             "id":"[variables('asg-mgmt')]"
+                             "id":"[variables('asg-mgmt-id')]"
                          }
                      ]
                  }
@@ -248,7 +248,7 @@
                   "destinationAddressPrefixes": [],
                   "destinationApplicationSecurityGroups": [
                       {
-                          "id":"[variables('asg-mgmt')]"
+                          "id":"[variables('asg-mgmt-id')]"
                       }
                   ]
               }
@@ -270,7 +270,7 @@
                   "destinationAddressPrefixes": [],
                   "destinationApplicationSecurityGroups": [
                       {
-                          "id":"[variables('asg-mgmt')]"
+                          "id":"[variables('asg-mgmt-id')]"
                       }
                   ]
               }
@@ -292,7 +292,7 @@
                   "destinationAddressPrefixes": [],
                   "destinationApplicationSecurityGroups": [
                       {
-                          "id": "[variables('asg-mgmt')]"
+                          "id": "[variables('asg-mgmt-id')]"
                       }
                   ]
               }
@@ -314,7 +314,7 @@
                 "destinationAddressPrefixes": [],
                 "destinationApplicationSecurityGroups": [
                     {
-                        "id": "[variables('asg-mgmt')]"
+                        "id": "[variables('asg-mgmt-id')]"
                     }
                 ]
             }
@@ -336,7 +336,7 @@
                 "destinationAddressPrefixes": [],
                 "destinationApplicationSecurityGroups": [
                     {
-                        "id": "[variables('asg-mgmt')]"
+                        "id": "[variables('asg-mgmt-id')]"
                     }
                 ]
             }
@@ -380,7 +380,7 @@
                 "destinationAddressPrefixes": [],
                 "destinationApplicationSecurityGroups": [
                     {
-                        "id": "[variables('asg-mgmt')]"
+                        "id": "[variables('asg-mgmt-id')]"
                     }
                 ]
             }
