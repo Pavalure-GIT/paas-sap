@@ -19,6 +19,8 @@
       "asg-cust-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('asg-cust'))]",
       "asg-saprtr-pub": "asg-saprtr-pub",
       "asg-saprtr-pub-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('asg-saprtr-pub'))]",
+      "asg-mgmt": "asg-mgmt",
+      "asg-mgmt-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('asg-mgmt'))]",
       "buaas-mgt": "buaas-mgt",
       "buaas-mgt-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('buaas-mgt'))]",
       "saprtr-mgt": "saprtr-mgt",
@@ -171,6 +173,14 @@
         "location": "[parameters('location')]",
         "properties": {}
       },
+      {
+        "comments": "Application Security Group: [variable('asg-mgmt')]",
+        "name": "[variables('asg-mgmt')]",
+        "type": "Microsoft.Network/applicationSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
 
       {
         "comments": "Application Security Group: [variable('saprtr-pub')]",
@@ -193,38 +203,37 @@
           "[variables('SAP-mgt-id')]",
           "[variables('hrs-sid-mgt-id')]",
           "[variables('proxy-dns-mgt-id')]",
-          "[variables('mid-mgt-id')]"
+          "[variables('mid-mgt-id')]",
+          "[variables('asg-mgmt')]"
         ],
         "properties": {
           "securityRules": [
             {
-              "name": "200",
-               "properties": {
-                   "description": "Allows all management   network addresses in the VNET to talk to each other",
-                   "protocol": "*",
-                   "sourcePortRange": "*",
-                   "destinationPortRange": "*",
-                   "access": "Allow",
-                   "priority": 200,
-                   "direction": "Inbound",
-                   "sourcePortRanges": [],
-                   "destinationPortRanges": [],
-                   "sourceAddressPrefixes": [],
-                   "destinationAddressPrefixes": [],
-                   "sourceApplicationSecurityGroups": [
-                       {
-                           "id":"[variables('mgmt-net-all-id')]"
-                       }
-                   ],
-                   "destinationApplicationSecurityGroups": [
-                       {
-                           "id":"[variables('mgmt-net-all-id')]"
-                       }
-                   ]
-               }
-           },
+                "name": "mgmt-allow-all",
+                 "properties": {
+                     "description": "",
+                     "protocol": "*",
+                     "sourcePortRange": "*",
+                     "destinationPortRange": "*",
+                     "access": "Allow",
+                     "priority": 200,
+                     "direction": "Inbound",
+                     "sourceAddressPrefixes": [],
+                     "destinationAddressPrefixes": [],
+                     "sourceApplicationSecurityGroups": [
+                         {
+                             "id":"[variables('asg-mgmt')]"
+                         }
+                     ],
+                     "destinationApplicationSecurityGroups": [
+                         {
+                             "id":"[variables('asg-mgmt')]"
+                         }
+                     ]
+                 }
+             },
            {
-              "name": "210",
+              "name": "dr-mgmt-allow-all",
               "properties": {
                   "protocol": "*",
                   "sourcePortRange": "*",
@@ -239,17 +248,17 @@
                   "destinationAddressPrefixes": [],
                   "destinationApplicationSecurityGroups": [
                       {
-                          "id":"[variables('mgmt-net-all-id')]"
+                          "id":"[variables('asg-mgmt')]"
                       }
                   ]
               }
            },
            {
-              "name": "220",
+              "name": "ssh-mgmt-allow-all",
               "properties": {
                   "description": "Enables SSH access to   all instances from management VPC",
-                  "protocol": "*",
-                  "sourcePortRange": "*",
+                  "protocol": "Tcp",
+                  "sourcePortRange": "22",
                   "destinationPortRange": "22",
                   "sourceAddressPrefix": "10.4.0.0/22",
                   "access": "Allow",
@@ -261,21 +270,21 @@
                   "destinationAddressPrefixes": [],
                   "destinationApplicationSecurityGroups": [
                       {
-                          "id":"[variables('mgmt-net-all-id')]"
+                          "id":"[variables('asg-mgmt')]"
                       }
                   ]
               }
            },
            {
-              "name": "300",
+              "name": "rdp-prod-mgmt-allow-all",
               "properties": {
-                  "description": "BuaaS DPA-agent    to DPA-server proxied reporting flows",
+                  "description": "",
                   "protocol": "Tcp",
-                  "sourcePortRange": "*",
-                  "destinationPortRange": "3741",
-                  "sourceAddressPrefix": "10.4.0.0/22",
+                  "sourcePortRange": "3389",
+                  "destinationPortRange": "3389",
+                  "sourceAddressPrefix": "10.4.1.0/26",
                   "access": "Allow",
-                  "priority": 300,
+                  "priority": 230,
                   "direction": "Inbound",
                   "sourcePortRanges": [],
                   "destinationPortRanges": [],
@@ -283,437 +292,115 @@
                   "destinationAddressPrefixes": [],
                   "destinationApplicationSecurityGroups": [
                       {
-                          "id": "[variables('buaas-mgt-id')]"
+                          "id": "[variables('asg-mgmt')]"
                       }
                   ]
               }
            },
            {
-              "name": "Port_8080",
-              "properties": {
-                  "description": "BuaaS DPA-agent    to DPA-server proxied reporting flows",
-                  "protocol": "Tcp",
-                  "sourcePortRange": "*",
-                  "destinationPortRange": "9002",
-                  "sourceAddressPrefix": "10.4.0.0/22",
-                  "access": "Allow",
-                  "priority": 310,
-                  "direction": "Inbound",
-                  "sourcePortRanges": [],
-                  "destinationPortRanges": [],
-                  "sourceAddressPrefixes": [],
-                  "destinationAddressPrefixes": [],
-                  "destinationApplicationSecurityGroups": [
-                      {
-                          "id": "[variables('buaas-mgt-id')]"
-                      }
-                  ]
-              }
-           },
-           {
-              "name": "320",
-              "properties": {
-                  "description": "BUaaS flows from   DPA-agent/proxy in mgmt.-VPC to the BUaaS-newtorker server in customer-VPC.",
-                  "protocol": "Tcp",
-                  "sourcePortRange": "*",
-                  "destinationPortRange": "7937-9936",
-                  "sourceAddressPrefix": "10.4.0.0/22",
-                  "access": "Allow",
-                  "priority": 320,
-                  "direction": "Inbound",
-                  "sourcePortRanges": [],
-                  "destinationPortRanges": [],
-                  "sourceAddressPrefixes": [],
-                  "destinationAddressPrefixes": [],
-                  "destinationApplicationSecurityGroups": [
-                      {
-                          "id": "[variables('buaas-mgt-id')]"
-                      }
-                  ]
-              }
-           },
-           {
-              "name": "330",
-              "properties": {
-                  "description": "BUaaS flows from  BUaaS to BUaaS in customer-VPC.",
-                  "protocol": "Tcp",
-                  "sourcePortRange": "*",
-                  "destinationPortRange": "7443",
-                  "access": "Allow",
-                  "priority": 330,
-                  "direction": "Inbound",
-                  "sourcePortRanges": [],
-                  "destinationPortRanges": [],
-                  "sourceAddressPrefixes": [],
-                  "destinationAddressPrefixes": [],
-                  "sourceApplicationSecurityGroups": [
-                      {
-                          "id": "[variables('buaas-mgt-id')]"
-                      }
-                  ],
-                  "destinationApplicationSecurityGroups": [
-                      {
-                          "id": "[variables('buaas-mgt-id')]"
-                      }
-                  ]
-              }
-           },
-           {
-              "name": "400",
-              "properties": {
-                  "description": "outbound web proxy",
-                  "protocol": "Tcp",
-                  "sourcePortRange": "*",
-                  "destinationPortRange": "8080",
-                  "access": "Allow",
-                  "priority": 400,
-                  "direction": "Inbound",
-                  "sourcePortRanges": [],
-                  "destinationPortRanges": [],
-                  "sourceAddressPrefixes": [],
-                  "destinationAddressPrefixes": [],
-                  "sourceApplicationSecurityGroups": [
-                      {
-                          "id": "[variables('mgmt-net-all-id')]"
-                      }
-                  ],
-                  "destinationApplicationSecurityGroups": [
-                      {
-                          "id": "[variables('saprtr-mgt-id')]"
-                      }
-                  ]
-              }
-           },
-           {
-              "name": "500",
-              "properties": {
-                  "description": "Intra-VPC flows   between SAP servers.",
-                  "protocol": "Tcp",
-                  "sourcePortRange": "*",
-                  "destinationPortRange": "3900-3999",
-                  "access": "Allow",
-                  "priority": 500,
-                  "direction": "Inbound",
-                  "sourcePortRanges": [],
-                  "destinationPortRanges": [],
-                  "sourceAddressPrefixes": [],
-                  "destinationAddressPrefixes": [],
-                  "sourceApplicationSecurityGroups": [
-                      {                                    
-                          "id": "[variables('SAP-mgt-id')]"
-                      }
-                  ],
-                  "destinationApplicationSecurityGroups": [
-                      {
-                          "id": "[variables('SAP-mgt-id')]"
-                      }
-                  ]
-              }
-           },
-           {
-              "name": "510",
-              "properties": {
-                  "description": "Allow LAMA access from management VPC",
-                  "protocol": "Tcp",
-                  "sourcePortRange": "*",
-                  "destinationPortRange": "1128",
-                  "sourceAddressPrefix": "10.4.0.0/22",
-                  "access": "Allow",
-                  "priority": 510,
-                  "direction": "Inbound",
-                  "sourcePortRanges": [],
-                  "destinationPortRanges": [],
-                  "sourceAddressPrefixes": [],
-                  "destinationAddressPrefixes": [],
-                  "destinationApplicationSecurityGroups": [
-                      {
-                          "id": "[variables('SAP-mgt-id')]"
-                      }
-                  ]
-              }
-           },
-           {
-              "name": "520",
-              "properties": {
-                  "description": "Allow LAMA access   from management VPC",
-                  "protocol": "Tcp",
-                  "sourcePortRange": "*",
-                  "destinationPortRange": "1129",
-                  "sourceAddressPrefix": "10.4.0.0/22",
-                  "access": "Allow",
-                  "priority": 520,
-                  "direction": "Inbound",
-                  "sourcePortRanges": [],
-                  "destinationPortRanges": [],
-                  "sourceAddressPrefixes": [],
-                  "destinationAddressPrefixes": [],
-                  "destinationApplicationSecurityGroups": [
-                      {
-                          "id": "[variables('SAP-mgt-id')]"
-                      }
-                  ]
-              }
-           },
-           {
-              "name": "530",
-              "properties": {
-                  "description": "Allow iSCSI access from management VPC",
-                  "protocol": "Tcp",
-                  "sourcePortRange": "*",
-                  "destinationPortRange": "3260",
-                  "sourceAddressPrefix": "10.4.0.0/22",
-                  "access": "Allow",
-                  "priority": 530,
-                  "direction": "Inbound",
-                  "sourcePortRanges": [],
-                  "destinationPortRanges": [],
-                  "sourceAddressPrefixes": [],
-                  "destinationAddressPrefixes": [],
-                  "destinationApplicationSecurityGroups": [
-                      {
-                          "id": "[variables('SAP-mgt-id')]"
-                      }
-                  ]
-              }
-           },
-           {
-              "name": "540",
-              "properties": {
-                  "description": "Allow SAP discovery   from management VPC",
-                  "protocol": "Tcp",
-                  "sourcePortRange": "*",
-                  "destinationPortRange": "50013-59914",
-                  "sourceAddressPrefix": "10.4.0.0/22",
-                  "access": "Allow",
-                  "priority": 540,
-                  "direction": "Inbound",
-                  "sourcePortRanges": [],
-                  "destinationPortRanges": [],
-                  "sourceAddressPrefixes": [],
-                  "destinationAddressPrefixes": [],
-                  "destinationApplicationSecurityGroups": [
-                      {
-                          "id": "[variables('SAP-mgt-id')]"
-                      }
-                  ]
-              }
-           },
-           {
-              "name": "550",
-              "properties": {
-                  "description": "Allow NFS connections from management VPC",
-                  "protocol": "Tcp",
-                  "sourcePortRange": "*",
-                  "destinationPortRange": "2049",
-                  "sourceAddressPrefix": "10.4.0.0/22",
-                  "access": "Allow",
-                  "priority": 550,
-                  "direction": "Inbound",
-                  "sourcePortRanges": [],
-                  "destinationPortRanges": [],
-                  "sourceAddressPrefixes": [],
-                  "destinationAddressPrefixes": [],
-                  "destinationApplicationSecurityGroups": [
-                      {
-                          "id": "[variables('SAP-mgt-id')]"
-                      }
-                  ]
-              }
-           },
-           {
-              "name": "560",
-              "properties": {
-                  "description": "Allow Sybase connections from management VPC",
-                  "protocol": "Tcp",
-                  "sourcePortRange": "*",
-                  "destinationPortRange": "3600-3699",
-                  "access": "Allow",
-                  "priority": 560,
-                  "direction": "Inbound",
-                  "sourcePortRanges": [],
-                  "destinationPortRanges": [],
-                  "sourceAddressPrefixes": [],
-                  "destinationAddressPrefixes": [],
-                  "sourceApplicationSecurityGroups": [
-                      {
-                          "id": "[variables('SAP-mgt-id')]"
-                      }
-                  ],
-                  "destinationApplicationSecurityGroups": [
-                      {
-                          "id": "[variables('SAP-mgt-id')]"
-                      }
-                  ]
-              }
-           },
-           {
-              "name": "700",
-              "properties": {
-                  "description": "Allows inbound proxy connections from mgmt. VPC",
-                  "protocol": "Tcp",
-                  "sourcePortRange": "*",
-                  "destinationPortRange": "3128",
-                  "sourceAddressPrefix": "10.4.0.0/22",
-                  "access": "Allow",
-                  "priority": 700,
-                  "direction": "Inbound",
-                  "sourcePortRanges": [],
-                  "destinationPortRanges": [],
-                  "sourceAddressPrefixes": [],
-                  "destinationAddressPrefixes": [],
-                  "destinationApplicationSecurityGroups": [
-                      {
-                          "id": "[variables('proxy-dns-mgt-id')]"
-                      }
-                  ]
-              }
-           },
-           {
-              "name": "710",
-              "properties": {
-                  "description": "Allows   inbound SAP-proxy connections from mgmt. VPC",
-                  "protocol": "Tcp",
-                  "sourcePortRange": "*",
-                  "destinationPortRange": "3299",
-                  "sourceAddressPrefix": "10.4.0.0/22",
-                  "access": "Allow",
-                  "priority": 710,
-                  "direction": "Inbound",
-                  "sourcePortRanges": [],
-                  "destinationPortRanges": [],
-                  "sourceAddressPrefixes": [],
-                  "destinationAddressPrefixes": [],
-                  "destinationApplicationSecurityGroups": [
-                      {
-                          "id": "[variables('proxy-dns-mgt-id')]"
-                      }
-                  ]
-              }
-           },
-           {
-              "name": "720",
-              "properties": {
-                  "description": "Allows inbound DNS connections from mgmt. VPC",
-                  "protocol": "UDP",
-                  "sourcePortRange": "*",
-                  "destinationPortRange": "53",
-                  "sourceAddressPrefix": "10.4.0.0/22",
-                  "access": "Allow",
-                  "priority": 720,
-                  "direction": "Inbound",
-                  "sourcePortRanges": [],
-                  "destinationPortRanges": [],
-                  "sourceAddressPrefixes": [],
-                  "destinationAddressPrefixes": [],
-                  "destinationApplicationSecurityGroups": [
-                      {
-                          "id": "[variables('proxy-dns-mgt-id')]"
-                      }
-                  ]
-              }
-           },
-           {
-              "name": "730",
-              "properties": {
-                  "description": "Allows inbound DNS   connections from mgmt. VPC",
-                  "protocol": "Tcp",
-                  "sourcePortRange": "*",
-                  "destinationPortRange": "53",
-                  "sourceAddressPrefix": "10.4.0.0/22",
-                  "access": "Allow",
-                  "priority": 730,
-                  "direction": "Inbound",
-                  "sourcePortRanges": [],
-                  "destinationPortRanges": [],
-                  "sourceAddressPrefixes": [],
-                  "destinationAddressPrefixes": [],
-                  "destinationApplicationSecurityGroups": [
-                      {
-                          "id": "[variables('proxy-dns-mgt-id')]"
-                      }
-                  ]
-              }
-           },
-           {
-              "name": "CleanupRule",
-              "properties": {
-                  "description": "Last user-defined rule in the list; explicitly drops all traffic not previously permitted.",
-                  "protocol": "*",
-                  "sourcePortRange": "*",
-                  "destinationPortRange": "*",
-                  "sourceAddressPrefix": "*",
-                  "destinationAddressPrefix": "*",
-                  "access": "Allow",
-                  "priority": 4096,
-                  "direction": "Inbound",
-                  "sourcePortRanges": [],
-                  "destinationPortRanges": [],
-                  "sourceAddressPrefixes": [],
-                  "destinationAddressPrefixes": []
-              }
-           },
-           {
-              "name": "allow_outbound",
-              "properties": {
-                  "description": "test",
-                  "protocol": "*",
-                  "sourcePortRange": "*",
-                  "destinationPortRange": "*",
-                  "sourceAddressPrefix": "*",
-                  "destinationAddressPrefix": "*",
-                  "access": "Allow",
-                  "priority": 4096,
-                  "direction": "Outbound",
-                  "sourcePortRanges": [],
-                  "destinationPortRanges": [],
-                  "sourceAddressPrefixes": [],
-                  "destinationAddressPrefixes": []
-              }
-           },
-           {
-              "name": "740",
-              "properties": {
-                  "description": "Allows FRUN access from mgtm VPC.",
-                  "protocol": "Tcp",
-                  "sourcePortRange": "*",
-                  "destinationPortRange": "1128",
-                  "sourceAddressPrefix": "10.4.0.0/22",
-                  "access": "Allow",
-                  "priority": 740,
-                  "direction": "Inbound",
-                  "sourcePortRanges": [],
-                  "destinationPortRanges": [],
-                  "sourceAddressPrefixes": [],
-                  "destinationAddressPrefixes": [],
-                  "destinationApplicationSecurityGroups": [
-                      {
-                          "id": "[variables('proxy-dns-mgt-id')]"
-                      }
-                  ]
-              }
-            },
-            {
-              "name": "750",
-              "properties": {
-                  "description": "Allows FRUN access from mgtm VPC.",
-                  "protocol": "Tcp",
-                  "sourcePortRange": "*",
-                  "destinationPortRange": "1129",
-                  "sourceAddressPrefix": "10.4.0.0/22",
-                  "access": "Allow",
-                  "priority": 750,
-                  "direction": "Inbound",
-                  "sourcePortRanges": [],
-                  "destinationPortRanges": [],
-                  "sourceAddressPrefixes": [],
-                  "destinationAddressPrefixes": [],
-                  "destinationApplicationSecurityGroups": [
-                      {
-                          "id": "[variables('proxy-dns-mgt-id')]"
-                      }
-                  ]
-              }
+            "name": "rdp-dev-mgmt-allow-all",
+            "properties": {
+                "description": "",
+                "protocol": "Tcp",
+                "sourcePortRange": "3389",
+                "destinationPortRange": "3389",
+                "sourceAddressPrefix": "10.208.0.0/26",
+                "access": "Allow",
+                "priority": 240,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "destinationApplicationSecurityGroups": [
+                    {
+                        "id": "[variables('asg-mgmt')]"
+                    }
+                ]
             }
+         },
+         {
+            "name": "rdp-test-mgmt-allow-all",
+            "properties": {
+                "description": "",
+                "protocol": "Tcp",
+                "sourcePortRange": "3389",
+                "destinationPortRange": "3389",
+                "sourceAddressPrefix": "10.208.64.0/26",
+                "access": "Allow",
+                "priority": 250,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "destinationApplicationSecurityGroups": [
+                    {
+                        "id": "[variables('asg-mgmt')]"
+                    }
+                ]
+            }
+         },
+           {
+              "name": "rsync-dr-mgmt-allow-all",
+              "properties": {
+                  "description": "",
+                  "protocol": "Tcp",
+                  "sourcePortRange": "873",
+                  "destinationPortRange": "873",
+                  "sourceAddressPrefix": "10.4.0.0/12",
+                  "access": "Allow",
+                  "priority": 270,
+                  "direction": "Inbound",
+                  "sourcePortRanges": [],
+                  "destinationPortRanges": [],
+                  "sourceAddressPrefixes": [],
+                  "destinationAddressPrefixes": [],
+                  "destinationApplicationSecurityGroups": [
+                      {
+                          "id": "[variables('asg-mgmt')]"
+                      }
+                  ]
+              }
+           },
+           {
+            "name": "tomcat-prod-mgmt-allow-all",
+            "properties": {
+                "description": "",
+                "protocol": "Tcp",
+                "sourcePortRange": "8080",
+                "destinationPortRange": "8080",
+                "sourceAddressPrefix": "10.4.1.0/26",
+                "access": "Allow",
+                "priority": 280,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "destinationApplicationSecurityGroups": [
+                    {
+                        "id": "[variables('asg-mgmt')]"
+                    }
+                ]
+            }
+         },
+         {
+            "name": "mgmt-deny",
+            "properties": {
+                "description": "",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Deny",
+                "priority": 4096,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": []
+            }
+         }
           ]
         }
       },
