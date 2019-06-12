@@ -817,8 +817,8 @@
                     "access": "Deny",
                     "priority": 4096,
                     "direction": "Inbound",
-                    "sourceAddressPrefixes": [],
-                    "destinationAddressPrefixes": []
+                    "sourceAddressPrefix": "*",
+                    "destinationAddressPrefix": "*"
                 }
             }
           ],
