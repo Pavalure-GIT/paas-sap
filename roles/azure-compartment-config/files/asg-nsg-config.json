@@ -813,7 +813,7 @@
                 "properties": {
                     "protocol": "*",
                     "sourcePortRange": "*",
-                    "destinationPortRange": "*",
+                    "destinationPortRange": "",
                     "access": "Deny",
                     "priority": 4096,
                     "direction": "Inbound",
