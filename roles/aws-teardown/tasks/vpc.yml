@@ -16,10 +16,10 @@
 #Delete VPC Peering connection
 - name: Delete VPC Peer
   ec2_vpc_peer:
-    region: "{{ region }}"
-    peering_id: "{{ peering.result[0].vpc_peering_connection_id }}"
-    state: absent
-  when: requester and terminate
+   region: "{{ region }}"
+   peering_id: "{{ peering.result[0].vpc_peering_connection_id }}"
+   state: absent
+  when: dr == true
 
 #Get list of subnets for given VPC/region
 - ec2_vpc_subnet_facts:
@@ -32,8 +32,8 @@
 - ec2_vpc_subnet:
     state: absent
     vpc_id: "{{ vpc }}"
-    region: "{{ region }}"
     cidr: "{{ item.cidr_block }}"
+    region: "{{ region }}"
   with_items: "{{ subnets.subnets }}"
   when: 
     - item.vpc_id == "{{ vpc }}"
