@@ -1,4 +1,4 @@
-
+#This will add and name  the subnets to the VPC with the parameters you set in vars.
 - name: Add Management subnet to VPC
   azure_rm_subnet:
     resource_group: "{{ resource_group }}"

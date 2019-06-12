@@ -5,21 +5,3 @@
     - name: Call Teardown Role
       include_role:
         name: aws-teardown
-      vars:
-        vpc: vpc-024cd03cce7818bbc
-        region: us-east-1
-        list: true
-        terminate: true
-        route53_zones:
-          cv.aws.paas4sap.svcs.entsvcs.com. : 'Z3JNDMGY6354GH'
-          chartest.paas4sap.svcs.entsvcs.com. : 'Z3PA3TT7M9ZWYI'
-          in-addr.arpa. : 'Z5QIVUNV36CAN'
-        vpc_name: Dev-Charlotte
-        gateway_id: 'vgw-0f73c280059aa00d2'
-        # Below variables are for the DR Teardown, if dr is set to true the teardown will run a second time to teardown DR.
-        dr: true
-        dr_vpc: vpc-0af9bf39247934d58
-        dr_vpc_name: DR-Dev-Example
-        dr_region: us-east-2
-        dr_list: true
-        dr_terminate: true

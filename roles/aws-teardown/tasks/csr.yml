@@ -1,6 +1,6 @@
 - name: Delete the CSR cloudformation stack
   cloudformation:
-    stack_name: "cv-csr-stack"
+    stack_name: "{{ stack_name }}"
     state: "absent"
 
 - name: Find VGWs for Region
@@ -31,9 +31,8 @@
     resource: "{{ gateway_id }}"
     state: absent
     tags:
-      Name: cv-csr-vgw
-      owner: System Team
-      transitvpc:spoke: 'true'
+      Name: "{{ vgw_name }}"
+      "{{ csr_tag }}": 'true'
 
 - pause:
     minutes: 1
