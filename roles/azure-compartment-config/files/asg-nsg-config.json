@@ -348,7 +348,7 @@
                   "protocol": "Tcp",
                   "sourcePortRange": "873",
                   "destinationPortRange": "873",
-                  "sourceAddressPrefix": "10.4.0.0/12",
+                  "sourceAddressPrefix": "100.64.0.0/12",
                   "access": "Allow",
                   "priority": 270,
                   "direction": "Inbound",
