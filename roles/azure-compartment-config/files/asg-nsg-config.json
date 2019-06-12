@@ -812,11 +812,11 @@
                 "name": "cust-deny",
                 "properties": {
                     "protocol": "*",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "*",
                     "access": "Deny",
                     "priority": 4096,
                     "direction": "Inbound",
-                    "sourcePortRanges": ["*"],
-                    "destinationPortRanges": ["*"],
                     "sourceAddressPrefixes": ["*"],
                     "destinationAddressPrefixes": ["*"]
                 }
