@@ -12,8 +12,8 @@
   loop_control:
        loop_var: item_id
   when: list
-
-#Terminate each ec2 instance in VPC when terminate is set to true       
+       
+#Terminate each ec2 instance in VPC when terminate is set to true
 - ec2:
     state: 'absent'
     instance_ids: '{{ item_id.instance_id }}'
@@ -28,13 +28,13 @@
     seconds: 30
   when: terminate 
 
-#Get list of EC2 Network interfaces in VPC       
+#Get list of EC2 Network interfaces in VPC        
 - ec2_eni_facts:
     region: "{{ region }}"
     filters:
       vpc-id: "{{ vpc }}"
   register: net_interfaces
-
+  
 #Print list of Network Interfaces when list is set to true  
 - debug:
     msg: "{{ item_id.id }}" 
@@ -42,8 +42,8 @@
   loop_control:
        loop_var: item_id
   when: list
-
-#Remove each Network Interface in the VPC when terminate is set to true       
+       
+#Remove each Network Interface in the VPC when terminate is set to true
 - ec2_eni:
     region: "{{ region }}"
     eni_id: "{{ item_id.id }}"
