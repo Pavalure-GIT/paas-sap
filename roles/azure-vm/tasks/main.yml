@@ -3,7 +3,7 @@
   azure_rm_networkinterface:
     name: "{{ azure_vm_name }}-nic1"
     resource_group: "{{azure_vm_resource_group}}"
-    virtual_network: "{{azue_vm_vnet}}"
+    virtual_network: "{{azure_vm_vnet}}"
     subnet_name: "{{azure_vm_nic1_subnet}}"
     security_group: "{{azure_vm_nic1_nsg}}"
     state: present
