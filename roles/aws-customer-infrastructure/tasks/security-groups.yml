@@ -109,10 +109,10 @@
         cidr_ip: "{{ aws_customer_vpc_management_cidr  }}"
       - proto: tcp
         ports: 3389
-        cidr_ip: "{{ aws_customer_vpc_management_dxc_cidr }}"
+        cidr_ip: 10.208.0.0/27
       - proto: tcp
         ports: 3389 
-        cidr_ip: "{{ aws_customer_vpc_management_dxc_cidr }}"
+        cidr_ip: 10.208.0.64/27 
       - proto: tcp
         ports: 8080
         cidr_ip: "{{ aws_customer_vpc_management_cidr  }}"

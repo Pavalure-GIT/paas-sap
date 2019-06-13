@@ -31,7 +31,6 @@
         clusteraz3_cidr: "{{ clustaz3_cidr }}"
         #The CIDR range of the attached management compartment is given
         aws_customer_vpc_management_cidr: "{{ vpc_management_cidr }}"
-        aws_customer_vpc_management_dxc_cidr: "{{ vpc_management_dxc_cidr }}"
         #The management dns zone is given as shortname
         aws_customer_vpc_shortname: "{{ vpc_shortname }}"
         #The customer dns zone is given as longname
@@ -448,7 +447,6 @@
         clusteraz2_cidr: "{{ dr_clustaz2_cidr }}"
         clusteraz3_cidr: "{{ dr_clustaz3_cidr }}"
         aws_customer_vpc_management_cidr: "{{ vpc_management_cidr }}"
-        aws_customer_vpc_management_dxc_cidr: "{{ vpc_management_dxc_cidr }}"
         aws_customer_vpc_shortname: "{{ vpc_shortname }}"
         aws_customer_vpc_longname: "{{ vpc_longname }}"
         create_zone: false
