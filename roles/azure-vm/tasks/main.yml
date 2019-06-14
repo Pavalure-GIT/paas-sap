@@ -13,7 +13,7 @@
   azure_rm_networkinterface:
     name: "{{ azure_vm_name }}-nic2"
     resource_group: "{{azure_vm_resource_group}}"
-    virtual_network: "{{azue_vm_vnet}}"
+    virtual_network: "{{azure_vm_vnet}}"
     subnet_name: "{{azure_vm_nic2_subnet}}"
     state: present
   when: (azure_vm_nic2_subnet != "" ) #Check to see if two NIC's are required
