@@ -43,6 +43,8 @@
         azure_vm_public_ssh: "{{vm_public_keys}}"
         azure_vm_nic1_subnet: "Management"
         azure_vm_nic2_subnet: ""
+        azure_vm_nic1_nsg: "nsg-buaas-mgt"
+        azure_vm_nic2_nsg: ""
         azure_vm_nic1_dns: "{{ st_management_dns }}"
         azure_vm_nic2_dns: ""
         azure_vm_nic1_reverse_dns: "{{ st_management_reverse_dns }}"
@@ -55,8 +57,8 @@
         name: azure-asg-allocate
       vars:
         asgs:
-          - { resource_group: "{{ st_resource_group }}", name: buaas-mgt }
-          - { resource_group: "{{ st_resource_group }}", name: mgmt-net-all }
+          - { resource_group: "{{ st_resource_group }}", name: asg-buaas-mgt }
+          - { resource_group: "{{ st_resource_group }}", name: asg-mgmt }
         azure_vm_nic: "cloudboost-nic1"
       when: buaas
 
@@ -75,6 +77,8 @@
         azure_vm_public_ssh: "{{vm_public_keys}}"
         azure_vm_nic1_subnet: "Management"
         azure_vm_nic2_subnet: ""
+        azure_vm_nic1_nsg: "nsg-buaas-mgt"
+        azure_vm_nic2_nsg: ""
         azure_vm_nic1_dns: "{{ st_management_dns }}"
         azure_vm_nic2_dns: ""
         azure_vm_nic1_reverse_dns: "{{ st_management_reverse_dns }}"
@@ -87,8 +91,8 @@
         name: azure-asg-allocate
       vars:
         asgs:
-          - { resource_group: "{{ st_resource_group }}", name: buaas-mgt }
-          - { resource_group: "{{ st_resource_group }}", name: mgmt-net-all }
+          - { resource_group: "{{ st_resource_group }}", name: asg-buaas-mgt }
+          - { resource_group: "{{ st_resource_group }}", name: asg-mgmt }
         azure_vm_nic: "networker-nic1"
       when: buaas
 
@@ -107,6 +111,8 @@
         azure_vm_public_ssh: "{{vm_public_keys}}"
         azure_vm_nic1_subnet: "Management"
         azure_vm_nic2_subnet: ""
+        azure_vm_nic1_nsg: "nsg-buaas-mgt"
+        azure_vm_nic2_nsg: ""
         azure_vm_nic1_dns: "{{ st_management_dns }}"
         azure_vm_nic2_dns: ""
         azure_vm_nic1_reverse_dns: "{{ st_management_reverse_dns }}"
@@ -119,8 +125,8 @@
         name: azure-asg-allocate
       vars:
         asgs:
-          - { resource_group: "{{ st_resource_group }}", name: buaas-mgt }
-          - { resource_group: "{{ st_resource_group }}", name: mgmt-net-all }
+          - { resource_group: "{{ st_resource_group }}", name: asg-buaas-mgt }
+          - { resource_group: "{{ st_resource_group }}", name: asg-mgmt }
         azure_vm_nic: "nmc-nic1"
       when: buaas
         
@@ -140,6 +146,8 @@
         azure_vm_nic1_subnet: "Public"
         azure_vm_nic2_subnet: "Management"
         azure_vm_nic1_dns: ""
+        azure_vm_nic1_nsg: "nsg-saprtr-pub"
+        azure_vm_nic2_nsg: "nsg-saprtr-mgt"
         azure_vm_nic2_dns: "{{ st_management_dns }}"
         azure_vm_nic1_reverse_dns: ""
         azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
@@ -150,16 +158,16 @@
         name: azure-asg-allocate
       vars:
         asgs:
-          - { resource_group: "{{ st_resource_group }}", name: saprtr-pub  }
-          - { resource_group: "{{ st_resource_group }}", name: pub-net-all }
+          - { resource_group: "{{ st_resource_group }}", name: asg-saprtr-pub  }
+          - { resource_group: "{{ st_resource_group }}", name: asg-pub }
         azure_vm_nic: "SAPRouter-nic1"
     - name: Allocate ASG nic2 - Management
       include_role: 
         name: azure-asg-allocate
       vars:
         asgs:
-          - { resource_group: "{{ st_resource_group }}", name: saprtr-mgt  }
-          - { resource_group: "{{ st_resource_group }}", name: mgmt-net-all }
+          - { resource_group: "{{ st_resource_group }}", name: asg-saprtr-mgt }
+          - { resource_group: "{{ st_resource_group }}", name: asg-mgmt }
         azure_vm_nic: "SAPRouter-nic2"
 
     - name: Provison MidServerA
@@ -177,6 +185,8 @@
         azure_vm_public_ssh: "{{ vm_public_keys }}"
         azure_vm_nic1_subnet: "Management"
         azure_vm_nic2_subnet: ""
+        azure_vm_nic1_nsg: "nsg-mid-mgt"
+        azure_vm_nic2_nsg: ""
         azure_vm_nic1_dns: "{{ st_management_dns }}"
         azure_vm_nic2_dns: ""
         azure_vm_nic1_reverse_dns: "{{ st_management_reverse_dns }}"
@@ -188,8 +198,8 @@
         name: azure-asg-allocate
       vars:
         asgs:
-        #  - { resource_group: "{{ st_resource_group }}", name: mid-mgt  }
-          - { resource_group: "{{ st_resource_group }}", name: mgmt-net-all }
+          - { resource_group: "{{ st_resource_group }}", name: asg-mid-mgt }
+          - { resource_group: "{{ st_resource_group }}", name: asg-mgt }
         azure_vm_nic: "MidServerA-nic1"
     
 
@@ -208,6 +218,8 @@
         azure_vm_public_ssh: "{{ vm_public_keys }}"
         azure_vm_nic1_subnet: "Management"
         azure_vm_nic2_subnet: ""
+        azure_vm_nic1_nsg: "nsg-mid-mgt"
+        azure_vm_nic2_nsg: ""
         azure_vm_nic1_dns: "{{ st_management_dns }}"
         azure_vm_nic2_dns: ""
         azure_vm_nic1_reverse_dns: "{{ st_management_reverse_dns }}"
@@ -219,8 +231,8 @@
         name: azure-asg-allocate
       vars:
         asgs:
-        #  - { resource_group: "{{ st_resource_group }}", name: mid-mgt  }
-          - { resource_group: "{{ st_resource_group }}", name: mgmt-net-all }
+          - { resource_group: "{{ st_resource_group }}", name: asg-mid-mgt }
+          - { resource_group: "{{ st_resource_group }}", name: asg-mgt }
         azure_vm_nic: "MidServerB-nic1"
  
     - name: Provision FDE
@@ -238,6 +250,8 @@
         azure_vm_public_ssh: "{{ vm_public_keys }}"
         azure_vm_nic1_subnet: "Customer"
         azure_vm_nic2_subnet: "Management"
+        azure_vm_nic1_nsg: "nsg-proxy-dns-cst"
+        azure_vm_nic2_nsg: "nsg-dns-proxy-mgt"
         azure_vm_nic1_dns: "{{ st_customer_dns }}"
         azure_vm_nic2_dns: "{{ st_management_dns }}"
         azure_vm_nic1_reverse_dns: "{{ st_customer_reverse_dns }}"
@@ -249,18 +263,17 @@
         name: azure-asg-allocate
       vars:
         asgs:
-          - { resource_group: "{{ st_resource_group }}", name: proxy-dns-cst  }
-          - { resource_group: "{{ st_resource_group }}", name: cust-net-all }
+          - { resource_group: "{{ st_resource_group }}", name: asg-proxy-dns-cst  }
+          - { resource_group: "{{ st_resource_group }}", name: asg-cust }
         azure_vm_nic: "FDE-nic1"
     - name: Allocate ASG nic2 - Management
       include_role: 
         name: azure-asg-allocate
       vars:
         asgs:
-          - { resource_group: "{{ st_resource_group }}", name: proxy-dns-mgt  }
-          - { resource_group: "{{ st_resource_group }}", name: mgmt-net-all }
+          - { resource_group: "{{ st_resource_group }}", name: asg-proxy-dns-mgt  }
+          - { resource_group: "{{ st_resource_group }}", name: asg-mgmt }
         azure_vm_nic: "FDE-nic2"
-
     ##Duplicating provisions for HA requirements     
     - name: Provision SAP Router
       include_role:
@@ -277,6 +290,8 @@
         azure_vm_public_ssh: "{{vm_public_keys}}"
         azure_vm_nic1_subnet: "Public"
         azure_vm_nic2_subnet: "Management"
+        azure_vm_nic1_nsg: "nsg-saprtr-pub"
+        azure_vm_nic2_nsg: "nsg-saprtr-mgt"
         azure_vm_nic1_dns: ""
         azure_vm_nic2_dns: "{{ st_management_dns }}"
         azure_vm_nic1_reverse_dns: ""
@@ -289,8 +304,8 @@
         name: azure-asg-allocate
       vars:
         asgs:
-          - { resource_group: "{{ st_resource_group }}", name: saprtr-pub  }
-          - { resource_group: "{{ st_resource_group }}", name: pub-net-all }
+          - { resource_group: "{{ st_resource_group }}", name: asg-saprtr-pub  }
+          - { resource_group: "{{ st_resource_group }}", name: asg-pub }
         azure_vm_nic: "SAPRouter-HA-nic1"
       when: ha_compartment
 
@@ -299,8 +314,8 @@
         name: azure-asg-allocate
       vars:
         asgs:
-          - { resource_group: "{{ st_resource_group }}", name: saprtr-mgt  }
-          - { resource_group: "{{ st_resource_group }}", name: mgmt-net-all }
+          - { resource_group: "{{ st_resource_group }}", name: asg-saprtr-mgt  }
+          - { resource_group: "{{ st_resource_group }}", name: asg-mgmt }
         azure_vm_nic: "SAPRouter-HA-nic2"
       when: ha_compartment
 
@@ -321,6 +336,8 @@
         azure_vm_public_ssh: "{{ vm_public_keys }}"
         azure_vm_nic1_subnet: "Customer"
         azure_vm_nic2_subnet: "Management"
+        azure_vm_nic1_nsg: "nsg-proxy-dns-cst"
+        azure_vm_nic2_nsg: "nsg-dns-proxy-mgt"
         azure_vm_nic1_dns: "{{ st_customer_dns }}"
         azure_vm_nic2_dns: "{{ st_management_dns }}"
         azure_vm_nic1_reverse_dns: "{{ st_customer_reverse_dns }}"
@@ -333,8 +350,8 @@
         name: azure-asg-allocate
       vars:
         asgs:
-          - { resource_group: "{{ st_resource_group }}", name: proxy-dns-cst  }
-          - { resource_group: "{{ st_resource_group }}", name: cust-net-all }
+          - { resource_group: "{{ st_resource_group }}", name: asg-proxy-dns-cst  }
+          - { resource_group: "{{ st_resource_group }}", name: asg-cust }
         azure_vm_nic: "FDE-HA-nic1"
       when: ha_compartment
       
@@ -343,8 +360,8 @@
         name: azure-asg-allocate
       vars:
         asgs:
-          - { resource_group: "{{ st_resource_group }}", name: proxy-dns-mgt  }
-          - { resource_group: "{{ st_resource_group }}", name: mgmt-net-all }
+          - { resource_group: "{{ st_resource_group }}", name: asg-proxy-dns-mgt  }
+          - { resource_group: "{{ st_resource_group }}", name: asg-mgmt }
         azure_vm_nic: "FDE-HA-nic2"
       when: ha_compartment       
 
@@ -395,6 +412,8 @@
         azure_vm_public_ssh: "{{vm_public_keys}}"
         azure_vm_nic1_subnet: "Public"
         azure_vm_nic2_subnet: "Management"
+        azure_vm_nic1_nsg: "nsg-saprtr-pub"
+        azure_vm_nic2_nsg: "nsg-saprtr-mgt"
         azure_vm_nic1_dns: ""
         azure_vm_nic2_dns: "{{ st_management_dns }}"
         azure_vm_nic1_reverse_dns: ""
@@ -409,8 +428,8 @@
         name: azure-asg-allocate
       vars:
         asgs:
-          - { resource_group: "{{ dr_resource_group }}", name: saprtr-pub  }
-          - { resource_group: "{{ dr_resource_group }}", name: pub-net-all }
+          - { resource_group: "{{ dr_resource_group }}", name: asg-saprtr-pub  }
+          - { resource_group: "{{ st_resource_group }}", name: asg-pub }
         azure_vm_nic: "SAPRouter-dr-nic1"
       when: dr_compartment
 
@@ -419,8 +438,8 @@
         name: azure-asg-allocate
       vars:
         asgs:
-          - { resource_group: "{{ dr_resource_group }}", name: saprtr-mgt  }
-          - { resource_group: "{{ dr_resource_group }}", name: mgmt-net-all }
+          - { resource_group: "{{ dr_resource_group }}", name: asg-saprtr-mgt  }
+          - { resource_group: "{{ st_resource_group }}", name: asg-mgmt }
         azure_vm_nic: "SAPRouter-dr-nic2"
       when: dr_compartment
 
@@ -439,6 +458,8 @@
         azure_vm_public_ssh: "{{ vm_public_keys }}"
         azure_vm_nic1_subnet: "Management"
         azure_vm_nic2_subnet: ""
+        azure_vm_nic1_nsg: "nsg-mid-mgt"
+        azure_vm_nic2_nsg: ""
         azure_vm_nic1_dns: "{{ st_management_dns }}"
         azure_vm_nic2_dns: ""
         azure_vm_nic1_reverse_dns: "{{ dr_management_reverse_dns }}"
@@ -450,8 +471,8 @@
         name: azure-asg-allocate
       vars:
         asgs:
-          #- { resource_group: "{{ dr_resource_group }}", name: mid-mgt  }
-          - { resource_group: "{{ dr_resource_group }}", name: mgmt-net-all }
+          - { resource_group: "{{ dr_resource_group }}", name: asg-mid-mgt  }
+          - { resource_group: "{{ st_resource_group }}", name: asg-mgmt }
         azure_vm_nic: "MidServerA-dr-nic1"
       when: dr_compartment
 
@@ -470,6 +491,8 @@
         azure_vm_public_ssh: "{{ vm_public_keys }}"
         azure_vm_nic1_subnet: "Management"
         azure_vm_nic2_subnet: ""
+        azure_vm_nic1_nsg: "nsg-mid-mgt"
+        azure_vm_nic2_nsg: ""
         azure_vm_nic1_dns: "{{ st_management_dns }}"
         azure_vm_nic2_dns: ""
         azure_vm_nic1_reverse_dns: "{{ dr_management_reverse_dns }}"
@@ -481,8 +504,8 @@
         name: azure-asg-allocate
       vars:
         asgs:
-          #- { resource_group: "{{ dr_resource_group }}", name: mid-mgt  }
-          - { resource_group: "{{ dr_resource_group }}", name: mgmt-net-all }
+          - { resource_group: "{{ dr_resource_group }}", name: asg-mid-mgt  }
+          - { resource_group: "{{ st_resource_group }}", name: asg-mgmt }
         azure_vm_nic: "MidServerB-dr-nic1"
       when: dr_compartment
 
@@ -503,6 +526,8 @@
         azure_vm_public_ssh: "{{ vm_public_keys }}"
         azure_vm_nic1_subnet: "Customer"
         azure_vm_nic2_subnet: "Management"
+        azure_vm_nic1_nsg: "nsg-proxy-dns-cst"
+        azure_vm_nic2_nsg: "nsg-dns-proxy-mgt"       
         azure_vm_nic1_dns: "{{ st_customer_dns }}"
         azure_vm_nic2_dns: "{{ st_management_dns }}"
         azure_vm_nic1_reverse_dns: "{{ dr_customer_reverse_dns }}"
@@ -514,8 +539,8 @@
         name: azure-asg-allocate
       vars:
         asgs:
-          - { resource_group: "{{ dr_resource_group }}", name: proxy-dns-cst  }
-          - { resource_group: "{{ dr_resource_group }}", name: cust-net-all }
+          - { resource_group: "{{ dr_resource_group }}", name: asg-proxy-dns-cst  }
+          - { resource_group: "{{ dr_resource_group }}", name: asg-cust }
         azure_vm_nic: "FDE-dr-nic1"
       when: dr_compartment
     - name: Allocate ASG nic2 - Management
@@ -523,8 +548,8 @@
         name: azure-asg-allocate
       vars:
         asgs:
-          - { resource_group: "{{ dr_resource_group }}", name: proxy-dns-mgt  }
-          - { resource_group: "{{ dr_resource_group }}", name: mgmt-net-all }
+          - { resource_group: "{{ dr_resource_group }}", name: asg-proxy-dns-mgt  }
+          - { resource_group: "{{ dr_resource_group }}", name: asg-mgmt  }
         azure_vm_nic: "FDE-dr-nic2"
       when: dr_compartment
 
@@ -544,6 +569,8 @@
         azure_vm_public_ssh: "{{vm_public_keys}}"
         azure_vm_nic1_subnet: "Public"
         azure_vm_nic2_subnet: "Management"
+        azure_vm_nic1_nsg: "nsg-saprtr-pub"
+        azure_vm_nic2_nsg: "nsg-saprtr-mgt"
         azure_vm_nic1_dns: ""
         azure_vm_nic2_dns: "{{ st_management_dns }}"
         azure_vm_nic1_reverse_dns: ""
@@ -555,8 +582,8 @@
         name: azure-asg-allocate
       vars:
         asgs:
-          - { resource_group: "{{ dr_resource_group }}", name: saprtr-pub  }
-          - { resource_group: "{{ dr_resource_group }}", name: pub-net-all }
+          - { resource_group: "{{ dr_resource_group }}", name: asg-saprtr-pub  }
+          - { resource_group: "{{ dr_resource_group }}", name: asg-pub }
         azure_vm_nic: "SAPRouter-HA-dr-nic1"
       when: dr_compartment and dr_ha_compartment
 
@@ -565,8 +592,8 @@
         name: azure-asg-allocate
       vars:
         asgs:
-          - { resource_group: "{{ dr_resource_group }}", name: saprtr-mgt  }
-          - { resource_group: "{{ dr_resource_group }}", name: mgmt-net-all }
+          - { resource_group: "{{ dr_resource_group }}", name: asg-saprtr-mgt  }
+          - { resource_group: "{{ dr_resource_group }}", name: asg-mgmt }
         azure_vm_nic: "SAPRouter-HA-dr-nic2"
       when: dr_compartment and dr_ha_compartment
  
@@ -585,6 +612,8 @@
         azure_vm_public_ssh: "{{ vm_public_keys }}"
         azure_vm_nic1_subnet: "Customer"
         azure_vm_nic2_subnet: "Management"
+        azure_vm_nic1_nsg: "nsg-proxy-dns-cst"
+        azure_vm_nic2_nsg: "nsg-proxy-dns-mgt"
         azure_vm_nic1_dns: "{{ st_customer_dns }}"
         azure_vm_nic2_dns: "{{ st_management_dns }}"
         azure_vm_nic1_reverse_dns: "{{ dr_customer_reverse_dns }}"
@@ -596,8 +625,8 @@
         name: azure-asg-allocate
       vars:
         asgs:
-          - { resource_group: "{{ dr_resource_group }}", name: proxy-dns-cst  }
-          - { resource_group: "{{ dr_resource_group }}", name: cust-net-all }
+          - { resource_group: "{{ dr_resource_group }}", name: asg-proxy-dns-cst  }
+          - { resource_group: "{{ dr_resource_group }}", name: asg-cust }
         azure_vm_nic: "FDE-HA-dr-nic1"
       when: dr_compartment and dr_ha_compartment
 
@@ -606,8 +635,8 @@
         name: azure-asg-allocate
       vars:
         asgs:
-          - { resource_group: "{{ dr_resource_group }}", name: proxy-dns-mgt  }
-          - { resource_group: "{{ dr_resource_group }}", name: mgmt-net-all }
+          - { resource_group: "{{ dr_resource_group }}", name: asg-proxy-dns-mgt  }
+          - { resource_group: "{{ dr_resource_group }}", name: asg-mgmt  }
         azure_vm_nic: "FDE-HA-dr-nic2"
       when: dr_compartment and dr_ha_compartment
     
