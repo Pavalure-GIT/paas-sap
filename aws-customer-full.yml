@@ -40,6 +40,20 @@
         #The single_az flag is used to indicate if additional AZ subnets need to created
         single_az: "{{ single_availability_zone }}"
         dr: false
+#Provisioning  SIEM server
+- name: Provision SIEM server
+  include_role:
+    name: aws-ec2-vm
+  vars:
+    aws_ec2_vm_Name: SIEM
+    aws_ec2_vm_region: "{{ vpc_region }}"
+    aws_ec2_vm_key_name: "{{ key_name }}"
+    aws_ec2_vm_instance_type: "{{ siem_instance_type }}"
+    aws_ec2_vm_image: "{{ siem_image }}"
+    aws_ec2_vm_eth1_groups: "{{ mgmt_net_all.group_id }}"
+    aws_ec2_vm_eth1_subnet: "{{ managementaz1.subnet.id }}"
+    aws_eth0_security_groups: "{{ siem_eth0_security_groups }}"
+    single_nic: true
 
 - name: Provision Component Machines
   hosts: localhost

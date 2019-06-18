@@ -74,6 +74,17 @@ sap_eth1_security_groups:
   - mgmt-net-all
   - saprtr-mgt
 
+#SIEMServer
+siem_image: ami-6871a115
+siem_instance_type: t2.micro
+siem_eth0_security_groups:
+  - mgmt-net-all
+instance_profile_name: p4s-iam-role
+
+
+
+
+
 #MidServers
 #Instance type/size
 mid_instance_type: t2.small
