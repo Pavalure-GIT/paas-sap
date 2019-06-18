@@ -106,4 +106,4 @@
   when: not dr_compartment
 
 - pause:
-    minutes: 5
+    minutes: 8
