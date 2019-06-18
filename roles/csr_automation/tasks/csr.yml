@@ -74,7 +74,7 @@
      vpc_id: "{{ vpc.vpcs[0].vpc_id }}"
      tags:
        owner: "{{ vgw_owner }}"
-       transitvpc:spoke: 'true'
+       transitvpc:devtest2: 'true'
      aws_access_key: "{{ lookup('env','AWS_ACCESS_KEY') }}"
      aws_secret_key: "{{ lookup('env','AWS_SECRET_KEY') }}"
   register: vgw
