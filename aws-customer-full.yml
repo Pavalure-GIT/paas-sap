@@ -950,3 +950,4 @@
         fde_ip: "{{ ansible_default_ipv4.address }}"
         #Set saprouter proxy address
         proxy_domain: "proxy.{{ vpc_shortname }}"
+        fde_virualhostname: "fde.{{ vpc_shortname }}"
