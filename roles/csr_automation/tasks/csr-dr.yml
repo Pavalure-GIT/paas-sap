@@ -1,10 +1,9 @@
 ---
-
 - name: Create a CSR function stack, pass in the template via an URL
   cloudformation:
-    stack_name: "{{ stack_name }}"
+    stack_name: "{{ dr_stack_name }}"
     state: present
-    region: "{{ vpc_region }}"
+    region: "{{ dr_vpc_region }}"
     disable_rollback: true
     template_url: https://s3.amazonaws.com/solutions-reference/transit-vpc/latest/transit-vpc-second-account.template
     aws_access_key: "{{ lookup('env','AWS_ACCESS_KEY') }}"
@@ -18,10 +17,10 @@
 - name: Get vpc facts to retreive vpc_id
   ec2_vpc_net_facts:
     filters:
-      "tag:Name": "{{ vpc_env_name }}"
+      "tag:Name": "{{ dr_vpc_env_name }}"
     aws_access_key: "{{ lookup('env','AWS_ACCESS_KEY') }}"
     aws_secret_key: "{{ lookup('env','AWS_SECRET_KEY') }}"
-    region: "{{ vpc_region }}"
+    region: "{{ dr_vpc_region }}"
   register: vpc
 
 - debug: var=vpc.vpcs[0].vpc_id
@@ -33,8 +32,8 @@
   ec2_vpc_vgw:
      state: present
      asn: 64513
-     region: "{{ vpc_region }}"
-     name: "{{ vgw_name }}"
+     region: "{{ dr_vpc_region }}"
+     name: "{{ dr_vgw_name }}"
      type: ipsec.1
      vpc_id: "{{ vpc.vpcs[0].vpc_id }}"
      tags:
@@ -48,13 +47,15 @@
 
 - ec2_vpc_route_table:
     vpc_id: "{{ vgw.vgw.vpc_id }}"
-    region: "{{ vpc_region }}"
+    region: "{{ dr_vpc_region }}"
     tags:
       Name: Management AZ1
     routes:
+      - dest: "{{ manaz1_cidr }}"
+        vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
       - dest: 0.0.0.0/0
-        gateway_id: "{{ az1ngw }}"
+        gateway_id: "{{ draz1ngw }}"
     propagating_vgw_ids: "{{ vgw.vgw.id }}"
 
 - pause:
-    minutes: 8
+    minutes: 5

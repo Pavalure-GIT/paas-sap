@@ -1,3 +1,12 @@
 ---
-- name: Cisco CSR
+
+#- name: Cisco CSR Management Setup
+#  include_tasks: csr-mgmt.yml
+
+- name: Cisco CSR Customer Setup
   include_tasks: csr.yml
+
+- name: Cisco CSR DR Customer Setup
+  include_tasks: csr-dr.yml
+  when: dr_compartment
+

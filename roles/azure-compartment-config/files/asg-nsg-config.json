@@ -1,958 +1,539 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-    "location": {
-      "type": "string",
-      "defaultValue": "[resourceGroup().location]",
-      "metadata": {
-        "description": "Location for all resources."
-      }
-    }
-  },
-  "variables": {
-    "mgmt-net-all": "mgmt-net-all",
-    "mgmt-net-all-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('mgmt-net-all'))]",
-    "buaas-mgt": "buaas-mgt",
-    "buaas-mgt-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('buaas-mgt'))]",
-    "saprtr-mgt": "saprtr-mgt",
-    "saprtr-mgt-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('saprtr-mgt'))]",
-    "SAP-mgt": "SAP-mgt",
-    "SAP-mgt-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('SAP-mgt'))]",
-    "hrs-sid-mgt": "hrs-sid-mgt",
-    "hrs-sid-mgt-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('hrs-sid-mgt'))]",
-    "proxy-dns-mgt": "proxy-dns-mgt",
-    "proxy-dns-mgt-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('proxy-dns-mgt'))]",
-    "mid-mgt": "mid-mgt",
-    "mid-mgt-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('mid-mgt'))]",
-    "cust-net-all": "cust-net-all",
-    "cust-net-all-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('cust-net-all'))]",
-    "SAP-cst": "SAP-cst",
-    "SAP-cst-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('SAP-cst'))]",
-    "hrs-sid-cst": "hrs-sid-cst",
-    "hrs-sid-cst-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('hrs-sid-cst'))]",
-    "proxy-dns-cst": "proxy-dns-cst",
-    "proxy-dns-cst-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('proxy-dns-cst'))]",
-    "pub-net-all": "pub-net-all",
-    "pub-net-all-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('pub-net-all'))]",
-    "saprtr-pub": "saprtr-pub",
-    "saprtr-pub-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('saprtr-pub'))]",
-    "nsg-mgmt": "nsg-mgmt",
-    "nsg-mgmt-id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsg-mgmt'))]",
-    "nsg-cust": "nsg-cust",
-    "nsg-cust-id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsg-cust'))]",
-    "nsg-pub": "nsg-pub",
-    "nsg-pub-id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsg-pub'))]"    
-  },
-  "resources": [
-    {
-      "comments": "Application Security Group: [variable('mgmt-net-all')]",
-      "name": "[variables('mgmt-net-all')]",
-      "type": "Microsoft.Network/applicationSecurityGroups",
-      "apiVersion": "2017-10-01",
-      "location": "[parameters('location')]",
-      "properties": {}
-    },
-    {
-      "comments": "Application Security Group: [variable('buaas-mgt')]",
-      "name": "[variables('buaas-mgt')]",
-      "type": "Microsoft.Network/applicationSecurityGroups",
-      "apiVersion": "2017-10-01",
-      "location": "[parameters('location')]",
-      "properties": {}
-    },
-    {
-      "comments": "Application Security Group: [variable('saprtr-mgt')]",
-      "name": "[variables('saprtr-mgt')]",
-      "type": "Microsoft.Network/applicationSecurityGroups",
-      "apiVersion": "2017-10-01",
-      "location": "[parameters('location')]",
-      "properties": {}
-    },
-    {
-      "comments": "Application Security Group: [variable('SAP-mgt')]",
-      "name": "[variables('SAP-mgt')]",
-      "type": "Microsoft.Network/applicationSecurityGroups",
-      "apiVersion": "2017-10-01",
-      "location": "[parameters('location')]",
-      "properties": {}
-    },
-    {
-      "comments": "Application Security Group: [variable('hrs-sid-mgt')]",
-      "name": "[variables('hrs-sid-mgt')]",
-      "type": "Microsoft.Network/applicationSecurityGroups",
-      "apiVersion": "2017-10-01",
-      "location": "[parameters('location')]",
-      "properties": {}
-    },
-    {
-      "comments": "Application Security Group: [variable('proxy-dns-mgt')]",
-      "name": "[variables('proxy-dns-mgt')]",
-      "type": "Microsoft.Network/applicationSecurityGroups",
-      "apiVersion": "2017-10-01",
-      "location": "[parameters('location')]",
-      "properties": {}
-    },
-    {
-      "comments": "Application Security Group: [variable('mid-mgt')]",
-      "name": "[variables('mid-mgt')]",
-      "type": "Microsoft.Network/applicationSecurityGroups",
-      "apiVersion": "2017-10-01",
-      "location": "[parameters('location')]",
-      "properties": {}
-    },
-    {
-      "comments": "Application Security Group: [variable('cust-net-all')]",
-      "name": "[variables('cust-net-all')]",
-      "type": "Microsoft.Network/applicationSecurityGroups",
-      "apiVersion": "2017-10-01",
-      "location": "[parameters('location')]",
-      "properties": {}
-    },
-    {
-      "comments": "Application Security Group: [variable('SAP-cst')]",
-      "name": "[variables('SAP-cst')]",
-      "type": "Microsoft.Network/applicationSecurityGroups",
-      "apiVersion": "2017-10-01",
-      "location": "[parameters('location')]",
-      "properties": {}
-    },
-    {
-      "comments": "Application Security Group: [variable('hrs-sid-cst')]",
-      "name": "[variables('hrs-sid-cst')]",
-      "type": "Microsoft.Network/applicationSecurityGroups",
-      "apiVersion": "2017-10-01",
-      "location": "[parameters('location')]",
-      "properties": {}
-    },
-    {
-      "comments": "Application Security Group: [variable('proxy-dns-cst')]",
-      "name": "[variables('proxy-dns-cst')]",
-      "type": "Microsoft.Network/applicationSecurityGroups",
-      "apiVersion": "2017-10-01",
-      "location": "[parameters('location')]",
-      "properties": {}
-    },
-    {
-      "comments": "Application Security Group: [variable('pub-net-all')]",
-      "name": "[variables('pub-net-all')]",
-      "type": "Microsoft.Network/applicationSecurityGroups",
-      "apiVersion": "2017-10-01",
-      "location": "[parameters('location')]",
-      "properties": {}
-    },
-    {
-      "comments": "Application Security Group: [variable('saprtr-pub')]",
-      "name": "[variables('saprtr-pub')]",
-      "type": "Microsoft.Network/applicationSecurityGroups",
-      "apiVersion": "2017-10-01",
-      "location": "[parameters('location')]",
-      "properties": {}
-    },
-    {
-      "comments": "Network Security Group: [variable('nsg-mgmt')]",
-      "name": "[variables('nsg-mgmt')]",
-      "type": "Microsoft.Network/networkSecurityGroups",
-      "apiVersion": "2017-09-01",
-      "location": "[parameters('location')]",
-      "dependsOn": [
-        "[variables('mgmt-net-all-id')]",
-        "[variables('buaas-mgt-id')]",
-        "[variables('saprtr-mgt-id')]",
-        "[variables('SAP-mgt-id')]",
-        "[variables('hrs-sid-mgt-id')]",
-        "[variables('proxy-dns-mgt-id')]",
-        "[variables('mid-mgt-id')]"
-      ],
-      "properties": {
-        "securityRules": [
-          {
-            "name": "200",
-             "properties": {
-                 "description": "Allows all management   network addresses in the VNET to talk to each other",
-                 "protocol": "*",
-                 "sourcePortRange": "*",
-                 "destinationPortRange": "*",
-                 "access": "Allow",
-                 "priority": 200,
-                 "direction": "Inbound",
-                 "sourcePortRanges": [],
-                 "destinationPortRanges": [],
-                 "sourceAddressPrefixes": [],
-                 "destinationAddressPrefixes": [],
-                 "sourceApplicationSecurityGroups": [
-                     {
-                         "id":"[variables('mgmt-net-all-id')]"
-                     }
-                 ],
-                 "destinationApplicationSecurityGroups": [
-                     {
-                         "id":"[variables('mgmt-net-all-id')]"
-                     }
-                 ]
-             }
-         },
-         {
-            "name": "210",
-            "properties": {
-                "protocol": "*",
-                "sourcePortRange": "*",
-                "destinationPortRange": "*",
-                "sourceAddressPrefix": "100.64.0.0/12",
-                "access": "Allow",
-                "priority": 210,
-                "direction": "Inbound",
-                "sourcePortRanges": [],
-                "destinationPortRanges": [],
-                "sourceAddressPrefixes": [],
-                "destinationAddressPrefixes": [],
-                "destinationApplicationSecurityGroups": [
-                    {
-                        "id":"[variables('mgmt-net-all-id')]"
-                    }
-                ]
-            }
-         },
-         {
-            "name": "220",
-            "properties": {
-                "description": "Enables SSH access to   all instances from management VPC",
-                "protocol": "*",
-                "sourcePortRange": "*",
-                "destinationPortRange": "22",
-                "sourceAddressPrefix": "10.4.0.0/22",
-                "access": "Allow",
-                "priority": 220,
-                "direction": "Inbound",
-                "sourcePortRanges": [],
-                "destinationPortRanges": [],
-                "sourceAddressPrefixes": [],
-                "destinationAddressPrefixes": [],
-                "destinationApplicationSecurityGroups": [
-                    {
-                        "id":"[variables('mgmt-net-all-id')]"
-                    }
-                ]
-            }
-         },
-         {
-            "name": "300",
-            "properties": {
-                "description": "BuaaS DPA-agent    to DPA-server proxied reporting flows",
-                "protocol": "TCP",
-                "sourcePortRange": "*",
-                "destinationPortRange": "3741",
-                "sourceAddressPrefix": "10.4.0.0/22",
-                "access": "Allow",
-                "priority": 300,
-                "direction": "Inbound",
-                "sourcePortRanges": [],
-                "destinationPortRanges": [],
-                "sourceAddressPrefixes": [],
-                "destinationAddressPrefixes": [],
-                "destinationApplicationSecurityGroups": [
-                    {
-                        "id": "[variables('buaas-mgt-id')]"
-                    }
-                ]
-            }
-         },
-         {
-            "name": "Port_8080",
-            "properties": {
-                "description": "BuaaS DPA-agent    to DPA-server proxied reporting flows",
-                "protocol": "TCP",
-                "sourcePortRange": "*",
-                "destinationPortRange": "9002",
-                "sourceAddressPrefix": "10.4.0.0/22",
-                "access": "Allow",
-                "priority": 310,
-                "direction": "Inbound",
-                "sourcePortRanges": [],
-                "destinationPortRanges": [],
-                "sourceAddressPrefixes": [],
-                "destinationAddressPrefixes": [],
-                "destinationApplicationSecurityGroups": [
-                    {
-                        "id": "[variables('buaas-mgt-id')]"
-                    }
-                ]
-            }
-         },
-         {
-            "name": "320",
-            "properties": {
-                "description": "BUaaS flows from   DPA-agent/proxy in mgmt.-VPC to the BUaaS-newtorker server in customer-VPC.",
-                "protocol": "TCP",
-                "sourcePortRange": "*",
-                "destinationPortRange": "7937-9936",
-                "sourceAddressPrefix": "10.4.0.0/22",
-                "access": "Allow",
-                "priority": 320,
-                "direction": "Inbound",
-                "sourcePortRanges": [],
-                "destinationPortRanges": [],
-                "sourceAddressPrefixes": [],
-                "destinationAddressPrefixes": [],
-                "destinationApplicationSecurityGroups": [
-                    {
-                        "id": "[variables('buaas-mgt-id')]"
-                    }
-                ]
-            }
-         },
-         {
-            "name": "330",
-            "properties": {
-                "description": "BUaaS flows from  BUaaS to BUaaS in customer-VPC.",
-                "protocol": "TCP",
-                "sourcePortRange": "*",
-                "destinationPortRange": "7443",
-                "access": "Allow",
-                "priority": 330,
-                "direction": "Inbound",
-                "sourcePortRanges": [],
-                "destinationPortRanges": [],
-                "sourceAddressPrefixes": [],
-                "destinationAddressPrefixes": [],
-                "sourceApplicationSecurityGroups": [
-                    {
-                        "id": "[variables('buaas-mgt-id')]"
-                    }
-                ],
-                "destinationApplicationSecurityGroups": [
-                    {
-                        "id": "[variables('buaas-mgt-id')]"
-                    }
-                ]
-            }
-         },
-         {
-            "name": "400",
-            "properties": {
-                "description": "outbound web proxy",
-                "protocol": "TCP",
-                "sourcePortRange": "*",
-                "destinationPortRange": "8080",
-                "access": "Allow",
-                "priority": 400,
-                "direction": "Inbound",
-                "sourcePortRanges": [],
-                "destinationPortRanges": [],
-                "sourceAddressPrefixes": [],
-                "destinationAddressPrefixes": [],
-                "sourceApplicationSecurityGroups": [
-                    {
-                        "id": "[variables('mgmt-net-all-id')]"
-                    }
-                ],
-                "destinationApplicationSecurityGroups": [
-                    {
-                        "id": "[variables('saprtr-mgt-id')]"
-                    }
-                ]
-            }
-         },
-         {
-            "name": "500",
-            "properties": {
-                "description": "Intra-VPC flows   between SAP servers.",
-                "protocol": "TCP",
-                "sourcePortRange": "*",
-                "destinationPortRange": "3900-3999",
-                "access": "Allow",
-                "priority": 500,
-                "direction": "Inbound",
-                "sourcePortRanges": [],
-                "destinationPortRanges": [],
-                "sourceAddressPrefixes": [],
-                "destinationAddressPrefixes": [],
-                "sourceApplicationSecurityGroups": [
-                    {                                    
-                        "id": "[variables('SAP-mgt-id')]"
-                    }
-                ],
-                "destinationApplicationSecurityGroups": [
-                    {
-                        "id": "[variables('SAP-mgt-id')]"
-                    }
-                ]
-            }
-         },
-         {
-            "name": "510",
-            "properties": {
-                "description": "Allow LAMA access from management VPC",
-                "protocol": "TCP",
-                "sourcePortRange": "*",
-                "destinationPortRange": "1128",
-                "sourceAddressPrefix": "10.4.0.0/22",
-                "access": "Allow",
-                "priority": 510,
-                "direction": "Inbound",
-                "sourcePortRanges": [],
-                "destinationPortRanges": [],
-                "sourceAddressPrefixes": [],
-                "destinationAddressPrefixes": [],
-                "destinationApplicationSecurityGroups": [
-                    {
-                        "id": "[variables('SAP-mgt-id')]"
-                    }
-                ]
-            }
-         },
-         {
-            "name": "520",
-            "properties": {
-                "description": "Allow LAMA access   from management VPC",
-                "protocol": "TCP",
-                "sourcePortRange": "*",
-                "destinationPortRange": "1129",
-                "sourceAddressPrefix": "10.4.0.0/22",
-                "access": "Allow",
-                "priority": 520,
-                "direction": "Inbound",
-                "sourcePortRanges": [],
-                "destinationPortRanges": [],
-                "sourceAddressPrefixes": [],
-                "destinationAddressPrefixes": [],
-                "destinationApplicationSecurityGroups": [
-                    {
-                        "id": "[variables('SAP-mgt-id')]"
-                    }
-                ]
-            }
-         },
-         {
-            "name": "530",
-            "properties": {
-                "description": "Allow iSCSI access from management VPC",
-                "protocol": "TCP",
-                "sourcePortRange": "*",
-                "destinationPortRange": "3260",
-                "sourceAddressPrefix": "10.4.0.0/22",
-                "access": "Allow",
-                "priority": 530,
-                "direction": "Inbound",
-                "sourcePortRanges": [],
-                "destinationPortRanges": [],
-                "sourceAddressPrefixes": [],
-                "destinationAddressPrefixes": [],
-                "destinationApplicationSecurityGroups": [
-                    {
-                        "id": "[variables('SAP-mgt-id')]"
-                    }
-                ]
-            }
-         },
-         {
-            "name": "540",
-            "properties": {
-                "description": "Allow SAP discovery   from management VPC",
-                "protocol": "TCP",
-                "sourcePortRange": "*",
-                "destinationPortRange": "50013-59914",
-                "sourceAddressPrefix": "10.4.0.0/22",
-                "access": "Allow",
-                "priority": 540,
-                "direction": "Inbound",
-                "sourcePortRanges": [],
-                "destinationPortRanges": [],
-                "sourceAddressPrefixes": [],
-                "destinationAddressPrefixes": [],
-                "destinationApplicationSecurityGroups": [
-                    {
-                        "id": "[variables('SAP-mgt-id')]"
-                    }
-                ]
-            }
-         },
-         {
-            "name": "550",
-            "properties": {
-                "description": "Allow NFS connections from management VPC",
-                "protocol": "TCP",
-                "sourcePortRange": "*",
-                "destinationPortRange": "2049",
-                "sourceAddressPrefix": "10.4.0.0/22",
-                "access": "Allow",
-                "priority": 550,
-                "direction": "Inbound",
-                "sourcePortRanges": [],
-                "destinationPortRanges": [],
-                "sourceAddressPrefixes": [],
-                "destinationAddressPrefixes": [],
-                "destinationApplicationSecurityGroups": [
-                    {
-                        "id": "[variables('SAP-mgt-id')]"
-                    }
-                ]
-            }
-         },
-         {
-            "name": "560",
-            "properties": {
-                "description": "Allow Sybase connections from management VPC",
-                "protocol": "TCP",
-                "sourcePortRange": "*",
-                "destinationPortRange": "3600-3699",
-                "access": "Allow",
-                "priority": 560,
-                "direction": "Inbound",
-                "sourcePortRanges": [],
-                "destinationPortRanges": [],
-                "sourceAddressPrefixes": [],
-                "destinationAddressPrefixes": [],
-                "sourceApplicationSecurityGroups": [
-                    {
-                        "id": "[variables('SAP-mgt-id')]"
-                    }
-                ],
-                "destinationApplicationSecurityGroups": [
-                    {
-                        "id": "[variables('SAP-mgt-id')]"
-                    }
-                ]
-            }
-         },
-         {
-            "name": "700",
-            "properties": {
-                "description": "Allows inbound proxy connections from mgmt. VPC",
-                "protocol": "TCP",
-                "sourcePortRange": "*",
-                "destinationPortRange": "3128",
-                "sourceAddressPrefix": "10.4.0.0/22",
-                "access": "Allow",
-                "priority": 700,
-                "direction": "Inbound",
-                "sourcePortRanges": [],
-                "destinationPortRanges": [],
-                "sourceAddressPrefixes": [],
-                "destinationAddressPrefixes": [],
-                "destinationApplicationSecurityGroups": [
-                    {
-                        "id": "[variables('proxy-dns-mgt-id')]"
-                    }
-                ]
-            }
-         },
-         {
-            "name": "710",
-            "properties": {
-                "description": "Allows   inbound SAP-proxy connections from mgmt. VPC",
-                "protocol": "TCP",
-                "sourcePortRange": "*",
-                "destinationPortRange": "3299",
-                "sourceAddressPrefix": "10.4.0.0/22",
-                "access": "Allow",
-                "priority": 710,
-                "direction": "Inbound",
-                "sourcePortRanges": [],
-                "destinationPortRanges": [],
-                "sourceAddressPrefixes": [],
-                "destinationAddressPrefixes": [],
-                "destinationApplicationSecurityGroups": [
-                    {
-                        "id": "[variables('proxy-dns-mgt-id')]"
-                    }
-                ]
-            }
-         },
-         {
-            "name": "720",
-            "properties": {
-                "description": "Allows inbound DNS connections from mgmt. VPC",
-                "protocol": "UDP",
-                "sourcePortRange": "*",
-                "destinationPortRange": "53",
-                "sourceAddressPrefix": "10.4.0.0/22",
-                "access": "Allow",
-                "priority": 720,
-                "direction": "Inbound",
-                "sourcePortRanges": [],
-                "destinationPortRanges": [],
-                "sourceAddressPrefixes": [],
-                "destinationAddressPrefixes": [],
-                "destinationApplicationSecurityGroups": [
-                    {
-                        "id": "[variables('proxy-dns-mgt-id')]"
-                    }
-                ]
-            }
-         },
-         {
-            "name": "730",
-            "properties": {
-                "description": "Allows inbound DNS   connections from mgmt. VPC",
-                "protocol": "TCP",
-                "sourcePortRange": "*",
-                "destinationPortRange": "53",
-                "sourceAddressPrefix": "10.4.0.0/22",
-                "access": "Allow",
-                "priority": 730,
-                "direction": "Inbound",
-                "sourcePortRanges": [],
-                "destinationPortRanges": [],
-                "sourceAddressPrefixes": [],
-                "destinationAddressPrefixes": [],
-                "destinationApplicationSecurityGroups": [
-                    {
-                        "id": "[variables('proxy-dns-mgt-id')]"
-                    }
-                ]
-            }
-         },
-         {
-            "name": "CleanupRule",
-            "properties": {
-                "description": "Last user-defined rule in the list; explicitly drops all traffic not previously permitted.",
-                "protocol": "*",
-                "sourcePortRange": "*",
-                "destinationPortRange": "*",
-                "sourceAddressPrefix": "*",
-                "destinationAddressPrefix": "*",
-                "access": "Allow",
-                "priority": 4096,
-                "direction": "Inbound",
-                "sourcePortRanges": [],
-                "destinationPortRanges": [],
-                "sourceAddressPrefixes": [],
-                "destinationAddressPrefixes": []
-            }
-         },
-         {
-            "name": "allow_outbound",
-            "properties": {
-                "description": "test",
-                "protocol": "*",
-                "sourcePortRange": "*",
-                "destinationPortRange": "*",
-                "sourceAddressPrefix": "*",
-                "destinationAddressPrefix": "*",
-                "access": "Allow",
-                "priority": 4096,
-                "direction": "Outbound",
-                "sourcePortRanges": [],
-                "destinationPortRanges": [],
-                "sourceAddressPrefixes": [],
-                "destinationAddressPrefixes": []
-            }
-         },
-         {
-            "name": "740",
-            "properties": {
-                "description": "Allows FRUN access from mgtm VPC.",
-                "protocol": "TCP",
-                "sourcePortRange": "*",
-                "destinationPortRange": "1128",
-                "sourceAddressPrefix": "10.4.0.0/22",
-                "access": "Allow",
-                "priority": 740,
-                "direction": "Inbound",
-                "sourcePortRanges": [],
-                "destinationPortRanges": [],
-                "sourceAddressPrefixes": [],
-                "destinationAddressPrefixes": [],
-                "destinationApplicationSecurityGroups": [
-                    {
-                        "id": "[variables('proxy-dns-mgt-id')]"
-                    }
-                ]
-            }
-          },
-          {
-            "name": "750",
-            "properties": {
-                "description": "Allows FRUN access from mgtm VPC.",
-                "protocol": "TCP",
-                "sourcePortRange": "*",
-                "destinationPortRange": "1129",
-                "sourceAddressPrefix": "10.4.0.0/22",
-                "access": "Allow",
-                "priority": 750,
-                "direction": "Inbound",
-                "sourcePortRanges": [],
-                "destinationPortRanges": [],
-                "sourceAddressPrefixes": [],
-                "destinationAddressPrefixes": [],
-                "destinationApplicationSecurityGroups": [
-                    {
-                        "id": "[variables('proxy-dns-mgt-id')]"
-                    }
-                ]
-            }
-          }
-        ]
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
       }
     },
-    {
-      "comments": "Network Security Group: [variable('nsg-cust')]",            
-      "name": "[variables('nsg-cust')]",
-      "type": "Microsoft.Network/networkSecurityGroups",
-      "apiVersion": "2018-10-01",
-      "location": "[parameters('location')]",
-      "scale": null,      
-      "dependsOn": [
-      "[variables('mgmt-net-all-id')]",
-      "[variables('cust-net-all-id')]",
-      "[variables('proxy-dns-cst-id')]"
-      ],
-      "properties": {
-        "securityRules": [
-            {
-                "name": "100",
-                "properties": {
-                    "protocol": "*",
-                    "sourcePortRange": "*",
-                    "destinationPortRange": "*",
-                    "access": "Allow",
-                    "priority": 100,
-                    "direction": "Inbound",
-                    "sourcePortRanges": [],
-                    "destinationPortRanges": [],
-                    "sourceAddressPrefixes": [],
-                    "destinationAddressPrefixes": [],
-                    "sourceApplicationSecurityGroups": [
-                        {
-                            "id":"[variables('mgmt-net-all-id')]"
-                        }
-                    ],
-                    "destinationApplicationSecurityGroups": [
-                        {
-                            "id":"[variables('cust-net-all-id')]"
-                        }
-                    ]
-                }
-            },
-            {
-                "name": "410",
-                "properties": {
-                    "description": "Allows inbound proxy   connections from customer enterprise",
-                    "protocol": "TCP",
-                    "sourcePortRange": "*",
-                    "destinationPortRange": "3128",
-                    "sourceAddressPrefix": "0.0.0.0",
-                    "access": "Allow",
-                    "priority": 410,
-                    "direction": "Inbound",
-                    "sourcePortRanges": [],
-                    "destinationPortRanges": [],
-                    "sourceAddressPrefixes": [],
-                    "destinationAddressPrefixes": [],
-                    "destinationApplicationSecurityGroups": [
-                        {
-                            "id":"[variables('proxy-dns-cst-id')]"
-                        }
-                    ]
-                }
-            },
-            {
-                "name": "420",
-                "properties": {
-                    "description": "Allows inbound DNS   connections from customer enterprise",
-                    "protocol": "UDP",
-                    "sourcePortRange": "*",
-                    "destinationPortRange": "53",
-                    "sourceAddressPrefix": "0.0.0.0",
-                    "access": "Allow",
-                    "priority": 420,
-                    "direction": "Inbound",
-                    "sourcePortRanges": [],
-                    "destinationPortRanges": [],
-                    "sourceAddressPrefixes": [],
-                    "destinationAddressPrefixes": [],
-                    "destinationApplicationSecurityGroups": [
-                        {
-                            "id":"[variables('proxy-dns-cst-id')]"
-                        }
-                    ],
-                }
-            },
-            {
-                "name": "430",
-                "properties": {
-                    "description": "Allows inbound DNS   connections from customer enterprise",
-                    "protocol": "TCP",
-                    "sourcePortRange": "*",
-                    "destinationPortRange": "53",
-                    "sourceAddressPrefix": "0.0.0.0",
-                    "access": "Allow",
-                    "priority": 430,
-                    "direction": "Inbound",
-                    "sourcePortRanges": [],
-                    "destinationPortRanges": [],
-                    "sourceAddressPrefixes": [],
-                    "destinationAddressPrefixes": [],
-                    "destinationApplicationSecurityGroups": [
-                        {
-                            "id":"[variables('proxy-dns-cst-id')]"
-                        }
-                    ]
-                }
-            },
-            {
-                "name": "cleanup_rule",
-                "properties": {
-                    "description": "Azure-only \"cleanup\" rule to drop all traffic not explicitly permitted in previous rules.",
-                    "protocol": "*",
-                    "sourcePortRange": "*",
-                    "destinationPortRange": "*",
-                    "sourceAddressPrefix": "*",
-                    "destinationAddressPrefix": "*",
-                    "access": "Allow",
-                    "priority": 4096,
-                    "direction": "Inbound",
-                    "sourcePortRanges": [],
-                    "destinationPortRanges": [],
-                    "sourceAddressPrefixes": [],
-                    "destinationAddressPrefixes": []
-                }
-            },
-            {
-                "name": "allow_outbound",
-                "properties": {
-                    "protocol": "*",
-                    "sourcePortRange": "*",
-                    "destinationPortRange": "*",
-                    "sourceAddressPrefix": "*",
-                    "destinationAddressPrefix": "*",
-                    "access": "Allow",
-                    "priority": 4096,
-                    "direction": "Outbound",
-                    "sourcePortRanges": [],
-                    "destinationPortRanges": [],
-                    "sourceAddressPrefixes": [],
-                    "destinationAddressPrefixes": []
-                }
-            }
+    "variables": {
+      "asg-pub": "asg-pub",
+      "asg-pub-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('asg-pub'))]",
+      "asg-cust": "asg-cust",
+      "asg-cust-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('asg-cust'))]",
+      "asg-saprtr-pub": "asg-saprtr-pub",
+      "asg-saprtr-pub-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('asg-saprtr-pub'))]",
+      "asg-mgmt": "asg-mgmt",
+      "asg-mgmt-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('asg-mgmt'))]",
+      "asg-mid-mgt": "asg-mid-mgt",
+      "asg-mid-mgt-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('asg-mid-mgt'))]",
+      "asg-proxy-dns-cst": "asg-proxy-dns-cst",
+      "asg-proxy-dns-cst-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('asg-proxy-dns-cst'))]",
+      "asg-sap-mgt": "asg-sap-mgt",
+      "asg-sap-mgt-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('asg-sap-mgt'))]",
+      "asg-sap-cst": "asg-sap-cst",
+      "asg-sap-cst-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('asg-sap-cst'))]",
+      "asg-saprtr-mgt": "asg-saprtr-mgt",
+      "asg-saprtr-mgt-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('asg-saprtr-mgt'))]",
+      "asg-hrs-sid-mgt": "asg-hrs-sid-mgt",
+      "asg-hrs-sid-mgt-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('asg-hrs-sid-mgt'))]",
+      "asg-hrs-sid-cst": "asg-hrs-sid-cst",
+      "asg-hrs-sid-cst-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('asg-hrs-sid-cst'))]",
+      "asg-proxy-dns-mgt": "asg-proxy-dns-mgt",
+      "asg-proxy-dns-mgt-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('asg-proxy-dns-mgt'))]",
+      "asg-buaas-mgt": "asg-buaas-mgt",
+      "asg-buaas-mgt-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('asg-buaas-mgt'))]",
+      "asg-suse-mgt": "asg-suse-mgt",
+      "asg-suse-mgt-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('asg-suse-mgt'))]",
+      "asg-wd-pub": "asg-wd-pub",
+      "asg-wd-pub-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('asg-wd-pub'))]",
+      "asg-cc-pub": "asg-cc-pub",
+      "asg-cc-pub-id": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('asg-cc-pub'))]",
+      "nsg-mgmt": "nsg-mgmt",
+      "nsg-mgmt-id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsg-mgmt'))]",
+      "nsg-cust": "nsg-cust",
+      "nsg-cust-id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsg-cust'))]",
+      "nsg-pub": "nsg-pub",
+      "nsg-pub-id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsg-pub'))]",
+      "nsg-mid-mgt": "nsg-mid-mgt",
+      "nsg-mid-mgt-id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsg-mid-mgt'))]",
+      "nsg-proxy-dns-cst": "nsg-proxy-dns-cst",
+      "nsg-proxy-dns-cst-id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsg-proxy-dns-cst'))]",
+      "nsg-sap-mgt": "nsg-sap-mgt",
+      "nsg-sap-mgt-id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsg-sap-mgt'))]",
+      "nsg-sap-cst": "nsg-sap-cst",
+      "nsg-sap-cst-id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsg-sap-cst'))]",
+      "nsg-saprtr-mgt": "nsg-saprtr-mgt",
+      "nsg-saprtr-mgt-id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsg-saprtr-mgt'))]",
+      "nsg-saprtr-pub": "nsg-saprtr-pub",
+      "nsg-saprtr-pub-id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsg-saprtr-pub'))]",
+      "nsg-hrs-sid-mgt": "nsg-hrs-sid-mgt",
+      "nsg-hrs-sid-mgt-id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsg-hrs-sid-mgt'))]",
+      "nsg-hrs-sid-cst": "nsg-hrs-sid-cst",
+      "nsg-hrs-sid-cst-id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsg-hrs-sid-cst'))]",
+      "nsg-proxy-dns-mgt": "nsg-proxy-dns-mgt",
+      "nsg-proxy-dns-mgt-id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsg-proxy-dns-mgt'))]",
+      "nsg-buaas-mgt": "nsg-buaas-mgt",
+      "nsg-buaas-mgt-id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsg-buaas-mgt'))]",
+      "nsg-suse-mgt": "nsg-suse-mgt",
+      "nsg-suse-mgt-id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsg-suse-mgt'))]",
+      "nsg-wd-pub": "nsg-wd-pub",
+      "nsg-wd-pub-id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsg-wd-pub'))]",
+      "nsg-cc-pub": "nsg-cc-pub",
+      "nsg-cc-pub-id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsg-cc-pub'))]"
+
+    },
+    "resources": [
+      {
+        "comments": "Application Security Group: [variable('asg-pub')]",
+        "name": "[variables('asg-pub')]",
+        "type": "Microsoft.Network/applicationSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Application Security Group: [variable('asg-cust')]",
+        "name": "[variables('asg-cust')]",
+        "type": "Microsoft.Network/applicationSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Application Security Group: [variable('asg-mgmt')]",
+        "name": "[variables('asg-mgmt')]",
+        "type": "Microsoft.Network/applicationSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Application Security Group: [variable('asg-mid-mgt')]",
+        "name": "[variables('asg-mid-mgt')]",
+        "type": "Microsoft.Network/applicationSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Application Security Group: [variable('asg-sap-mgt')]",
+        "name": "[variables('asg-sap-mgt')]",
+        "type": "Microsoft.Network/applicationSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Application Security Group: [variable('asg-sap-cst')]",
+        "name": "[variables('asg-sap-cst')]",
+        "type": "Microsoft.Network/applicationSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Application Security Group: [variable('asg-saprtr-mgt')]",
+        "name": "[variables('asg-saprtr-mgt')]",
+        "type": "Microsoft.Network/applicationSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Application Security Group: [variable('asg-saprtr-pub')]",
+        "name": "[variables('asg-saprtr-pub')]",
+        "type": "Microsoft.Network/applicationSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Application Security Group: [variable('asg-hrs-sid-mgt')]",
+        "name": "[variables('asg-hrs-sid-mgt')]",
+        "type": "Microsoft.Network/applicationSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Application Security Group: [variable('asg-hrs-sid-cst')]",
+        "name": "[variables('asg-hrs-sid-cst')]",
+        "type": "Microsoft.Network/applicationSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Application Security Group: [variable('asg-proxy-dns-mgt')]",
+        "name": "[variables('asg-proxy-dns-mgt')]",
+        "type": "Microsoft.Network/applicationSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Application Security Group: [variable('asg-buaas-mgt')]",
+        "name": "[variables('asg-buaas-mgt')]",
+        "type": "Microsoft.Network/applicationSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Application Security Group: [variable('asg-suse-mgt')]",
+        "name": "[variables('asg-suse-mgt')]",
+        "type": "Microsoft.Network/applicationSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Application Security Group: [variable('asg-proxy-dns-cst')]",
+        "name": "[variables('asg-proxy-dns-cst')]",
+        "type": "Microsoft.Network/applicationSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Application Security Group: [variable('asg-cc-pub')]",
+        "name": "[variables('asg-cc-pub')]",
+        "type": "Microsoft.Network/applicationSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Application Security Group: [variable('asg-wd-pub')]",
+        "name": "[variables('asg-wd-pub')]",
+        "type": "Microsoft.Network/applicationSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Network Security Group: [variable('nsg-buaas-mgt')]",
+        "name": "[variables('nsg-buaas-mgt')]",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Network Security Group: [variable('nsg-saprtr-mgt')]",
+        "name": "[variables('nsg-saprtr-mgt')]",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Network Security Group: [variable('nsg-proxy-dns-mgt')]",
+        "name": "[variables('nsg-proxy-dns-mgt')]",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Network Security Group: [variable('nsg-mid-mgt')]",
+        "name": "[variables('nsg-mid-mgt')]",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Network Security Group: [variable('nsg-sap-mgt')]",
+        "name": "[variables('nsg-sap-mgt')]",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Network Security Group: [variable('nsg-hrs-sid-mgt')]",
+        "name": "[variables('nsg-hrs-sid-mgt')]",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Network Security Group: [variable('nsg-proxy-dns-cst')]",
+        "name": "[variables('nsg-proxy-dns-cst')]",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Network Security Group: [variable('nsg-sap-cst')]",
+        "name": "[variables('nsg-sap-cst')]",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Network Security Group: [variable('nsg-hrs-sid-cst')]",
+        "name": "[variables('nsg-hrs-sid-cst')]",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Network Security Group: [variable('nsg-saprtr-pub')]",
+        "name": "[variables('nsg-saprtr-pub')]",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+     {
+        "comments": "Network Security Group: [variable('nsg-cc-pub')]",
+        "name": "[variables('nsg-cc-pub')]",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Network Security Group: [variable('nsg-wd-pub')]",
+        "name": "[variables('nsg-wd-pub')]",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Network Security Group: [variable('nsg-suse-mgt')]",
+        "name": "[variables('nsg-suse-mgt')]",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {}
+      },
+      {
+        "comments": "Network Security Group: [variable('nsg-mgmt')]",
+        "name": "[variables('nsg-mgmt')]",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2017-09-01",
+        "location": "[parameters('location')]",
+        "dependsOn": [
+          "[variables('asg-mgmt-id')]"
+
+
         ],
-        "defaultSecurityRules": [
+        "properties": {
+          "securityRules": [
             {
-                "name": "AllowVnetInBound",
-                "properties": {
-                    "description": "Allow inbound traffic from all VMs in VNET",
-                    "protocol": "*",
-                    "sourcePortRange": "*",
-                    "destinationPortRange": "*",
-                    "sourceAddressPrefix": "VirtualNetwork",
-                    "destinationAddressPrefix": "VirtualNetwork",
-                    "access": "Allow",
-                    "priority": 65000,
-                    "direction": "Inbound",
-                    "sourcePortRanges": [],
-                    "destinationPortRanges": [],
-                    "sourceAddressPrefixes": [],
-                    "destinationAddressPrefixes": []
-                }
-            },
-            {
-                "name": "AllowAzureLoadBalancerInBound",
-                "properties": {
-                    "description": "Allow inbound traffic from azure load balancer",
-                    "protocol": "*",
-                    "sourcePortRange": "*",
-                    "destinationPortRange": "*",
-                    "sourceAddressPrefix": "AzureLoadBalancer",
-                    "destinationAddressPrefix": "*",
-                    "access": "Allow",
-                    "priority": 65001,
-                    "direction": "Inbound",
-                    "sourcePortRanges": [],
-                    "destinationPortRanges": [],
-                    "sourceAddressPrefixes": [],
-                    "destinationAddressPrefixes": []
-                }
-            },
-            {
-                "name": "DenyAllInBound",
-                "properties": {
-                    "description": "Deny all inbound traffic",
-                    "protocol": "*",
-                    "sourcePortRange": "*",
-                    "destinationPortRange": "*",
-                    "sourceAddressPrefix": "*",
-                    "destinationAddressPrefix": "*",
-                    "access": "Deny",
-                    "priority": 65500,
-                    "direction": "Inbound",
-                    "sourcePortRanges": [],
-                    "destinationPortRanges": [],
-                    "sourceAddressPrefixes": [],
-                    "destinationAddressPrefixes": []
-                }
-            },
-            {
-                "name": "AllowVnetOutBound",
-                "properties": {
-                    "description": "Allow outbound traffic from all VMs to all VMs in VNET",
-                    "protocol": "*",
-                    "sourcePortRange": "*",
-                    "destinationPortRange": "*",
-                    "sourceAddressPrefix": "VirtualNetwork",
-                    "destinationAddressPrefix": "VirtualNetwork",
-                    "access": "Allow",
-                    "priority": 65000,
-                    "direction": "Outbound",
-                    "sourcePortRanges": [],
-                    "destinationPortRanges": [],
-                    "sourceAddressPrefixes": [],
-                    "destinationAddressPrefixes": []
-                }
-            },
-            {
-                "name": "AllowInternetOutBound",
-                "properties": {
-                    "description": "Allow outbound traffic from all VMs to Internet",
-                    "protocol": "*",
-                    "sourcePortRange": "*",
-                    "destinationPortRange": "*",
-                    "sourceAddressPrefix": "*",
-                    "destinationAddressPrefix": "Internet",
-                    "access": "Allow",
-                    "priority": 65001,
-                    "direction": "Outbound",
-                    "sourcePortRanges": [],
-                    "destinationPortRanges": [],
-                    "sourceAddressPrefixes": [],
-                    "destinationAddressPrefixes": []
-                }
-            },
-            {
-                "name": "DenyAllOutBound",
-                "properties": {
-                    "description": "Deny all outbound traffic",
-                    "protocol": "*",
-                    "sourcePortRange": "*",
-                    "destinationPortRange": "*",
-                    "sourceAddressPrefix": "*",
-                    "destinationAddressPrefix": "*",
-                    "access": "Deny",
-                    "priority": 65500,
-                    "direction": "Outbound",
-                    "sourcePortRanges": [],
-                    "destinationPortRanges": [],
-                    "sourceAddressPrefixes": [],
-                    "destinationAddressPrefixes": []
-                }
+                "name": "mgmt-allow-all",
+                 "properties": {
+                     "description": "",
+                     "protocol": "*",
+                     "sourcePortRange": "*",
+                     "destinationPortRange": "*",
+                     "access": "Allow",
+                     "priority": 200,
+                     "direction": "Inbound",
+                     "sourceAddressPrefixes": [],
+                     "destinationAddressPrefixes": [],
+                     "sourceApplicationSecurityGroups": [
+                         {
+                             "id":"[variables('asg-mgmt-id')]"
+                         }
+                     ],
+                     "destinationApplicationSecurityGroups": [
+                         {
+                             "id":"[variables('asg-mgmt-id')]"
+                         }
+                     ]
+                 }
+             },
+           {
+              "name": "dr-mgmt-allow-all",
+              "properties": {
+                  "protocol": "*",
+                  "sourcePortRange": "*",
+                  "destinationPortRange": "*",
+                  "sourceAddressPrefix": "100.64.0.0/12",
+                  "access": "Allow",
+                  "priority": 210,
+                  "direction": "Inbound",
+                  "sourcePortRanges": [],
+                  "destinationPortRanges": [],
+                  "sourceAddressPrefixes": [],
+                  "destinationAddressPrefixes": [],
+                  "destinationApplicationSecurityGroups": [
+                      {
+                          "id":"[variables('asg-mgmt-id')]"
+                      }
+                  ]
+              }
+           },
+           {
+              "name": "ssh-mgmt-allow-all",
+              "properties": {
+                  "description": "Enables SSH access to   all instances from management VPC",
+                  "protocol": "Tcp",
+                  "sourcePortRange": "22",
+                  "destinationPortRange": "22",
+                  "sourceAddressPrefix": "10.4.0.0/22",
+                  "access": "Allow",
+                  "priority": 220,
+                  "direction": "Inbound",
+                  "sourcePortRanges": [],
+                  "destinationPortRanges": [],
+                  "sourceAddressPrefixes": [],
+                  "destinationAddressPrefixes": [],
+                  "destinationApplicationSecurityGroups": [
+                      {
+                          "id":"[variables('asg-mgmt-id')]"
+                      }
+                  ]
+              }
+           },
+           {
+              "name": "rdp-prod-mgmt-allow-all",
+              "properties": {
+                  "description": "",
+                  "protocol": "Tcp",
+                  "sourcePortRange": "3389",
+                  "destinationPortRange": "3389",
+                  "sourceAddressPrefix": "10.4.1.0/26",
+                  "access": "Allow",
+                  "priority": 230,
+                  "direction": "Inbound",
+                  "sourcePortRanges": [],
+                  "destinationPortRanges": [],
+                  "sourceAddressPrefixes": [],
+                  "destinationAddressPrefixes": [],
+                  "destinationApplicationSecurityGroups": [
+                      {
+                          "id": "[variables('asg-mgmt-id')]"
+                      }
+                  ]
+              }
+           },
+           {
+            "name": "rdp-dev-mgmt-allow-all",
+            "properties": {
+                "description": "",
+                "protocol": "Tcp",
+                "sourcePortRange": "3389",
+                "destinationPortRange": "3389",
+                "sourceAddressPrefix": "10.208.0.0/26",
+                "access": "Allow",
+                "priority": 240,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "destinationApplicationSecurityGroups": [
+                    {
+                        "id": "[variables('asg-mgmt-id')]"
+                    }
+                ]
             }
-        ]
-      }
-    },
-    {
-      "comments": "Network Security Group: [variable('nsg-pub')]",
-      "type": "Microsoft.Network/networkSecurityGroups",
-      "name": "[variables('nsg-pub')]",
-      "apiVersion": "2018-10-01",
-      "location": "[parameters('location')]",
-      "dependsOn": [
-        "[variables('pub-net-all-id')]",
-        "[variables('saprtr-mgt-id')]"
-      ],
-      "properties": {
+         },
+         {
+            "name": "rdp-test-mgmt-allow-all",
+            "properties": {
+                "description": "",
+                "protocol": "Tcp",
+                "sourcePortRange": "3389",
+                "destinationPortRange": "3389",
+                "sourceAddressPrefix": "10.208.64.0/26",
+                "access": "Allow",
+                "priority": 250,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "destinationApplicationSecurityGroups": [
+                    {
+                        "id": "[variables('asg-mgmt-id')]"
+                    }
+                ]
+            }
+         },
+           {
+              "name": "rsync-dr-mgmt-allow-all",
+              "properties": {
+                  "description": "",
+                  "protocol": "Tcp",
+                  "sourcePortRange": "873",
+                  "destinationPortRange": "873",
+                  "sourceAddressPrefix": "100.64.0.0/12",
+                  "access": "Allow",
+                  "priority": 270,
+                  "direction": "Inbound",
+                  "sourcePortRanges": [],
+                  "destinationPortRanges": [],
+                  "sourceAddressPrefixes": [],
+                  "destinationAddressPrefixes": [],
+                  "destinationApplicationSecurityGroups": [
+                      {
+                          "id": "[variables('asg-mgmt-id')]"
+                      }
+                  ]
+              }
+           },
+           {
+            "name": "tomcat-prod-mgmt-allow-all",
+            "properties": {
+                "description": "",
+                "protocol": "Tcp",
+                "sourcePortRange": "8080",
+                "destinationPortRange": "8080",
+                "sourceAddressPrefix": "10.4.1.0/26",
+                "access": "Allow",
+                "priority": 280,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "destinationApplicationSecurityGroups": [
+                    {
+                        "id": "[variables('asg-mgmt-id')]"
+                    }
+                ]
+            }
+         },
+         {
+            "name": "mgmt-deny",
+            "properties": {
+                "description": "",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Deny",
+                "priority": 4096,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": []
+            }
+         }
+          ]
+        }
+      },
+      {
+        "comments": "Network Security Group: [variable('nsg-cust')]",            
+        "name": "[variables('nsg-cust')]",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2018-10-01",
+        "location": "[parameters('location')]",
+        "scale": null,      
+        "dependsOn": [
+        "[variables('asg-cust-id')]",
+        "[variables('asg-saprtr-pub-id')]"
+        ],
+        "properties": {
           "securityRules": [
               {
-                  "name": "100",
+                  "name": "cust-allow-all",
                   "properties": {
                       "protocol": "*",
                       "sourcePortRange": "*",
@@ -966,91 +547,79 @@
                       "destinationAddressPrefixes": [],
                       "sourceApplicationSecurityGroups": [
                           {
-                              "id":"[variables('pub-net-all-id')]"
+                              "id":"[variables('asg-cust-id')]"
                           }
                       ],
                       "destinationApplicationSecurityGroups": [
                           {
-                              "id":"[variables('pub-net-all-id')]"
+                              "id":"[variables('asg-cust-id')]"
                           }
                       ]
                   }
               },
               {
-                  "name": "RDP",
-                  "properties": {
-                      "description": "temporary RDP server",
-                      "protocol": "*",
-                      "sourcePortRange": "*",
-                      "destinationPortRange": "3389",
-                      "sourceAddressPrefix": "*",
-                      "destinationAddressPrefix": "VirtualNetwork",
-                      "access": "Allow",
-                      "priority": 101,
-                      "direction": "Inbound",
-                      "sourcePortRanges": [],
-                      "destinationPortRanges": [],
-                      "sourceAddressPrefixes": [],
-                      "destinationAddressPrefixes": []
-                  }
-              },
-              {
-                  "name": "200",
-                  "properties": {
-                      "description": "Allows SAP router to   accept incoming connections from SAP HQ",
-                      "protocol": "TCP",
-                      "sourcePortRange": "*",
-                      "destinationPortRange": "3299",
-                      "sourceAddressPrefix": "0.0.0.0",
-                      "access": "Allow",
-                      "priority": 200,
-                      "direction": "Inbound",
-                      "sourcePortRanges": [],
-                      "destinationPortRanges": [],
-                      "sourceAddressPrefixes": [],
-                      "destinationAddressPrefixes": [],
-                      "destinationApplicationSecurityGroups": [
-                          {
-                              "id":"[variables('saprtr-pub-id')]"
-                          }
-                      ]
-                  }
-              },
-              {
-                  "name": "cleanup_rule",
-                  "properties": {
-                      "description": " Azure-only \"cleanup\" rule to drop all traffic not explicitly permitted in previous rules.",
-                      "protocol": "*",
-                      "sourcePortRange": "*",
-                      "destinationPortRange": "*",
-                      "sourceAddressPrefix": "*",
-                      "destinationAddressPrefix": "*",
-                      "access": "Deny",
-                      "priority": 4096,
-                      "direction": "Inbound",
-                      "sourcePortRanges": [],
-                      "destinationPortRanges": [],
-                      "sourceAddressPrefixes": [],
-                      "destinationAddressPrefixes": []
-                  }
-              },
-              {
-                  "name": "allow_outbound",
-                  "properties": {
-                      "protocol": "*",
-                      "sourcePortRange": "*",
-                      "destinationPortRange": "*",
-                      "sourceAddressPrefix": "*",
-                      "destinationAddressPrefix": "*",
-                      "access": "Allow",
-                      "priority": 4096,
-                      "direction": "Outbound",
-                      "sourcePortRanges": [],
-                      "destinationPortRanges": [],
-                      "sourceAddressPrefixes": [],
-                      "destinationAddressPrefixes": []
-                  }
-              }
+                "name": "cust-allow-supr",
+                "properties": {
+                    "protocol": "Tcp",
+                    "sourcePortRange": "3299",
+                    "destinationPortRange": "3299",
+                    "access": "Allow",
+                    "priority": 110,
+                    "direction": "Inbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [],
+                    "sourceAddressPrefixes": [],
+                    "destinationAddressPrefixes": [],
+                    "sourceApplicationSecurityGroups": [
+                        {
+                            "id":"[variables('asg-saprtr-pub-id')]"
+                        }
+                    ],
+                    "destinationApplicationSecurityGroups": [
+                        {
+                            "id":"[variables('asg-cust-id')]"
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "cust-allow-nipping",
+                "properties": {
+                    "protocol": "Tcp",
+                    "sourcePortRange": "3298",
+                    "destinationPortRange": "3298",
+                    "access": "Allow",
+                    "priority": 120,
+                    "direction": "Inbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [],
+                    "sourceAddressPrefixes": [],
+                    "destinationAddressPrefixes": [],
+                    "sourceApplicationSecurityGroups": [
+                        {
+                            "id":"[variables('asg-saprtr-pub-id')]"
+                        }
+                    ],
+                    "destinationApplicationSecurityGroups": [
+                        {
+                            "id":"[variables('asg-cust-id')]"
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "cust-deny",
+                "properties": {
+                    "protocol": "*",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "*",
+                    "access": "Deny",
+                    "priority": 4096,
+                    "direction": "Inbound",
+                    "sourceAddressPrefix": "*",
+                    "destinationAddressPrefix": "*"
+                }
+            }
           ],
           "defaultSecurityRules": [
               {
@@ -1162,7 +731,175 @@
                   }
               }
           ]
-      }            
-    }
-  ]
-}
+        }
+      },
+      {
+        "comments": "Network Security Group: [variable('nsg-pub')]",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "[variables('nsg-pub')]",
+        "apiVersion": "2018-10-01",
+        "location": "[parameters('location')]",
+        "dependsOn": [
+          "[variables('asg-pub')]"
+        ],
+        "properties": {
+            "securityRules": [
+                {
+                    "name": "pub-allow-all",
+                    "properties": {
+                        "protocol": "*",
+                        "sourcePortRange": "*",
+                        "destinationPortRange": "*",
+                        "access": "Allow",
+                        "priority": 100,
+                        "direction": "Inbound",
+                        "sourcePortRanges": [],
+                        "destinationPortRanges": [],
+                        "sourceAddressPrefixes": [],
+                        "destinationAddressPrefixes": [],
+                        "sourceApplicationSecurityGroups": [
+                            {
+                                "id":"[variables('asg-pub-id')]"
+                            }
+                        ],
+                        "destinationApplicationSecurityGroups": [
+                            {
+                                "id":"[variables('asg-pub-id')]"
+                            }
+                        ]
+                    }
+                },
+                
+                {
+                    "name": "pub-deny",
+                    "properties": {
+                        "description": "",
+                        "protocol": "*",
+                        "sourcePortRange": "*",
+                        "destinationPortRange": "*",
+                        "sourceAddressPrefix": "*",
+                        "destinationAddressPrefix": "*",
+                        "access": "Deny",
+                        "priority": 4096,
+                        "direction": "Inbound",
+                        "sourcePortRanges": [],
+                        "destinationPortRanges": [],
+                        "sourceAddressPrefixes": [],
+                        "destinationAddressPrefixes": []
+                    }
+                }
+            ],
+            "defaultSecurityRules": [
+                {
+                    "name": "AllowVnetInBound",
+                    "properties": {
+                        "description": "Allow inbound traffic from all VMs in VNET",
+                        "protocol": "*",
+                        "sourcePortRange": "*",
+                        "destinationPortRange": "*",
+                        "sourceAddressPrefix": "VirtualNetwork",
+                        "destinationAddressPrefix": "VirtualNetwork",
+                        "access": "Allow",
+                        "priority": 65000,
+                        "direction": "Inbound",
+                        "sourcePortRanges": [],
+                        "destinationPortRanges": [],
+                        "sourceAddressPrefixes": [],
+                        "destinationAddressPrefixes": []
+                    }
+                },
+                {
+                    "name": "AllowAzureLoadBalancerInBound",
+                    "properties": {
+                        "description": "Allow inbound traffic from azure load balancer",
+                        "protocol": "*",
+                        "sourcePortRange": "*",
+                        "destinationPortRange": "*",
+                        "sourceAddressPrefix": "AzureLoadBalancer",
+                        "destinationAddressPrefix": "*",
+                        "access": "Allow",
+                        "priority": 65001,
+                        "direction": "Inbound",
+                        "sourcePortRanges": [],
+                        "destinationPortRanges": [],
+                        "sourceAddressPrefixes": [],
+                        "destinationAddressPrefixes": []
+                    }
+                },
+                {
+                    "name": "DenyAllInBound",
+                    "properties": {
+                        "description": "Deny all inbound traffic",
+                        "protocol": "*",
+                        "sourcePortRange": "*",
+                        "destinationPortRange": "*",
+                        "sourceAddressPrefix": "*",
+                        "destinationAddressPrefix": "*",
+                        "access": "Deny",
+                        "priority": 65500,
+                        "direction": "Inbound",
+                        "sourcePortRanges": [],
+                        "destinationPortRanges": [],
+                        "sourceAddressPrefixes": [],
+                        "destinationAddressPrefixes": []
+                    }
+                },
+                {
+                    "name": "AllowVnetOutBound",
+                    "properties": {
+                        "description": "Allow outbound traffic from all VMs to all VMs in VNET",
+                        "protocol": "*",
+                        "sourcePortRange": "*",
+                        "destinationPortRange": "*",
+                        "sourceAddressPrefix": "VirtualNetwork",
+                        "destinationAddressPrefix": "VirtualNetwork",
+                        "access": "Allow",
+                        "priority": 65000,
+                        "direction": "Outbound",
+                        "sourcePortRanges": [],
+                        "destinationPortRanges": [],
+                        "sourceAddressPrefixes": [],
+                        "destinationAddressPrefixes": []
+                    }
+                },
+                {
+                    "name": "AllowInternetOutBound",
+                    "properties": {
+                        "description": "Allow outbound traffic from all VMs to Internet",
+                        "protocol": "*",
+                        "sourcePortRange": "*",
+                        "destinationPortRange": "*",
+                        "sourceAddressPrefix": "*",
+                        "destinationAddressPrefix": "Internet",
+                        "access": "Allow",
+                        "priority": 65001,
+                        "direction": "Outbound",
+                        "sourcePortRanges": [],
+                        "destinationPortRanges": [],
+                        "sourceAddressPrefixes": [],
+                        "destinationAddressPrefixes": []
+                    }
+                },
+                {
+                    "name": "DenyAllOutBound",
+                    "properties": {
+                        "description": "Deny all outbound traffic",
+                        "protocol": "*",
+                        "sourcePortRange": "*",
+                        "destinationPortRange": "*",
+                        "sourceAddressPrefix": "*",
+                        "destinationAddressPrefix": "*",
+                        "access": "Deny",
+                        "priority": 65500,
+                        "direction": "Outbound",
+                        "sourcePortRanges": [],
+                        "destinationPortRanges": [],
+                        "sourceAddressPrefixes": [],
+                        "destinationAddressPrefixes": []
+                    }
+                }
+            ]
+        }            
+      }
+    ]
+  }

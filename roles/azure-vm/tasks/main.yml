@@ -15,6 +15,7 @@
     resource_group: "{{azure_vm_resource_group}}"
     virtual_network: "{{azure_vm_vnet}}"
     subnet_name: "{{azure_vm_nic1_subnet}}"
+    security_group: "{{azure_vm_nic1_nsg}}"
     state: present
   register: nic1
 
@@ -25,6 +26,7 @@
     resource_group: "{{azure_vm_resource_group}}"
     virtual_network: "{{azure_vm_vnet}}"
     subnet_name: "{{azure_vm_nic2_subnet}}"
+    security_group: "{{azure_vm_nic2_nsg}}"
     state: present
   when: (azure_vm_nic2_subnet != "" ) #Check to see if two NIC's are required
   register: nic2

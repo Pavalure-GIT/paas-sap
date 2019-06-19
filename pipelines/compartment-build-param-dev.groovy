@@ -4,6 +4,7 @@ pipeline{
     parameters {
         choice choices: ['AWS', 'AZURE'], description: 'Select the cloud provider to host the compartment', name: 'cloud_provider'
         string defaultValue: '----', description: 'enter subscription', name: 'subscription', trim: true
+        string defaultValue: 'config-fixes', description: 'enter branch to build from', name: 'branch_name', trim: true
     }
 
 
@@ -12,7 +13,7 @@ pipeline{
     stages{
         stage('Check Out SCM'){
             steps{
-                git url: 'e4s@vs-ssh.visualstudio.com:v3/e4s/E4S-PublicCloud/SystemTeam', credentialsId: 'p4s-engineering', branch: 'config-fixes'
+                git url: 'e4s@vs-ssh.visualstudio.com:v3/e4s/E4S-PublicCloud/SystemTeam', credentialsId: 'p4s-engineering', branch: "${params.branch_name}"
             }
          
         }

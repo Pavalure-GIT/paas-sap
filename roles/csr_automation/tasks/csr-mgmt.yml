@@ -1,0 +1,35 @@
+---
+
+- name: Replace s3 bucket policy with updated access
+  s3_bucket:
+    name: "{{ bucket_name }}"
+    policy: "{{ lookup('template','policy.json') }}"
+    state: present
+    aws_access_key: "{{ management_access_key }}"
+    aws_secret_key: "{{ management_secret_key }}"
+
+- aws_kms_facts:
+    filters:
+      alias: "{{ key_alias }}"
+    region: "{{ vpc_region }}"
+    aws_access_key: "{{ management_access_key }}"
+    aws_secret_key: "{{ management_secret_key }}"
+  register: kms
+
+- debug: var=kms
+
+- debug: var=kms['keys'][0].key_arn
+  register: key_arn
+
+- debug: var=key_arn
+
+- name: Update kms key policy for user access
+  aws_kms: 
+  args:
+    mode: grant
+    key_arn: "{{ key_arn }}"
+    #role_name: "Allow use of the key"
+    role_arn: "arn:aws:iam::{{ customer_account }}:root"
+    grant_types: "role"
+    aws_access_key: "{{ management_access_key }}"
+    aws_secret_key: "{{ management_secret_key }}"
