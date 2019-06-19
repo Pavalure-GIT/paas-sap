@@ -1,9 +1,9 @@
 #Remove the cloudformation stack created by the CSR spoke
-- name: Delete the CSR cloudformation stack
-  cloudformation:
-    stack_name: "{{ st_name }}"
-    state: "absent"
-    region: "{{ region }}"
+#- name: Delete the CSR cloudformation stack
+#  cloudformation:
+#    stack_name: "{{ st_name }}"
+#    state: "absent"
+#    region: "{{ region }}"
 
 #Get list of Virtual Gateways for the given region
 - name: Find VGWs for Region
