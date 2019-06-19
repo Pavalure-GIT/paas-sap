@@ -33,7 +33,7 @@ pipeline{
     stages{
         stage('clone git repo'){
             steps{
-                git url: 'e4s@vs-ssh.visualstudio.com:v3/e4s/E4S-PublicCloud/SystemTeam', credentialsId: 'daivdprivatekeygit', branch:'config-fixes'
+                git url: 'e4s@vs-ssh.visualstudio.com:v3/e4s/E4S-PublicCloud/SystemTeam', credentialsId: 'p4s-engineering', branch:'config-fixes'
             }
         }
         
