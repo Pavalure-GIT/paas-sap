@@ -34,6 +34,7 @@
       vars:
         azure_vm_name: "cloudboost"
         azure_vm_resource_group: "{{ st_resource_group }}"
+        region: "{{ st_region }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
         azure_vm_vnet: "{{ st_virtual_network_name }}" 
         azure_vm_size: "{{ cloudboost_size }}"
@@ -68,6 +69,7 @@
       vars:
         azure_vm_name: "networker"
         azure_vm_resource_group: "{{ st_resource_group }}"
+        region: "{{ st_region }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
         azure_vm_vnet: "{{ st_virtual_network_name }}"
         azure_vm_size: "{{ networker_size }}"
@@ -102,6 +104,7 @@
       vars:
         azure_vm_name: "nmc"
         azure_vm_resource_group: "{{ st_resource_group }}"
+        region: "{{ st_region }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
         azure_vm_vnet: "{{ st_virtual_network_name }}"
         azure_vm_size: "{{ nmc_size }}"
@@ -136,6 +139,7 @@
       vars:
         azure_vm_name: "SAPRouter"
         azure_vm_resource_group: "{{ st_resource_group }}"
+        region: "{{ st_region }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
         azure_vm_vnet: "{{ st_virtual_network_name }}" 
         azure_vm_size: "{{ saprouter_size }}"
@@ -176,6 +180,7 @@
       vars:
         azure_vm_name: "MidServerA"
         azure_vm_resource_group: "{{ st_resource_group }}"
+        region: "{{ st_region }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
         azure_vm_vnet: "{{ st_virtual_network_name }}" 
         azure_vm_size: "{{ mids_size }}"
@@ -209,6 +214,7 @@
       vars:
         azure_vm_name: "MidServerB"
         azure_vm_resource_group: "{{ st_resource_group }}"
+        region: "{{ st_region }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
         azure_vm_vnet: "{{ st_virtual_network_name }}" 
         azure_vm_size: "{{ mids_size }}"
@@ -241,6 +247,7 @@
       vars:
         azure_vm_name: "FDE"
         azure_vm_resource_group: "{{ st_resource_group }}"
+        region: "{{ st_region }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
         azure_vm_vnet: "{{ st_virtual_network_name }}" 
         azure_vm_size: "{{ fde_size }}"
@@ -281,6 +288,7 @@
       vars:
         azure_vm_name: "SAPRouter-HA"
         azure_vm_resource_group: "{{ st_resource_group }}"
+        region: "{{ st_region }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
         azure_vm_vnet: "{{ st_virtual_network_name }}" 
         azure_vm_size: "{{ saprouter_size }}"
@@ -327,6 +335,7 @@
       vars:
         azure_vm_name: "FDE-HA"
         azure_vm_resource_group: "{{ st_resource_group }}"
+        region: "{{ st_region }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
         azure_vm_vnet: "{{ st_virtual_network_name }}" 
         azure_vm_size: "{{ fde_size }}"
@@ -403,6 +412,7 @@
       vars:
         azure_vm_name: "SAPRouter-dr"
         azure_vm_resource_group: "{{ dr_resource_group }}"
+        region: "{{ dr_region }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
         azure_vm_vnet: "{{ dr_virtual_network_name }}" 
         azure_vm_size: "{{ saprouter_size }}"
@@ -449,6 +459,7 @@
       vars:
         azure_vm_name: "MidServerA-dr"
         azure_vm_resource_group: "{{ dr_resource_group }}"
+        region: "{{ dr_region }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
         azure_vm_vnet: "{{ dr_virtual_network_name }}" 
         azure_vm_size: "{{ mids_size }}"
@@ -482,6 +493,7 @@
       vars:
         azure_vm_name: "MidServerB-dr"
         azure_vm_resource_group: "{{ dr_resource_group }}"
+        region: "{{ dr_region }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
         azure_vm_vnet: "{{ dr_virtual_network_name }}" 
         azure_vm_size: "{{ mids_size }}"
@@ -517,6 +529,7 @@
       vars:
         azure_vm_name: "FDE-dr"
         azure_vm_resource_group: "{{ dr_resource_group }}"
+        region: "{{ dr_region }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
         azure_vm_vnet: "{{ dr_virtual_network_name }}" 
         azure_vm_size: "{{ fde_size }}"
@@ -560,6 +573,7 @@
       vars:
         azure_vm_name: "SAPRouter-HA-dr"
         azure_vm_resource_group: "{{ dr_resource_group }}"
+        region: "{{ dr_region }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
         azure_vm_vnet: "{{ dr_virtual_network_name }}" 
         azure_vm_size: "{{ saprouter_size }}"
@@ -603,6 +617,7 @@
       vars:
         azure_vm_name: "FDE-HA-dr"
         azure_vm_resource_group: "{{ dr_resource_group }}"
+        region: "{{ dr_region }}"
         azure_vm_dns_resource_group: "{{ st_resource_group }}"
         azure_vm_vnet: "{{ dr_virtual_network_name }}" 
         azure_vm_size: "{{ fde_size }}"

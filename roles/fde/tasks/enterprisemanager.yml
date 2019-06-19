@@ -50,6 +50,8 @@
     object: /INSTALL_UPGRADE/SAP/WILYEM/ISAGNTJ5STD02_0-70003142.ZIP
     dest: /media/SAP/WILYEM/ISAGNTJ5STD02_0-70003142.ZIP
     mode: get
+    aws_access_key: "{{ lookup('env','MEDIA_ACCESS_KEY') }}"
+    aws_secret_key: "{{ lookup('env','MEDIA_SECRET_KEY') }}"
   environment:
     http_proxy: "http://{{ proxy_domain }}:8080"
     https_proxy: "http://{{ proxy_domain }}:8080"
@@ -61,6 +63,8 @@
     object: /INSTALL_UPGRADE/SAP/WILYEM/WILYISEM02_0-70003060.ZIP
     dest: /media/SAP/WILYEM/WILYISEM02_0-70003060.ZIP
     mode: get
+    aws_access_key: "{{ lookup('env','MEDIA_ACCESS_KEY') }}"
+    aws_secret_key: "{{ lookup('env','MEDIA_SECRET_KEY') }}"
   environment:
     http_proxy: "http://{{ proxy_domain }}:8080"
     https_proxy: "http://{{ proxy_domain }}:8080"
@@ -72,17 +76,21 @@
     object: /INSTALL_UPGRADE/SAP/WILYEM/WILYISMM02_0-70003054.ZIP
     dest: /media/SAP/WILYEM/WILYISMM02_0-70003054.ZIP
     mode: get
+    aws_access_key: "{{ lookup('env','MEDIA_ACCESS_KEY') }}"
+    aws_secret_key: "{{ lookup('env','MEDIA_SECRET_KEY') }}"
   environment:
     http_proxy: "http://{{ proxy_domain }}:8080"
     https_proxy: "http://{{ proxy_domain }}:8080"
     no_proxy: "localhost, 127.0.0.1"
 
-- name: Pull Hostagent from Meida Bucket
+- name: Pull Hostagent from Media Bucket
   aws_s3:
     bucket: p4s-binaries
     object: /INSTALL_UPGRADE/TOOLS/SAPHOSTAGENT37_37-20009394.SAR
     dest: /media/SAP/SAPHOSTAGENT37_37-20009394.SAR
     mode: get
+    aws_access_key: "{{ lookup('env','MEDIA_ACCESS_KEY') }}"
+    aws_secret_key: "{{ lookup('env','MEDIA_SECRET_KEY') }}"
   environment:
     http_proxy: "http://{{ proxy_domain }}:8080"
     https_proxy: "http://{{ proxy_domain }}:8080"
@@ -94,6 +102,8 @@
     object: /INSTALL_UPGRADE/TOOLS/SAPCAR_816-80000935.EXE
     dest: /media/SAP/SAPCAR_816-80000935.EXE
     mode: get
+    aws_access_key: "{{ lookup('env','MEDIA_ACCESS_KEY') }}"
+    aws_secret_key: "{{ lookup('env','MEDIA_SECRET_KEY') }}"
   environment:
     http_proxy: "http://{{ proxy_domain }}:8080"
     https_proxy: "http://{{ proxy_domain }}:8080"

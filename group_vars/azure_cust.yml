@@ -35,6 +35,9 @@ st_customer_dns: proto-customer.paas4sap.svcs.entsvcs.com
 st_management_reverse_dns: 24.65.172.in-addr.arpa
 st_customer_reverse_dns: 0.64.172.in-addr.arpa
 
+#Name to be given to the availability set
+availability_set_name: "P4S-Prototype-AS"
+
 #DR
 #the DR resource group in which the build will reside
 dr_resource_group: "P4S-Prototype-AutomationDR"

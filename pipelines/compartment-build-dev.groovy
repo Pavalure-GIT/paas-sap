@@ -12,7 +12,7 @@ pipeline{
     stages{
         stage('Check Out SCM'){
             steps{
-                git url: 'e4s@vs-ssh.visualstudio.com:v3/e4s/E4S-PublicCloud/SystemTeam', credentialsId: 'p4s-engineering', branch: 'config-fixes'
+                git url: 'e4s@vs-ssh.visualstudio.com:v3/e4s/E4S-PublicCloud/SystemTeam', credentialsId: 'p4s-engineering', branch: 'master'
             }
          
         }
@@ -26,8 +26,8 @@ pipeline{
             environment {
                 AWS_ACCESS_KEY = vault path: "secret/${params.subscription}/automation/aws/access_key", key: 'value', vaultUrl: 'http://10.4.0.11:8200', credentialsId: 'jenkinsreadvaulttoken'
                 AWS_SECRET_KEY = vault path: "secret/${params.subscription}/automation/aws/secret_key", key: 'value', vaultUrl: 'http://10.4.0.11:8200', credentialsId: 'jenkinsreadvaulttoken'
-                media_access_key= vault path: "secret/470172651571/automation/aws/access_key", key: 'value', vaultUrl: 'http://10.4.0.11:8200', credentialsId: 'jenkinsreadvaulttoken'
-                media_secret_key= vault path: "secret/470172651571/automation/aws/secret_key", key: 'value', vaultUrl: 'http://10.4.0.11:8200', credentialsId: 'jenkinsreadvaulttoken'
+                MEDIA_ACCESS_KEY= vault path: "secret/470172651571/automation/aws/access_key", key: 'value', vaultUrl: 'http://10.4.0.11:8200', credentialsId: 'jenkinsreadvaulttoken'
+                MEDIA_SECRET_KEY= vault path: "secret/470172651571/automation/aws/secret_key", key: 'value', vaultUrl: 'http://10.4.0.11:8200', credentialsId: 'jenkinsreadvaulttoken'
                 AWS_DEFAULT_REGION = 'us-east-1'
             }
 
@@ -43,6 +43,8 @@ pipeline{
                 pip install -r aws_requirements.txt
                 export AWS_ACCESS_KEY_ID=${env.AWS_ACCESS_KEY}
                 export AWS_SECRET_ACCESS_KEY=${env.AWS_SECRET_KEY}
+                export MEDIA_ACCESS_KEY=${env.MEDIA_ACCESS_KEY}
+                export MEDIA_SECRET_KEY=${env.MEDIA_SECRET_KEY}
                 export AWS_DEFAULT_REGION=${env.AWS_DEFAULT_REGION}
                 ansible-playbook aws-customer-full.yml --extra-vars @group_vars/awscust.yml
                 

@@ -38,24 +38,24 @@
     object: /INSTALL_UPGRADE/SAP/ROUTER/SAPCRYPTOLIBP_8521-20011697.SAR
     dest: /media/ROUTER/SAPCRYPTOLIBP_8521-20011697.SAR
     mode: get
-    aws_access_key: "{{ aws_media_access_key }}"
-    aws_secret_key: "{{ aws_media_secret_key }}"
+    aws_access_key: "{{ lookup('env','MEDIA_ACCESS_KEY') }}"
+    aws_secret_key: "{{ lookup('env','MEDIA_SECRET_KEY') }}"
 
 - aws_s3:
     bucket: p4s-binaries
     object: /INSTALL_UPGRADE/SAP/ROUTER/saprouter_113-80003478.sar
     dest: /media/ROUTER/saprouter_113-80003478.sar
     mode: get
-    aws_access_key: "{{ aws_media_access_key }}"
-    aws_secret_key: "{{ aws_media_secret_key }}"
+    aws_access_key: "{{ lookup('env','MEDIA_ACCESS_KEY') }}"
+    aws_secret_key: "{{ lookup('env','MEDIA_SECRET_KEY') }}"
     
 - aws_s3:
     bucket: p4s-binaries
     object: /INSTALL_UPGRADE/TOOLS/SAPCAR_816-80000935.EXE
     dest: /media/NW75/SAPCAR_816-80000935.EXE
     mode: get
-    aws_access_key: "{{ aws_media_access_key }}"
-    aws_secret_key: "{{ aws_media_secret_key }}"
+    aws_access_key: "{{ lookup('env','MEDIA_ACCESS_KEY') }}"
+    aws_secret_key: "{{ lookup('env','MEDIA_SECRET_KEY') }}"
 
 - file:
     path: /media

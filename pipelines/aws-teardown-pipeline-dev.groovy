@@ -10,17 +10,20 @@ pipeline{
       choice choices: ['false', 'true'], description: '', name: 'requester'
       string defaultValue: 'xx.aws.paas4sap.svcs.entsvcs.com', description: 'enter vpc short name. Value can be found with the vars file used to build the VPC or use the VPC-ID to find shortname in route53', name: 'vpc_shortname', trim: true
       string defaultValue: 'Z19T3FXREVQ890', description: 'enter vpc short name id. Use the VPC-ID to find shortname ID in route53', name: 'vpc_shortname_id', trim: true
-      string defaultValue: 'xxxxxx.aws.paas4sap.svcs.entsvcs.com', description: 'enter vpc long name. Value can be found with the vars file used to build the VPC or use the VPC-ID to find longname in route53', name: 'vpc_longname', trim: true
+      string defaultValue: 'xxxxxx.paas4sap.svcs.entsvcs.com', description: 'enter vpc long name. Value can be found with the vars file used to build the VPC or use the VPC-ID to find longname in route53', name: 'vpc_longname', trim: true
       string defaultValue: 'Z19T3FXREVEDR9', description: 'enter vpc long name id. Use the VPC-ID to find longname ID in route53', name: 'vpc_longname_id', trim: true
       string defaultValue: 'Z19T3DERRVEDR9', description: 'in-addr.arpa VPC-ID to find longname ID in route53', name: 'in_addr_arpa', trim: true
-      string defaultValue: 'vgw-0f73c280059aa00d2', description: 'gateway ID', name: 'gateway_id', trim: true
-      choice choices: ['true', 'false'], description: 'tear down DR', name: 'dr'
+      string defaultValue: '-', description: 'virtual private gateway name', name: 'vgw_name', trim: true
+      string defaultValue: 'vgw-0f73c280059aa00d2', description: 'virtual private gateway ID', name: 'gateway_id', trim: true
+      choice choices: ['transitvpc:spoke','-'], description: 'The CSR tag for the virtual private gateway', name: 'csr_tag'
+      string defaultValue: '-', description: 'Name of the CSR stack', name: 'stack_name', trim: true
+      choice choices: ['false', 'true'], description: 'tear down DR', name: 'dr'
       string defaultValue: 'vpc-0af9bf39247934d58', description: 'Enter the DR VPC ID', name: 'dr_vpc_id', trim: true
       string defaultValue: 'DR-Dev-Example', description: 'Enter the VPC Name here', name: 'dr_vpc_name', trim: true
       string defaultValue: 'us-east-2', description: 'Enter the region here', name: 'dr_region', trim: true
       choice choices: ['false','true'], description: 'dr list', name: 'dr_list'
       choice choices: ['false', 'true'], description: 'dr terminate', name: 'dr_terminate'
-
+      
 
     }
     //get keys from vault
@@ -33,7 +36,7 @@ pipeline{
     stages{
         stage('clone git repo'){
             steps{
-                git url: 'e4s@vs-ssh.visualstudio.com:v3/e4s/E4S-PublicCloud/SystemTeam', credentialsId: 'p4s-engineering', branch:'config-fixes'
+                git url: 'e4s@vs-ssh.visualstudio.com:v3/e4s/E4S-PublicCloud/SystemTeam', credentialsId: 'p4s-engineering', branch:'master'
             }
         }
         
@@ -60,7 +63,10 @@ pipeline{
 		"in-addr.arpa.": "${params.in_addr_arpa}"
 	},
 	"vpc_name": "${params.vpc_name}",
+    "vgw_name": "${params.vgw_name}",
 	"gateway_id": "${params.gateway_id}",
+    "csr_tag": "${params.csr_tag}",
+    "st_name": "${params.stack_name}",
 	"dr": "${params.dr}",
 	"dr_vpc": "${params.dr_vpc_id}",
 	"dr_vpc_name": "${params.dr_vpc_name}",

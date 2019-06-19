@@ -57,4 +57,4 @@
     propagating_vgw_ids: "{{ vgw.vgw.id }}"
 
 - pause:
-    minutes: 5
+    minutes: 8
