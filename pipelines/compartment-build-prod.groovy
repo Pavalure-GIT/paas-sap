@@ -43,6 +43,8 @@ pipeline{
                 pip install -r aws_requirements.txt
                 export AWS_ACCESS_KEY_ID=${env.AWS_ACCESS_KEY}
                 export AWS_SECRET_ACCESS_KEY=${env.AWS_SECRET_KEY}
+                export MEDIA_ACCESS_KEY=${env.MEDIA_ACCESS_KEY}
+                export MEDIA_SECRET_KEY=${env.MEDIA_SECRET_KEY}
                 export AWS_DEFAULT_REGION=${env.AWS_DEFAULT_REGION}
                 ansible-playbook aws-customer-full.yml --extra-vars @group_vars/awscust.yml
                 
