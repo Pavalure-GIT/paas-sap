@@ -22,7 +22,7 @@ pipeline{
 
         stage('git'){
             steps{
-                git credentialsId: 'daivdprivatekeygit', url: 'e4s@vs-ssh.visualstudio.com:v3/e4s/E4S-PublicCloud/SystemTeam' , branch: 'config-fixes'
+                git credentialsId: 'p4s-engineering', url: 'e4s@vs-ssh.visualstudio.com:v3/e4s/E4S-PublicCloud/SystemTeam' , branch: 'config-fixes'
             }
         }
         stage('Azure'){
