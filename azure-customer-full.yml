@@ -199,7 +199,7 @@
       vars:
         asgs:
           - { resource_group: "{{ st_resource_group }}", name: asg-mid-mgt }
-          - { resource_group: "{{ st_resource_group }}", name: asg-mgt }
+          - { resource_group: "{{ st_resource_group }}", name: asg-mgmt }
         azure_vm_nic: "MidServerA-nic1"
     
 
@@ -232,7 +232,7 @@
       vars:
         asgs:
           - { resource_group: "{{ st_resource_group }}", name: asg-mid-mgt }
-          - { resource_group: "{{ st_resource_group }}", name: asg-mgt }
+          - { resource_group: "{{ st_resource_group }}", name: asg-mgmt }
         azure_vm_nic: "MidServerB-nic1"
  
     - name: Provision FDE
@@ -429,7 +429,7 @@
       vars:
         asgs:
           - { resource_group: "{{ dr_resource_group }}", name: asg-saprtr-pub  }
-          - { resource_group: "{{ st_resource_group }}", name: asg-pub }
+          - { resource_group: "{{ dr_resource_group }}", name: asg-pub }
         azure_vm_nic: "SAPRouter-dr-nic1"
       when: dr_compartment
 
@@ -439,7 +439,7 @@
       vars:
         asgs:
           - { resource_group: "{{ dr_resource_group }}", name: asg-saprtr-mgt  }
-          - { resource_group: "{{ st_resource_group }}", name: asg-mgmt }
+          - { resource_group: "{{ dr_resource_group }}", name: asg-mgmt }
         azure_vm_nic: "SAPRouter-dr-nic2"
       when: dr_compartment
 
@@ -472,7 +472,7 @@
       vars:
         asgs:
           - { resource_group: "{{ dr_resource_group }}", name: asg-mid-mgt  }
-          - { resource_group: "{{ st_resource_group }}", name: asg-mgmt }
+          - { resource_group: "{{ dr_resource_group }}", name: asg-mgmt }
         azure_vm_nic: "MidServerA-dr-nic1"
       when: dr_compartment
 
@@ -505,7 +505,7 @@
       vars:
         asgs:
           - { resource_group: "{{ dr_resource_group }}", name: asg-mid-mgt  }
-          - { resource_group: "{{ st_resource_group }}", name: asg-mgmt }
+          - { resource_group: "{{ dr_resource_group }}", name: asg-mgmt }
         azure_vm_nic: "MidServerB-dr-nic1"
       when: dr_compartment
 
