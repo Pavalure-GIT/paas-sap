@@ -5,9 +5,9 @@ single_availability_zone: true
 #busaas is set to true if BUaaS management servers are to be created, please note this requires the correct AMIs to be shared to the subscription in advance
 buaas: false
 #dr_compartment is set to true if a DR compartment is required, this will create the compartment and peer it to the primary compartment
-dr_compartment: false
+dr_compartment: true
 #dr_single_availability_zone is set to true if only a single AZ is required for the DR compartment
-dr_single_availability_zone: false
+dr_single_availability_zone: true
 #Setting ha to true will create a second FDE and SAP Router server in AZ2
 ha: false
 #Setting ha to true will create a second FDE and SAP Router server in AZ2 for the DR compartment
@@ -87,12 +87,16 @@ mid_eth0_security_groups:
 #CSR
 customer_account: 720232237161
 vgw_owner: "System Team"
+key_alias: sandbox-csr-automation-key
 key_arn: arn:aws:kms:eu-central-1:000987835229:key/240704ea-5c16-4075-9fd0-3aeaef52e94d
 bucket_name: sandbox-csr-automation-vpnconfigs3bucket-1ul5mfqbrghku
-stack_name: ts-csr-stack
-vgw_name: ts-csr-vgw
+stack_name: cv-csr-stack
+vgw_name: cv-csr-vgw
 csr_tag: transitvpc:spoke
-key_alias: sandbox-csr-automation-key
+
+#DR CSR
+dr_stack_name: cv-csr-stack-dr
+dr_vgw_name: cv-csr-vgw-dr
 
 #BUaaS
 #Instance types and AMIs for BUaaS - The AMIs need to be pre-shared from the BUaaS Team
