@@ -1,6 +1,3 @@
-- name: test debug
-  debug:
-    msg: "it works"
 - name: create siem server
   ec2:
     image: "{{ aws_ec2_vm_image }}"
@@ -12,3 +9,8 @@
     region: "{{ aws_region }}"
     instance_tags:
       Name: "SIEM"
+  register: siem
+
+- name: test debug
+  debug:
+    msg: "{{ siem }}"
