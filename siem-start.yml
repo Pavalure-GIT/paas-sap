@@ -1,0 +1,12 @@
+---
+- name: Provision Component Machines
+  hosts: localhost
+  tasks:
+  #Provisioning  SIEM server
+    - name: Provision SIEM server
+      include_role:
+        name: siem
+      vars: 
+        aws_ec2_vm_image: "{{ siem_image }}"
+        aws_ec2_vm_instance_type: "{{ siem_instance_type }}"
+        aws_region: "{{ vpc_region }}"

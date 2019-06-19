@@ -43,6 +43,7 @@
     region: "{{ aws_ec2_vm_region }}"
     wait: true
     volumes: "{{ aws_ec2_vm_volumes }}"
+    instance_profile_name: "{{ siem_iam_role | default('')}}"
   register: ec2_vm
   when: single_nic
   
@@ -58,6 +59,7 @@
     region: "{{ aws_ec2_vm_region }}"
     wait: true
     volumes: "{{ aws_ec2_vm_volumes }}"
+    instance_profile_name: "{{ siem_iam_role | default('')}}"
   register: ec2_vm
   when: not single_nic
 

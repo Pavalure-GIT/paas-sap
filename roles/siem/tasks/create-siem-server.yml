@@ -1,0 +1,14 @@
+- name: test debug
+  debug:
+    msg: "it works"
+- name: create siem server
+  ec2:
+    image: "{{ aws_ec2_vm_image }}"
+    key_name: "e4s-automation"
+    assign_public_ip: yes
+    vpc_subnet_id: subnet-e358f0bf
+    instance_type: "{{ aws_ec2_vm_instance_type }}"
+    instance_profile_name: p4s-iam-role
+    region: "{{ aws_region }}"
+    instance_tags:
+      Name: "SIEM"

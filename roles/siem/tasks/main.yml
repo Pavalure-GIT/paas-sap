@@ -1,0 +1,4 @@
+# - name: create siem server
+#   include: create-siem-server.yml
+- name: configure siem server
+  include: configure-siem-server.yml
