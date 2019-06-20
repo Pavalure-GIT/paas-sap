@@ -57,6 +57,7 @@
     state: absent
     wait_timeout: 320
   retries: 3
+  ignore_errors: true
   when:
     - terminate
 
