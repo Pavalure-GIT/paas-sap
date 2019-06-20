@@ -1,8 +1,10 @@
 - ec2_group:
     name: SAP-mgt
     description: The interfaces of any SAP servers on any management networks must be assigned to this security group
-    vpc_id: "{{ customer_network.vpc.id }}"
+    vpc_id: "{{ sgvpcid }}"
     region: "{{ aws_customer_vpc_region }}"
+    tags:
+      Name: SAP-mgt
     rules:
       - proto: tcp
         ports: 3900 - 3999
@@ -33,8 +35,10 @@
 - ec2_group:
     name: buaas-mgt
     description: The interfaces of any BUaaS servers on any management networks must be assigned to this security group
-    vpc_id: "{{ customer_network.vpc.id }}"
+    vpc_id: "{{ sgvpcid }}"
     region: "{{ aws_customer_vpc_region }}"
+    tags:
+      Name: buaas-mgt
     rules:
       - proto: tcp
         ports: 3741
@@ -50,8 +54,10 @@
 - ec2_group:
     name: saprtr-pub
     description: The interfaces of any SAP routers on any management networks must be assigned to this security group
-    vpc_id: "{{ customer_network.vpc.id }}"
+    vpc_id: "{{ sgvpcid }}"
     region: "{{ aws_customer_vpc_region }}"
+    tags:
+      Name: saprtr-pub
     rules:
       - proto: tcp
         ports: 3299
@@ -61,8 +67,10 @@
 - ec2_group:
     name: cust-net-all
     description: Every AWS interface in the VPCs AZ1 2 3 customer networks must be assigned to this security group
-    vpc_id: "{{ customer_network.vpc.id }}"
+    vpc_id: "{{ sgvpcid }}"
     region: "{{ aws_customer_vpc_region }}"
+    tags:
+      Name: cust-net-all
     rules:
       - proto: -1
         ports: 0
@@ -78,22 +86,28 @@
 - ec2_group:
     name: hrs-sid-cst
     description: The interfaces of any HRS-SID servers on any customer networks must be assigned to this security group
-    vpc_id: "{{ customer_network.vpc.id }}"
+    vpc_id: "{{ sgvpcid }}"
     region: "{{ aws_customer_vpc_region }}"
+    tags:
+      Name: hrs-sid-cst
   register: hrs_sid_cst
 
 - ec2_group:
     name: hrs-sid-mgt
     description: The interfaces of any HRS-SID servers on any management networks must be assigned to this security group
-    vpc_id: "{{ customer_network.vpc.id }}"
+    vpc_id: "{{ sgvpcid }}"
     region: "{{ aws_customer_vpc_region }}"
+    tags:
+      Name: hrs-sid-mgt
   register: hrs_sid_mgt
 
 - ec2_group:
     name: mgmt-net-all
     description: Every AWS interface in the VPCs AZ1 2 3 management networks must be assigned to this security group
-    vpc_id: "{{ customer_network.vpc.id }}"
+    vpc_id: "{{ sgvpcid }}"
     region: "{{ aws_customer_vpc_region }}"
+    tags:
+      Name: mgmt-net-all
     rules:
       - proto: -1
         ports: 0
@@ -127,15 +141,19 @@
 - ec2_group:
     name: mid-mgt
     description: The interfaces of any MID servers on any management networks must be assigned to this security group
-    vpc_id: "{{ customer_network.vpc.id }}"
+    vpc_id: "{{ sgvpcid }}"
     region: "{{ aws_customer_vpc_region }}"
+    tags:
+      Name: mid-mgt
   register: mid_mgt
 
 - ec2_group:
     name: proxy-dns-cst
     description: The interfaces of any proxy/DNS servers on any customer networks must be assigned to this security group
-    vpc_id: "{{ customer_network.vpc.id }}"
+    vpc_id: "{{ sgvpcid }}"
     region: "{{ aws_customer_vpc_region }}"
+    tags:
+      Name: proxy-dns-cst
     rules:
       - proto: tcp
         ports: 3128
@@ -154,8 +172,10 @@
 - ec2_group:
     name: proxy-dns-mgt
     description: The interfaces of any proxy/DNS servers on any management networks must be assigned to this security group
-    vpc_id: "{{ customer_network.vpc.id }}"
+    vpc_id: "{{ sgvpcid }}"
     region: "{{ aws_customer_vpc_region }}"
+    tags:
+      Name: proxy-dns-mgt
     rules:
       - proto: tcp
         ports: 1128
@@ -183,8 +203,10 @@
 - ec2_group:
     name: pub-net-all
     description: Every AWS interface in the VPCs AZ1 2 3 public networks must be assigned to this security group
-    vpc_id: "{{ customer_network.vpc.id }}"
+    vpc_id: "{{ sgvpcid }}"
     region: "{{ aws_customer_vpc_region }}"
+    tags:
+      Name: pub-net-all
     rules:
       - proto: -1
         ports: 0
@@ -194,8 +216,10 @@
 - ec2_group:
     name: saprtr-mgt
     description: The interfaces of any SAP routers on any management networks must be assigned to this security group
-    vpc_id: "{{ customer_network.vpc.id }}"
+    vpc_id: "{{ sgvpcid }}"
     region: "{{ aws_customer_vpc_region }}"
+    tags:
+      Name: saprtr-mgt
     rules:
       - proto: tcp
         ports: 8080
@@ -208,8 +232,10 @@
 - ec2_group:
     name: SAP-cst
     description: The interfaces of any SAP servers on any customer networks must be assigned to this security group
-    vpc_id: "{{ customer_network.vpc.id }}"
+    vpc_id: "{{ sgvpcid }}"
     region: "{{ aws_customer_vpc_region }}"
+    tags:
+      Name: SAP-cst
     rules:
       - proto: tcp
         ports: 6001
