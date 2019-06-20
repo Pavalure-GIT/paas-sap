@@ -54,7 +54,7 @@
       - dest: "{{ manaz1_cidr }}"
         vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
       - dest: 0.0.0.0/0
-        gateway_id: "{{ draz1ngw }}"
+        gateway_id: "{{ az1_nat_gateway.nat_gateway_id }}"
     propagating_vgw_ids: "{{ vgw.vgw.id }}"
 
 - pause:
