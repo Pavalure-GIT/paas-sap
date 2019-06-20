@@ -44,9 +44,9 @@
       Name: "{{ vgw_name }}"
       "{{ csr_tag }}": 'true'
 
-#Pause for 1 minute while the tag is removed
+#Pause for 3 minute while the tag is removed
 - pause:
-    minutes: 2
+    minutes: 3
 
 #Remove VGW
 - name: Remove VGW
