@@ -56,6 +56,7 @@
     vpn_gateway_id: "{{ gateway_id }}"
     state: absent
     wait_timeout: 320
+  retries: 3
   when:
     - terminate
 
