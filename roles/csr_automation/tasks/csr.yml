@@ -46,6 +46,9 @@
 
 - debug: var=vgw
 
+- debug: var=az1ngw
+- debug: var=az1_nat_gateway.nat_gateway_id
+
 - ec2_vpc_route_table:
     vpc_id: "{{ vgw.vgw.vpc_id }}"
     region: "{{ vpc_region }}"
