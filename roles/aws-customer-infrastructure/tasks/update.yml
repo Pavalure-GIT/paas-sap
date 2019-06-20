@@ -1,0 +1,5 @@
+---
+#Create Security Groups for VPC
+- include_tasks: security-groups.yml
+  vars:
+    sgvpcid: "{{ existing_vpc }}"

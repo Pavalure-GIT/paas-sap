@@ -1,0 +1,12 @@
+---
+- name: Update Customer AWS Security Group Rules
+  hosts: localhost
+  tasks:
+    - name: Create VPC, Subnets, NAT Gateways, Route Tables, Security Groups and Route53 Zones
+      include_role:
+        name: aws-customer-infrastructure
+      vars:
+        update_security_groups: true
+        existing_vpc:
+        aws_customer_vpc_management_cidr:
+        aws_customer_vpc_region:
