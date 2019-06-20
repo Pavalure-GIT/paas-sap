@@ -1,45 +1,6 @@
 ---
-#Create VPC
-- ec2_vpc_net:
-    state: present
-    name: "{{ aws_customer_vpc_env_name }}"
-    cidr_block: "{{ aws_customer_vpc_cidr }}"
-    region: "{{ aws_customer_vpc_region }}"
-  register: customer_network
+- include_tasks: build.yml
+  when: not update_security_groups
 
-#Include YML to Create Subnets inside of VPC
-- include_tasks: subnets.yml
-
-#Create Internet gateway for VPC
-- ec2_vpc_igw:
-   vpc_id: "{{ customer_network.vpc.id }}"
-   region: "{{ aws_customer_vpc_region }}"
-   state: "present"
-   tags:
-     Name: "{{ aws_customer_vpc_env_name }} Internet Gateway"
-  register: igw
-
-#Create NAT Gateways for each AZ
-- include_tasks: nat-gateways.yml
-
-#Create Security Groups for VPC
-- include_tasks: security-groups.yml
-
-#Create Route Tables for each AZ when not a Single AZ customer
-- include_tasks: route-tables.yml
-  when: not single_az
-
-#Create Route Table for 1 AZ when a Single AZ customer  
-- include_tasks: route-tables-single.yml
-  when: single_az
-
-#Create Route53 DNS Zones for Management, Customer and Reverese Zones
-- include_tasks: route53.yml
-
-#Set Facts for DR Peering when dr_compartment is true
-#Set facts when creating a non DR compartment
-- include_tasks: set-facts-non-dr.yml
-  when: dr_compartment and not dr
-#Set facts when creating a DR compartment
-- include_tasks: set-facts-dr.yml
-  when: dr_compartment and dr
+- include_tasks: update.yml
+  when: update_security_groups
