@@ -42,7 +42,7 @@
     state: absent
     tags:
       Name: "{{ vgw_name }}"
-      "{{ csr_tag }}": 'true'
+      transitvpc:spoke: 'true'
 
 #Pause for 3 minute while the tag is removed
 - pause:
