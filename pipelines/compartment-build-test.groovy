@@ -12,7 +12,7 @@ pipeline{
     stages{
         stage('Check Out SCM'){
             steps{
-                git url: 'e4s@vs-ssh.visualstudio.com:v3/e4s/E4S-PublicCloud/SystemTeam', credentialsId: 'p4s-engineering', branch: 'master'
+                git url: 'e4s@vs-ssh.visualstudio.com:v3/e4s/E4S-PublicCloud/SystemTeam', credentialsId: 'davidprivatekeygit', branch: 'master'
             }
          
         }
