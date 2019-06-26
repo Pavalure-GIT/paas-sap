@@ -1,0 +1,10 @@
+- name: "Get difference from two files"
+#  gather_facts: no
+  shell: diff approved.txt exceptional.txt | grep "^<" > diff-initial.txt && sed "s/[ < ]//g;" diff-initial.txt > finallist-ids.txt 
+  args:
+    chdir: /home/sureshpavalure/stopstart/roles/aws-startstop/files
+
+
+
+
+    

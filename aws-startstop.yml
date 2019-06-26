@@ -1,0 +1,33 @@
+---
+- name: compare
+  hosts: localhost  
+  tasks:
+    - name: Call compare the files Role    
+      include_role:
+        name: aws-startstop
+        tasks_from: comp1.yml
+
+- name: stop instance
+  hosts: localhost
+  vars:
+    region: us-east-1
+    finallist: false
+  tasks:
+    - name: stop instance when finallist is set to true
+      include_role: 
+         name: aws-startstop
+         tasks_from: stop.yml
+      when: finallist
+
+- name: start instance
+  hosts: localhost
+  vars:
+    region: us-east-1
+    approved: false
+  tasks:
+    - name: start instance when approved is set to true
+      include_role:
+        name: aws-startstop
+        tasks_from: start.yml
+      when: approved
+
