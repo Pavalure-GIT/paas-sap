@@ -1,0 +1,43 @@
+
+#- name: check file exists (pip install)
+#  stat:
+#    path: /etc/zypp/repos.d/Cloud_Tools.repo
+#  register: st
+
+
+
+#- name: add repo when it doesn't exist
+#  zypper_repository:
+#    repo: 'https://download.opensuse.org/repositories/Cloud:Tools/SLE_12_SP4/Cloud:Tools.repo'
+#    state: present
+#  when: st.stat.exists == false
+
+#- zypper_repository:
+#    repo: '*'
+#    runrefresh: yes
+#    auto_import_keys: yes
+
+#- name: install pip
+#  zypper:
+##    disable_gpg_check: yes
+#    name: python-pip
+#    state: present
+
+    
+#- name: install python pexpect
+#  command: pip install pexpect==3.3
+
+
+- name: SLES 12.4 registration
+  command: sudo SUSEConnect -r "{{ SUSEConnect_reg_code }}" -e "{{ Email_address }}"
+
+- name: SUSE Manager registration
+  command: sudo SUSEConnect -p SUSE-Manager-Server/3.2/x86_64 -r "{{ SUSEManager_reg_code }}"
+
+- zypper:
+    name: '*'
+    state: latest
+ 
+
+ 
+

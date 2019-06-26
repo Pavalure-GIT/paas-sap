@@ -1,0 +1,19 @@
+---
+- name: SUMA Server Configuration
+#  hosts: suma 
+  tasks:
+    - name: Call SUMA Server Role
+      include_role:
+        name: SUMA
+      vars:
+        #This is the registration code for SUSEConnect found in SCC
+        SUSEConnect_reg_code: 5490FA1496BF2C
+        #This is the email address for main account (System-Team)
+        Email_address: e4s-publiccloud_system@dxc.com
+        #This is the registration code for SUSE Manager Service found in SCC
+        SUSEManager_reg_code: 692572E0C0DAA8
+        fstab: /dev/nvme2n1p1 /manager_storage xfs defaults,nofail 0 1
+        FQDN: $ suma-test.devs4tbs.thebodyshop.com
+        #IP address of box
+        IP: 172.17.25.204
+        Short_name: $ sumatest

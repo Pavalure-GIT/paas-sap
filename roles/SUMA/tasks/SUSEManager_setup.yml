@@ -1,0 +1,17 @@
+- name: yast hostname setup
+  lineinfile:
+    path: /etc/hostname
+    regexp: 'ip*'
+    line: '{{ FQDN }}'
+  ignore_errors: yes
+
+- name: yast Domain name setup
+  lineinfile:
+    path: /etc/hosts
+    line: "{{ item.ip }} {{ item.name}} {{ item.sname }}"
+    insertafter: # IP-Address  Full-Qualified-Hostname  Short-Hostname
+  with_items:
+    - { ip: "{{ IP }}", name: "{{ FQDN }}", sname: "{{ Short_name }}" }
+  
+- name: hostname swap
+  command: hostname -F /etc/hostname

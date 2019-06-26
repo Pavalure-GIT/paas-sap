@@ -241,3 +241,29 @@
         ports: 6001
         group_name: proxy-dns-cst
   register: SAP_cst
+
+- ec2_group:
+    name: suma-mgt
+    description: The interfaces of any SUMA servers on any management networks must be assigned to this security group
+    vpc_id: "{{ customer_network.vpc.id }}"
+    region: "{{ aws_customer_vpc_region }}"
+    rules:
+      -  proto: tcp
+         ports: 80
+         group_name: mgmt-net-all
+      -  proto: tcp
+         ports: 5269
+         group_name: mgmt-net-all
+      -  proto: tcp
+         ports: 22
+         group_name: mgmt-net-all
+      -  proto: tcp
+         ports: 5222
+         group_name: mgmt-net-all
+      -  proto: tcp
+         ports: 4505
+         group_name: mgmt-net-all
+      -  proto: tcp
+         ports: 443
+         group_name: mgmt-net-all
+  register: suma_mgt

@@ -408,6 +408,57 @@
         ttl: 300
         value: "proxy.{{ vpc_shortname }}"
         wait: yes
+
+    #The SUMA-Server VM is created, if the SUMA flag is set to true
+    - name: Provision SUMA-Server
+      include_role:
+        name: aws-ec2-vm
+      vars:
+        aws_ec2_vm_Name: SUMA-Server
+        aws_ec2_vm_region: "{{ vpc_region }}"
+        aws_ec2_vm_key_name: "{{ key_name }}"
+        aws_ec2_vm_instance_type: "{{ suma_instance_type }}"
+        aws_ec2_vm_image: "{{ suma_image }}"
+        aws_ec2_vm_eth0_groups: "{{ mgmt_net_all.group_id }}"
+        aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
+        aws_eth0_security_groups: "{{ suma_eth0_security_groups }}"
+        single_nic: true
+        aws_ec2_vm_volumes:
+          - device_name: /dev/sda1
+            volume_type: gp2
+            volume_size: 150
+          - device_name: /dev/sdb
+            volume_type: gp2
+            volume_size: 50
+          - device_name: /dev/sdc
+            volume_type: gp2
+            volume_size: 500
+      when: suma
+    #An entry is added to the management DNS zone    
+    - route53:
+        state: present
+        zone: "{{ vpc_shortname }}"
+        record: "suma-srv.{{ vpc_shortname }}"
+        type: A
+        private_zone: yes
+        ttl: 300
+        value: "{{ eth0.interface.private_ip_address }}"
+        wait: yes
+      when: suma
+    #A reverse entry is added to the reverse zone
+    - route53:
+        state: present
+        zone: in-addr.arpa
+        hosted_zone_id: "{{ reverse_zone.zone_id }}"
+        record: "{{ eth0.interface.private_ip_address | ipaddr('revdns') }}"
+        type: PTR
+        private_zone: yes
+        ttl: 300
+        value: "suma-srv.{{ vpc_shortname }}"
+        wait: yes
+      when: suma
+
+
     #SAP Router 2 VM is created, if the HA flag is set to true    
     - name: Provision SAP-2 Router ec2 VM
       include_role:
@@ -911,8 +962,7 @@
         #This is the command for the desired IP route
         static_route: route add default gw "{{ static_route_ip }}" eth1
         azure_region: West US
-        aws_media_access_key: "{{ media_access_key }}"
-        aws_media_secret_key: "{{ media_secret_key }}"
+        aws_media_access_key: "{{ media_access_key }}"##       aws_media_secret_key: "{{ media_secret_key }}"
 
 #FDE configuration ran on FDE hosts
 - name: Configure FDE Server
