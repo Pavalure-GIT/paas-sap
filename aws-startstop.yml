@@ -5,7 +5,7 @@
     - name: Call compare the files Role    
       include_role:
         name: aws-startstop
-        tasks_from: comp1.yml
+        tasks_from: compare.yml
 
 - name: stop instance
   hosts: localhost

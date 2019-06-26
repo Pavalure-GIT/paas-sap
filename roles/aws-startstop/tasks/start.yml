@@ -1,6 +1,6 @@
 - name: "read a file and store value into variable"
   set_fact:
-     file1:  "{{ lookup('file', '/home/sureshpavalure/stopstart/roles/aws-startstop/files/approved.txt').splitlines() }}"
+     file1:  "{{ lookup('file', '/home/sureshpavalure/github/SystemTeam/roles/aws-startstop/files/approved.txt').splitlines() }}"
 
 - name: EC2 instance stop when we found the instance 
   ec2_instance:
