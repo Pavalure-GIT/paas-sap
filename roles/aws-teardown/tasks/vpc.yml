@@ -130,4 +130,5 @@
        Name: "{{ vpc_name }}"
   with_items: "{{ vpc_facts.vpcs }}"
   when: terminate
+  retries: 3
 
