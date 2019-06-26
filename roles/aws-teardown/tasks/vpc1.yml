@@ -1,3 +1,9 @@
+#Get VPC facts
+- ec2_vpc_net_facts:
+    vpc_ids: "{{ vpc }}"
+    region: "{{ region }}"
+  register: vpc_facts
+
 #Remove the VPC
 - name: Remove the VPC
   ec2_vpc_net:
