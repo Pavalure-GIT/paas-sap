@@ -22,7 +22,7 @@
 - name: Remove the VPC
   local_action:
     module: ec2_vpc_net
-    vpc_id: "{{ vpc }}"
+    name: "{{ vpc_name }}"
     region: "{{ region }}"
     state: absent
     resource_tags: "{}"
