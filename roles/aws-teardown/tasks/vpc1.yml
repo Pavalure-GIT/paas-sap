@@ -5,25 +5,17 @@
   register: vpc_facts
 
 #Remove the VPC
-#- name: Remove the VPC
-#  ec2_vpc_net:
-#    name: "{{ vpc_name }}"
-#    state: absent
-#    region: "{{ region }}"
-#    cidr_block: "{{ item.cidr_block }}"
-#    purge_cidrs: yes
-#    tags:
-#       Name: "{{ vpc_name }}"
-#  with_items: "{{ vpc_facts.vpcs }}"
-#  retries: 3
-#  delay: 5
-#  when: terminate
-
 - name: Remove the VPC
-  local_action:
-    module: ec2_vpc_net
+  ec2_vpc_net:
     name: "{{ vpc_name }}"
-    region: "{{ region }}"
     state: absent
-    resource_tags: "{}"
-    wait: yes
+    region: "{{ region }}"
+    cidr_block: "{{ item.cidr_block }}"
+    purge_cidrs: yes
+    tags:
+       Name: "{{ vpc_name }}"
+  with_items: "{{ vpc_facts.vpcs }}"
+  retries: 3
+  delay: 5
+  when: terminate
+
