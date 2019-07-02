@@ -14,5 +14,5 @@
         #This is the command for the desired IP route
         static_route: route add default gw 172.17.112.1 eth1
         azure_region: West US
-        aws_media_access_key: 
-        aws_media_secret_key: 
+        aws_media_access_key:  
+        aws_media_secret_key:  
