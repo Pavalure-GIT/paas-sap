@@ -409,55 +409,6 @@
         value: "proxy.{{ vpc_shortname }}"
         wait: yes
 
-    #The SUMA-Server VM is created, if the SUMA flag is set to true
-    - name: Provision SUMA-Server
-      include_role:
-        name: aws-ec2-vm
-      vars:
-        aws_ec2_vm_Name: SUMA-Server
-        aws_ec2_vm_region: "{{ vpc_region }}"
-        aws_ec2_vm_key_name: "{{ key_name }}"
-        aws_ec2_vm_instance_type: "{{ suma_instance_type }}"
-        aws_ec2_vm_image: "{{ suma_image }}"
-        aws_ec2_vm_eth0_groups: "{{ mgmt_net_all.group_id }}"
-        aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
-        aws_eth0_security_groups: "{{ suma_eth0_security_groups }}"
-        single_nic: true
-        aws_ec2_vm_volumes:
-          - device_name: /dev/sda1
-            volume_type: gp2
-            volume_size: 150
-          - device_name: /dev/sdb
-            volume_type: gp2
-            volume_size: 50
-          - device_name: /dev/sdc
-            volume_type: gp2
-            volume_size: 500
-      when: suma
-    #An entry is added to the management DNS zone    
-    - route53:
-        state: present
-        zone: "{{ vpc_shortname }}"
-        record: "suma-srv.{{ vpc_shortname }}"
-        type: A
-        private_zone: yes
-        ttl: 300
-        value: "{{ eth0.interface.private_ip_address }}"
-        wait: yes
-      when: suma
-    #A reverse entry is added to the reverse zone
-    - route53:
-        state: present
-        zone: in-addr.arpa
-        hosted_zone_id: "{{ reverse_zone.zone_id }}"
-        record: "{{ eth0.interface.private_ip_address | ipaddr('revdns') }}"
-        type: PTR
-        private_zone: yes
-        ttl: 300
-        value: "suma-srv.{{ vpc_shortname }}"
-        wait: yes
-      when: suma
-
 
     #SAP Router 2 VM is created, if the HA flag is set to true    
     - name: Provision SAP-2 Router ec2 VM
@@ -926,6 +877,65 @@
       register: mgmt_net_all_dr
       when: dr_compartment
 
+- name: Provision Component Machines
+  hosts: localhost
+  tasks:
+    #The SUMA-Server VM is created, if the SUMA flag is set to true
+    - name: Provision SUMA-Server
+      include_role:
+        name: aws-ec2-vm
+      vars:
+        aws_ec2_vm_Name: SUMA-Server
+        aws_ec2_vm_region: "{{ vpc_region }}"
+        aws_ec2_vm_key_name: "{{ key_name }}"
+        aws_ec2_vm_instance_type: "{{ suma_instance_type }}"
+        aws_ec2_vm_image: "{{ suma_image }}"
+        aws_ec2_vm_eth0_groups: "{{ mgmt_net_all.group_id }}"
+        aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
+        aws_eth0_security_groups: "{{ suma_eth0_security_groups }}"
+        single_nic: true
+        aws_ec2_vm_volumes:
+          - device_name: /dev/sda1
+            volume_type: gp2
+            volume_size: 150
+          - device_name: /dev/sdb
+            volume_type: gp2
+            volume_size: 50
+          - device_name: /dev/sdc
+            volume_type: gp2
+            volume_size: 500
+      when: suma
+    #An entry is added to the management DNS zone
+    - route53:
+        state: present
+        zone: "{{ vpc_shortname }}"
+        record: "suma-srv.{{ vpc_shortname }}"
+        type: A
+        private_zone: yes
+        ttl: 300
+        value: "{{ eth0.interface.private_ip_address }}"
+        wait: yes
+      when: suma
+    #A reverse entry is added to the reverse zone
+    - route53:
+        state: present
+        zone: in-addr.arpa
+        hosted_zone_id: "{{ reverse_zone.zone_id }}"
+        record: "{{ eth0.interface.private_ip_address | ipaddr('revdns') }}"
+        type: PTR
+        private_zone: yes
+        ttl: 300
+        value: "suma-srv.{{ vpc_shortname }}"
+        wait: yes
+      when: suma
+      #The created instance is added to the SUMA hosts group, so it can later be configured.
+    - name: Add SUMA server to suma group
+      add_host:
+        name: "{{ eth0.interface.private_ip_address }}"
+        groups: suma
+      when: suma
+
+
 #CSR Spoke creation role ran to connect new customer compartment to desired management compartment      
 - name: CSR Spoke Creation
   hosts: localhost
@@ -965,39 +975,59 @@
         aws_media_access_key: "{{ media_access_key }}"##       aws_media_secret_key: "{{ media_secret_key }}"
 
 #FDE configuration ran on FDE hosts
-- name: Configure FDE Server
-  hosts: fde
+#- name: Configure FDE Server
+#  hosts: fde
+#  tasks:
+#    - name: Call role
+#      include_role:
+#        name: fde
+#      vars:
+#        #The customer and management subnet CIDR ranges should cover multiple AZ's if deploying on AWS, for example 172.17.104.0/21 would cover multiple AZs
+#        customer_subnet_cidr: "{{ custaz1_cidr.split('/')[0] }}/21"
+#        customer_management_subnet_cidr: "{{ manaz1_cidr.split('/')[0] }}/21"
+#        #This is the IP of the LaMa instance for the associated management compartment
+#        lama_ip: "{{ vpc_management_cidr.split('.')[0:3] | join('.') }}.41"
+#        #Customer Lan (all AZ's) of customer
+#        customer_lan: "172.16.0.0/12"
+#        #Customer Lan (all AZ's) of customer
+#        management_lan: "172.17.0.0/12"
+#        #IPs of Dev/Test DNS Forwarders
+#        dns_ip_dev: "10.4.0.5"
+#        dns_ip_test: "10.2.0.5"
+#        #DNS Zones for mangement, customer and reverse DNS
+#        management_zone: "{{ vpc_shortname }}"
+#        customer_zone: "{{ vpc_longname }}"
+#        reverse_zone: "in-addr.arpa"
+#        #Forwarder IPs for each zone, for Azure these are taken from the nameserver addresses for each zone. For AWS it is by default the x.x.x.2 of the CIDR, e.g. 172.17.104.2
+#        management_forwarders: "{{ manaz1_cidr.split('.')[0:3] | join('.') }}.2;"
+#        customer_forwarders: "{{ manaz1_cidr.split('.')[0:3] | join('.') }}.2;"
+#        reverse_forwarders: "{{ manaz1_cidr.split('.')[0:3] | join('.') }}.2;"
+#        #Forwarder IP, if Azure then 168.63.129.16, if AWS then first IP in management range, e.g. 172.17.0.2
+#        forwarder_ip: "{{ manaz1_cidr.split('.')[0:3] | join('.') }}.2"
+#        #FDE customer domain is the customer domain
+#        fde_customer_domain: "{{ vpc_longname }}"
+#        #Management IP of the FDE itself
+#        fde_ip: "{{ ansible_default_ipv4.address }}"
+#        #Set saprouter proxy address
+#        proxy_domain: "proxy.{{ vpc_shortname }}"
+#        fde_virualhostname: "fde.{{ vpc_shortname }}"
+
+#SUMA configuration ran on SUMA host
+- name: SUMA Server Configuration
+  hosts: suma
   tasks:
-    - name: Call role
+    - name: Call SUMA Server Role
       include_role:
-        name: fde
+        name: SUMA
       vars:
-        #The customer and management subnet CIDR ranges should cover multiple AZ's if deploying on AWS, for example 172.17.104.0/21 would cover multiple AZs
-        customer_subnet_cidr: "{{ custaz1_cidr.split('/')[0] }}/21"
-        customer_management_subnet_cidr: "{{ manaz1_cidr.split('/')[0] }}/21"
-        #This is the IP of the LaMa instance for the associated management compartment
-        lama_ip: "{{ vpc_management_cidr.split('.')[0:3] | join('.') }}.41"
-        #Customer Lan (all AZ's) of customer
-        customer_lan: "172.16.0.0/12"
-        #Customer Lan (all AZ's) of customer
-        management_lan: "172.17.0.0/12"
-        #IPs of Dev/Test DNS Forwarders
-        dns_ip_dev: "10.4.0.5"
-        dns_ip_test: "10.2.0.5"
-        #DNS Zones for mangement, customer and reverse DNS
-        management_zone: "{{ vpc_shortname }}"
-        customer_zone: "{{ vpc_longname }}"
-        reverse_zone: "in-addr.arpa"
-        #Forwarder IPs for each zone, for Azure these are taken from the nameserver addresses for each zone. For AWS it is by default the x.x.x.2 of the CIDR, e.g. 172.17.104.2
-        management_forwarders: "{{ manaz1_cidr.split('.')[0:3] | join('.') }}.2;"
-        customer_forwarders: "{{ manaz1_cidr.split('.')[0:3] | join('.') }}.2;"
-        reverse_forwarders: "{{ manaz1_cidr.split('.')[0:3] | join('.') }}.2;"
-        #Forwarder IP, if Azure then 168.63.129.16, if AWS then first IP in management range, e.g. 172.17.0.2
-        forwarder_ip: "{{ manaz1_cidr.split('.')[0:3] | join('.') }}.2"
-        #FDE customer domain is the customer domain
-        fde_customer_domain: "{{ vpc_longname }}"
-        #Management IP of the FDE itself
-        fde_ip: "{{ ansible_default_ipv4.address }}"
-        #Set saprouter proxy address
-        proxy_domain: "proxy.{{ vpc_shortname }}"
-        fde_virualhostname: "fde.{{ vpc_shortname }}"
+        #This is the registration code for SUSEConnect found in SCC
+        SUSEConnect_reg_code: 5490FA1496BF2C
+        #This is the email address for main account (System-Team)
+        Email_address: e4s-publiccloud_system@dxc.com
+        #This is the registration code for SUSE Manager Service found in SCC
+        SUSEManager_reg_code: 692572E0C0DAA8
+        fstab: /dev/nvme2n1p1 /manager_storage xfs defaults,nofail 0 1
+        FQDN: '{{ suma_short }}.{{ vpc_shortname }}'
+        #IP address of box
+        IP: "{{ ansible_default_ipv4.address }}"
+        Short_name: '{{ suma_short }}'

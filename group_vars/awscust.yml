@@ -5,9 +5,9 @@ single_availability_zone: true
 #busaas is set to true if BUaaS management servers are to be created, please note this requires the correct AMIs to be shared to the subscription in advance
 buaas: false
 #dr_compartment is set to true if a DR compartment is required, this will create the compartment and peer it to the primary compartment
-dr_compartment: true
+dr_compartment: false
 #dr_single_availability_zone is set to true if only a single AZ is required for the DR compartment
-dr_single_availability_zone: true
+dr_single_availability_zone: false
 #Setting ha to true will create a second FDE and SAP Router server in AZ2
 ha: false
 #Setting ha to true will create a second FDE and SAP Router server in AZ2 for the DR compartment
@@ -17,7 +17,7 @@ suma: true
 
 #Non-DR Vars
 #CIDR ranges for the Customer Primary VPC
-vpc_cidr: 172.17.24.0/21, 172.16.0.0/20, 172.16.16.0/22, 172.16.20.0/23
+vpc_cidr: 172.17.34.0/21, 172.16.0.0/20, 172.16.16.0/22, 172.16.20.0/23
 #Name to be given to Customer Primary VPC
 vpc_env_name: "Dev-Kav"
 #Region for Customer Primary VPC
@@ -27,9 +27,9 @@ pubaz1_cidr: 172.16.16.0/25
 pubaz2_cidr: 172.16.16.128/25
 pubaz3_cidr: 172.16.17.0/25
 #Management Subnet CIDR ranges for each AZ
-manaz1_cidr: 172.17.24.0/23
-manaz2_cidr: 172.17.26.0/23
-manaz3_cidr: 172.17.28.0/23
+manaz1_cidr: 172.17.34.0/23
+manaz2_cidr: 172.17.36.0/23
+manaz3_cidr: 172.17.38.0/23
 #Customer Subnet CIDR ranges for each AZ
 custaz1_cidr: 172.16.0.0/22
 custaz2_cidr: 172.16.4.0/22
@@ -118,6 +118,8 @@ buaas_eth0_security_groups:
 suma_instance_type: c5.2xlarge
 #Image to be used - this is the suse-manager byos image
 suma_image: ami-0fa907e11fe25489b
+#specific DNS short name for suma server
+suma_short: suma-srv
 #Security groups - assigned per network interface
 suma_eth0_security_groups:
   - mgmt-net-all
