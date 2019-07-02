@@ -116,7 +116,7 @@
 
 #Wait for 3 minutes to ensure components have been removed
 - pause:
-    minutes: 1
+    minutes: 3
 
 #Remove the VPC
 - name: Remove the VPC
