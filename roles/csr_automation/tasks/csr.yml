@@ -29,7 +29,8 @@
 
 - debug: var=vpc_id_value
 
-- name: Create a new unattached vgw
+#Create a new virtual private gateway with the tag for the DEV csr
+- name: Create a new unattached vgw for DEV
   ec2_vpc_vgw:
      state: present
      asn: 64513
@@ -39,9 +40,44 @@
      vpc_id: "{{ vpc.vpcs[0].vpc_id }}"
      tags:
        owner: "{{ vgw_owner }}"
-       test_transitvpc: 'true'
+       transitvpc:spoke: 'true'
      aws_access_key: "{{ lookup('env','AWS_ACCESS_KEY') }}"
      aws_secret_key: "{{ lookup('env','AWS_SECRET_KEY') }}"
+  when: csr_tag == dev
+  register: vgw
+
+#Create a new virtual private gateway with the tag for the TEST csr
+- name: Create a new unattached vgw for TEST
+  ec2_vpc_vgw:
+     state: present
+     asn: 64513
+     region: "{{ vpc_region }}"
+     name: "{{ vgw_name }}"
+     type: ipsec.1
+     vpc_id: "{{ vpc.vpcs[0].vpc_id }}"
+     tags:
+       owner: "{{ vgw_owner }}"
+       transitvpc:spoke: 'true'
+     aws_access_key: "{{ lookup('env','AWS_ACCESS_KEY') }}"
+     aws_secret_key: "{{ lookup('env','AWS_SECRET_KEY') }}"
+  when: csr_tag == test
+  register: vgw
+
+#Create a new virtual private gateway with the tag for the PROD csr
+- name: Create a new unattached vgw for PROD
+  ec2_vpc_vgw:
+     state: present
+     asn: 64513
+     region: "{{ vpc_region }}"
+     name: "{{ vgw_name }}"
+     type: ipsec.1
+     vpc_id: "{{ vpc.vpcs[0].vpc_id }}"
+     tags:
+       owner: "{{ vgw_owner }}"
+       transitvpc:devtest2: 'true'
+     aws_access_key: "{{ lookup('env','AWS_ACCESS_KEY') }}"
+     aws_secret_key: "{{ lookup('env','AWS_SECRET_KEY') }}"
+  when: csr_tag == prod
   register: vgw
 
 - debug: var=vgw

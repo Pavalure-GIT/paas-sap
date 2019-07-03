@@ -92,7 +92,7 @@ key_arn: arn:aws:kms:eu-central-1:000987835229:key/240704ea-5c16-4075-9fd0-3aeae
 bucket_name: sandbox-csr-automation-vpnconfigs3bucket-1ul5mfqbrghku
 stack_name: cv-csr-stack
 vgw_name: cv-csr-vgw
-csr_tag: transitvpc:spoke
+csr_tag: dev
 
 #DR CSR
 dr_stack_name: cv-csr-stack-dr
