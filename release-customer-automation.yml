@@ -57,12 +57,12 @@
   hosts: jenkins
   tasks:
     - stat:
-        path: /var/lib/jenkins/deployment
+        path: /var/lib/jenkins/workspace/Latest-Build/deployment
       register: deployment
 
     - name: Remove previous
       file:
-        path: /var/lib/jenkins/deployment
+        path: /var/lib/jenkins/workspace/Latest-Build/deployment
         state: absent
       become: true
       when: deployment.stat.islnk is defined
@@ -72,6 +72,7 @@
         src: /tmp/deployment
         dest: /var/lib/jenkins/workspace/Latest-Build/
       become: true
+      become_user: jenkins
 
 - name: Clean up Build Agent
   hosts: localhost
