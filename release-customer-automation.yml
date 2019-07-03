@@ -1,0 +1,95 @@
+---
+- name: Download "{{ package }}" to Build Agent and Unrar
+  hosts: localhost
+  tasks:
+    - name: Check unar is installed
+      yum:
+        name: unar
+        state: present
+      become: true
+
+    - name: Check wget is installed
+      yum:
+        name: wget
+        state: present
+      become: true
+
+    - name: Download AutomationAnsible repository from Nexus
+      shell: |
+        wget --user="{{ nexus_username }}" --password="{{ nexus_password }}" http://nexus.solutionplace.svcs.hpe.com:8081/nexus/service/local/repositories/spp/content/artifacts/"{{ package }}"/"{{ package_version }}"/"{{ package }}"-"{{ package_version }}".rar -P /tmp
+      args:
+        warn: false
+    - stat:
+        path: /tmp/deployment
+      register: deployment
+
+    - name: Remove previous
+      file:
+        path: /tmp/deployment
+        state: absent
+      become: true
+      when: deployment.stat.islnk is defined
+
+    - file:
+        path: /tmp/deployment
+        state: directory
+      become: true
+
+    - name: Unar "{{ package }}" package to Deployment Directory
+      shell: unar -f /tmp/"{{ package }}"-"{{ package_version }}".rar -o /tmp
+      become: true
+
+    - name: Move package to deployment folder
+      command: cp -R /tmp/"{{ package }}"-"{{ package_version }}"/. /tmp/deployment
+      become: true
+
+    - name: Remove "{{ package }}" rar
+      file:
+        state: absent
+        path: /tmp/"{{ package }}"-"{{ package_version }}".rar
+
+    - name: Remove "{{ package }}"
+      file:
+        state: absent
+        path: /tmp/"{{ package }}"-"{{ package_version }}"
+
+- name: Copy/Update deployment directory on Jenkins
+  hosts: jenkins
+  tasks:
+    - stat:
+        path: /var/lib/jenkins/deployment
+      register: deployment
+
+    - name: Remove previous
+      file:
+        path: /var/lib/jenkins/deployment
+        state: absent
+      become: true
+      when: deployment.stat.islnk is defined
+
+    - name: Ansible copy directory to the remote server
+      copy:
+        src: /tmp/deployment
+        dest: /var/lib/jenkins/workspace/Latest-Build/
+      become: true
+
+- name: Clean up Build Agent
+  hosts: localhost
+  tasks:
+    - name: Remove "{{ package }}" rar
+      file:
+        state: absent
+        path: "/tmp/{{ package }}-{{ package_version }}.rar"
+      become: true
+
+    - name: Remove "{{ package }}"
+      file:
+        state: absent
+        path: "/tmp/{{ package }}-{{ package_version }}"
+      become: true
+
+    - name: Remove deployment directory
+      file:
+        state: absent
+        path: /tmp/deployment
+      become: true
