@@ -128,9 +128,9 @@
     purge_cidrs: yes
     tags:
        Name: "{{ vpc_name }}"
+  retries: 5
+  delay: 20
   with_items: "{{ vpc_facts.vpcs }}"
-  retries: 3  
-  delay: 5
   when: terminate
 
 
