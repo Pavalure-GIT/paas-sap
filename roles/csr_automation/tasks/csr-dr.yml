@@ -42,8 +42,8 @@
        transitvpc:spoke: 'true'
      aws_access_key: "{{ lookup('env','AWS_ACCESS_KEY') }}"
      aws_secret_key: "{{ lookup('env','AWS_SECRET_KEY') }}"
-  when: csr_tag == 'dev'
   register: vgw
+  when: csr_tag == 'dev'
 
 #Create a new virtual private gateway with the tag for the TEST csr
 - name: Create a new unattached vgw for TEST
@@ -59,8 +59,8 @@
        transitvpc:spoke: 'true'
      aws_access_key: "{{ lookup('env','AWS_ACCESS_KEY') }}"
      aws_secret_key: "{{ lookup('env','AWS_SECRET_KEY') }}"
-  when: csr_tag == 'test'
   register: vgw
+  when: csr_tag == 'test'
 
 #Create a new virtual private gateway with the tag for the PROD csr
 - name: Create a new unattached vgw for PROD
@@ -76,8 +76,8 @@
        transitvpc:devtest2: 'true'
      aws_access_key: "{{ lookup('env','AWS_ACCESS_KEY') }}"
      aws_secret_key: "{{ lookup('env','AWS_SECRET_KEY') }}"
-  when: csr_tag == 'prod'
   register: vgw
+  when: csr_tag == 'prod'
 
 - debug: var=vgw
 
