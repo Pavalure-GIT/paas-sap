@@ -131,6 +131,7 @@
   retries: 5
   delay: 20
   with_items: "{{ vpc_facts.vpcs }}"
+  ignore_errors: yes
   when: terminate
 
 
