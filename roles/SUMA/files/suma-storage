@@ -1,0 +1,151 @@
+#!/bin/bash
+
+function usage {
+    echo "Usage: $0 <storage-disk-device>"
+    echo
+}
+
+function info {
+    echo "--> $@"
+}
+
+function assert {
+    info $@
+    exit 1
+}
+
+function linux_device {
+    local device=$(readlink $1 2>/dev/null)
+    if [ -z "$device" ];then
+        echo $1
+        return
+    fi
+    device=$(basename $device)
+    device=/dev/$device
+    echo $device
+}
+
+function check_content_signature {
+    local device=$1
+    local signature=$(blkid $device -s TYPE -o value 2>/dev/null)
+    if [ ! -z "$signature" ];then
+        assert "Found filesystem signature $signature on $device"
+    fi
+}
+
+function get_first_partition_device {
+    local device=$1
+    ## In EC2 on newer instance types attached devices are NVMe based and we
+    ## get a partition entry
+    local partition=${device}p1
+    sleep 2
+    if [ -e $partition ]; then
+        echo $partition
+        return
+    else echo ${device}1
+    fi
+    # If we are not on NVMe it just shows up as a scsi device
+#    echo ${device}1
+}
+
+function create_partition {
+    local disk=$1
+    local result=$(yes | parted $disk mklabel msdos 2>&1)
+    if [ $? != 0 ]; then
+        assert "Creating new msdos label failed: $result"
+    fi
+    local cmd_sequence=$(mktemp -t fdisk_cmd_sequence.XXXXXX)
+    for cmd in n p 1 . . w;do
+        if [ $cmd = "." ];then
+            echo >> $cmd_sequence
+            continue
+        fi
+        echo $cmd >> $cmd_sequence
+    done
+    result=$(fdisk $disk < $cmd_sequence 2>&1)
+    if [ $? != 0 ]; then
+        assert "Partition setup failed: $result"
+    fi
+    rm -f $cmd_sequence
+}
+
+function create_filesystem {
+    local part=$(get_first_partition_device $1)
+    local fs=$2
+    local tool=mkfs.$fs
+    result=$($tool -f $part 2>&1)
+    if [ $? != 0 ]; then
+        assert "$fs filesystem setup failed: $result"
+    fi
+}
+
+function move_suma_to_storage {
+    local part=$(get_first_partition_device $1)
+    local mount_point=/manager_storage
+    mkdir -p $mount_point
+    local result=$(mount $part $mount_point 2>&1)
+    if [ $? != 0 ]; then
+        assert "Mounting $part failed with $result"
+    fi
+    locations="/var/lib/spacewalk /var/lib/pgsql"
+    result=$(rsync -zav $locations $mount_point 2>&1)
+    if [ $? != 0 ]; then
+        assert "Syncing $locations failed with: $result"
+    fi
+    for location in $locations; do
+        dname=$(basename $location)
+        rm -rf $location
+        ln -s $mount_point/$dname $location
+    done
+    # also move /var/spacewalk (home of packages), if exists
+    if [ -d /var/spacewalk/packages ]; then
+        result=$(rsync -av /var/spacewalk/ ${mount_point}/spacewalk)
+        if [ $? != 0 ]; then
+            assert "Syncing /var/spacewalk failed with: $result"
+        fi
+        rm -rf /var/spacewalk
+    fi
+    ln -s $mount_point/spacewalk /var/spacewalk
+}
+
+function update_fstab {
+    local mount_point=/manager_storage
+    local part=$(get_first_partition_device $1)
+    if grep -qi $part /etc/fstab; then
+        assert "$part already added to fstab"
+    fi
+    local fs=$(blkid -s TYPE $part -o value)
+    echo "$part $mount_point $fs defaults 1 1" >> /etc/fstab
+}
+
+function main {
+    storage_disk=$(linux_device $1)
+    storage_fs=xfs
+
+    if [ -z "$storage_disk" ] || [ ! -b "$storage_disk" ];then
+        usage
+        assert "Given storage disk does not exist or is not a block device"
+    fi
+
+    if [ ! $UID = 0 ];then
+        assert "You must be root to do this"
+    fi
+
+    info "Check disk for content signature"
+    check_content_signature $storage_disk
+
+    info "Creating partition on disk $storage_disk"
+    create_partition $storage_disk
+
+    info "Creating $storage_fs filesystem"
+    create_filesystem $storage_disk $storage_fs
+
+    info "Syncing SUSE Manager directories to storage disk"
+    move_suma_to_storage $storage_disk
+
+    #info "Updating fstab"
+    #update_fstab $storage_disk
+}
+
+main $@
+

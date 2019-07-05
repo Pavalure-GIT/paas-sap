@@ -1,0 +1,39 @@
+
+#the lines below delete the current suma storage script
+- name: delete suma storage scripts
+  file:
+    path: /usr/bin/suma-storage
+    state: absent
+
+#the lines below add the modified suma storage script and change file permissions
+- name: copy suma-storage
+  copy:
+    src: files/suma-storage
+    dest: /usr/bin/suma-storage
+    owner: root
+    group: root
+    mode: 0755
+
+
+#the lines below create a partition on disk /dev/nvme2n1 and mount it on manager_storage
+- name: disk partition and mount
+  command: /usr/bin/suma-storage /dev/nvme2n1
+
+
+##the lines below will add the contents of 'line' to the end of the file and pull fstab from the playbook
+- name: modify fstab
+  lineinfile:
+    path: /etc/fstab
+    line: '{{ fstab }}'
+
+
+#the following lines use the configured partition for swap file
+- name: makeswap
+  command: mkswap /dev/nvme1n1
+
+- name: swapon
+  command: swapon /dev/nvme1n1 
+
+#the following lines update the hostname file
+- name: hostname
+  command: hostname -F /etc/hostname

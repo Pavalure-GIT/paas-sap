@@ -1,0 +1,8 @@
+#re-image and patch
+- { include: image_update.yml, become: yes }
+
+#disk partition and swap
+- { include: filesystem_config.yml, become: yes }
+
+#SUSEManager Setup
+- { include: SUSEManager_setup.yml, become: yes }
