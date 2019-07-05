@@ -128,9 +128,12 @@
     purge_cidrs: yes
     tags:
        Name: "{{ vpc_name }}"
-  retries: 5
+  retries: 3
   delay: 20
+  register: result
   with_items: "{{ vpc_facts.vpcs }}"
   when: terminate
+
+- debug: var=result
 
 
