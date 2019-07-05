@@ -877,9 +877,6 @@
       register: mgmt_net_all_dr
       when: dr_compartment
 
-- name: Provision Component Machines
-  hosts: localhost
-  tasks:
     #The SUMA-Server VM is created, if the SUMA flag is set to true
     - name: Provision SUMA-Server
       include_role:
@@ -972,7 +969,6 @@
         #This is the command for the desired IP route
         static_route: route add default gw "{{ static_route_ip }}" eth1
         azure_region: West US
-        aws_media_access_key: "{{ media_access_key }}"##       aws_media_secret_key: "{{ media_secret_key }}"
 
 #FDE configuration ran on FDE hosts
 - name: Configure FDE Server
