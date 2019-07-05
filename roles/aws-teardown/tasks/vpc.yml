@@ -131,6 +131,7 @@
   retries: 3
   delay: 20
   register: result
+  until: result is succeeded
   with_items: "{{ vpc_facts.vpcs }}"
   ignore_errors: yes
   when: terminate
