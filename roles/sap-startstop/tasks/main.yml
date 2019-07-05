@@ -1,0 +1,6 @@
+---
+- include_tasks: start.yml
+  when: action == 'start'
+
+- include_tasks: stop.yml
+  when: action == 'stop'

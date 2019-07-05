@@ -1,0 +1,11 @@
+---
+- ec2_instance_facts:
+    region: "{{ instance_region }}"
+    instance_ids:
+      - "{{ instance }}"
+  register: facts
+
+- name: Add to group
+  add_host:
+    name: "{{ facts.instances[0].network_interfaces[0].private_ip_addresses[0].private_ip_address }}"
+    groups: instances

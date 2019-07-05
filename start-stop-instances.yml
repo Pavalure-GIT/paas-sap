@@ -1,0 +1,28 @@
+---
+- name: Gather Hosts for Shutdown
+  hosts: localhost
+  tasks:
+    - name: Call role
+      include_role:
+        name: aws-gather-hosts
+      vars:
+        aws_region: us-east-1
+
+- name: Start/Stop SAP Service
+  hosts: instances
+  tasks:
+    - name: Call Start Stop
+      include_role:
+        name: sap-startstop
+      vars:
+        action: stop
+
+- name: Run Start/Stop Instances
+  hosts: localhost
+  tasks:
+    - name: Start/Stop Instance
+      include_role:
+        name: aws-startstop
+      vars:
+        action: stop
+
