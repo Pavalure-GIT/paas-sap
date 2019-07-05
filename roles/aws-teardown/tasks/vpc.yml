@@ -116,7 +116,7 @@
 
 #Wait for 3 minutes to ensure components have been removed
 - pause:
-    minutes: 3
+    minutes: 1
 
 #Remove the VPC
 - name: Remove the VPC
@@ -129,5 +129,8 @@
     tags:
        Name: "{{ vpc_name }}"
   with_items: "{{ vpc_facts.vpcs }}"
+  retries: 3  
+  delay: 5
   when: terminate
+
 
