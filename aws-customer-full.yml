@@ -975,42 +975,42 @@
         aws_media_access_key: "{{ media_access_key }}"##       aws_media_secret_key: "{{ media_secret_key }}"
 
 #FDE configuration ran on FDE hosts
-#- name: Configure FDE Server
-#  hosts: fde
-#  tasks:
-#    - name: Call role
-#      include_role:
-#        name: fde
-#      vars:
-#        #The customer and management subnet CIDR ranges should cover multiple AZ's if deploying on AWS, for example 172.17.104.0/21 would cover multiple AZs
-#        customer_subnet_cidr: "{{ custaz1_cidr.split('/')[0] }}/21"
-#        customer_management_subnet_cidr: "{{ manaz1_cidr.split('/')[0] }}/21"
-#        #This is the IP of the LaMa instance for the associated management compartment
-#        lama_ip: "{{ vpc_management_cidr.split('.')[0:3] | join('.') }}.41"
-#        #Customer Lan (all AZ's) of customer
-#        customer_lan: "172.16.0.0/12"
-#        #Customer Lan (all AZ's) of customer
-#        management_lan: "172.17.0.0/12"
-#        #IPs of Dev/Test DNS Forwarders
-#        dns_ip_dev: "10.4.0.5"
-#        dns_ip_test: "10.2.0.5"
-#        #DNS Zones for mangement, customer and reverse DNS
-#        management_zone: "{{ vpc_shortname }}"
-#        customer_zone: "{{ vpc_longname }}"
-#        reverse_zone: "in-addr.arpa"
-#        #Forwarder IPs for each zone, for Azure these are taken from the nameserver addresses for each zone. For AWS it is by default the x.x.x.2 of the CIDR, e.g. 172.17.104.2
-#        management_forwarders: "{{ manaz1_cidr.split('.')[0:3] | join('.') }}.2;"
-#        customer_forwarders: "{{ manaz1_cidr.split('.')[0:3] | join('.') }}.2;"
-#        reverse_forwarders: "{{ manaz1_cidr.split('.')[0:3] | join('.') }}.2;"
-#        #Forwarder IP, if Azure then 168.63.129.16, if AWS then first IP in management range, e.g. 172.17.0.2
-#        forwarder_ip: "{{ manaz1_cidr.split('.')[0:3] | join('.') }}.2"
-#        #FDE customer domain is the customer domain
-#        fde_customer_domain: "{{ vpc_longname }}"
-#        #Management IP of the FDE itself
-#        fde_ip: "{{ ansible_default_ipv4.address }}"
-#        #Set saprouter proxy address
-#        proxy_domain: "proxy.{{ vpc_shortname }}"
-#        fde_virualhostname: "fde.{{ vpc_shortname }}"
+- name: Configure FDE Server
+  hosts: fde
+  tasks:
+    - name: Call role
+      include_role:
+        name: fde
+      vars:
+        #The customer and management subnet CIDR ranges should cover multiple AZ's if deploying on AWS, for example 172.17.104.0/21 would cover multiple AZs
+        customer_subnet_cidr: "{{ custaz1_cidr.split('/')[0] }}/21"
+        customer_management_subnet_cidr: "{{ manaz1_cidr.split('/')[0] }}/21"
+        #This is the IP of the LaMa instance for the associated management compartment
+        lama_ip: "{{ vpc_management_cidr.split('.')[0:3] | join('.') }}.41"
+        #Customer Lan (all AZ's) of customer
+        customer_lan: "172.16.0.0/12"
+        #Customer Lan (all AZ's) of customer
+        management_lan: "172.17.0.0/12"
+        #IPs of Dev/Test DNS Forwarders
+        dns_ip_dev: "10.4.0.5"
+        dns_ip_test: "10.2.0.5"
+        #DNS Zones for mangement, customer and reverse DNS
+        management_zone: "{{ vpc_shortname }}"
+        customer_zone: "{{ vpc_longname }}"
+        reverse_zone: "in-addr.arpa"
+        #Forwarder IPs for each zone, for Azure these are taken from the nameserver addresses for each zone. For AWS it is by default the x.x.x.2 of the CIDR, e.g. 172.17.104.2
+        management_forwarders: "{{ manaz1_cidr.split('.')[0:3] | join('.') }}.2;"
+        customer_forwarders: "{{ manaz1_cidr.split('.')[0:3] | join('.') }}.2;"
+        reverse_forwarders: "{{ manaz1_cidr.split('.')[0:3] | join('.') }}.2;"
+        #Forwarder IP, if Azure then 168.63.129.16, if AWS then first IP in management range, e.g. 172.17.0.2
+        forwarder_ip: "{{ manaz1_cidr.split('.')[0:3] | join('.') }}.2"
+        #FDE customer domain is the customer domain
+        fde_customer_domain: "{{ vpc_longname }}"
+        #Management IP of the FDE itself
+        fde_ip: "{{ ansible_default_ipv4.address }}"
+        #Set saprouter proxy address
+        proxy_domain: "proxy.{{ vpc_shortname }}"
+        fde_virualhostname: "fde.{{ vpc_shortname }}"
 
 #SUMA configuration ran on SUMA host
 - name: SUMA Server Configuration
