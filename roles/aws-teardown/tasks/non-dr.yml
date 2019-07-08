@@ -4,8 +4,8 @@
 
 - include: ec2.yml
 
-- include: route53.yml
-  with_dict: "{{ route53_zones }}"
+#- include: route53.yml
+#  with_dict: "{{ route53_zones }}"
 
 - include: csr.yml
 
