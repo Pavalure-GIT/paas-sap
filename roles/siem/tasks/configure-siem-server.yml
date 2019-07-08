@@ -40,18 +40,6 @@
 
 
 
-# - name: edit cs.falconhoseclient.cfg api key
-#   lineinfile:
-#     path: /opt/crowdstrike/etc/cs.falconhoseclient.cfg
-#     regexp: '^api_key ='
-#     line: api_key = {{ crowdstrike_api_key }}
-
-# - name: edit cs.falconhoseclient.cfg api uuid
-#   lineinfile:
-#     path: /opt/crowdstrike/etc/cs.falconhoseclient.cfg
-#     regexp: '^api_uuid ='
-#     line: api_uuid = {{ crowdstrike_api_uuid }}
-
 - name: start the crowdstrike service
   service:
     name: cs.falconhoseclientd
