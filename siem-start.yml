@@ -1,13 +1,25 @@
 ---
-- name: Provision Component Machines
+- name: provision siem server
   hosts: localhost
   tasks:
-  #Provisioning  SIEM server
     - name: Provision SIEM server
       include_role:
         name: siem
+        tasks_from: create-siem-server.yml
       vars: 
         aws_ec2_vm_image: "{{ siem_image }}"
         aws_ec2_vm_instance_type: "{{ siem_instance_type }}"
         aws_region: "{{ vpc_region }}"
+
+- name: configure siem server
+  hosts: siem
+  become: yes
+  tasks:
+    - name: call role
+      include_role:
+        name: siem
+        tasks_from: configure-siem-server.yml
+
+
+
       
