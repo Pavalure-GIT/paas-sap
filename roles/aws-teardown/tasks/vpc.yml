@@ -114,9 +114,9 @@
     region: "{{ region }}"
   register: vpc_facts
 
-#Wait for 2 minutes to ensure components have been removed
+#Wait for 20 minutes to ensure components have been removed
 - pause:
-    minutes: 2
+    minutes: 20
 
 #Remove the VPC
 - name: Remove the VPC
