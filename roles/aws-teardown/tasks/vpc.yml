@@ -114,9 +114,9 @@
     region: "{{ region }}"
   register: vpc_facts
 
-#Wait for 20 minutes to ensure components have been removed
+#Wait for 25 minutes to ensure components have been removed
 - pause:
-    minutes: 20
+    minutes: 25
 
 #Remove the VPC
 - name: Remove the VPC
@@ -133,9 +133,7 @@
   register: result
   until: result is succeeded
   with_items: "{{ vpc_facts.vpcs }}"
-  ignore_errors: yes
   when: terminate
 
-- debug: var=result
 
 
