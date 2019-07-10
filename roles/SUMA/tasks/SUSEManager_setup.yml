@@ -1,0 +1,21 @@
+
+##the lines below will pull the 'FQDN' from the playbook and replace the ip address in the hostname file with it
+- name: yast hostname setup
+  lineinfile:
+    path: /etc/hostname
+    regexp: 'ip*'
+    line: '{{ FQDN }}'
+
+
+#the lines below will pull IP, FQDN and Short_name from the playbook and add them to the relevant coloumns in /etc/hosts
+- name: yast Domain name setup
+  lineinfile:
+    path: /etc/hosts
+    line: "{{ item.ip }} {{ item.name}} {{ item.sname }}"
+    insertafter: # IP-Address  Full-Qualified-Hostname  Short-Hostname
+  with_items:
+    - { ip: "{{ IP }}", name: "{{ FQDN }}", sname: "{{ Short_name }}" }
+  
+#the lines below update the hostname file
+- name: hostname swap
+  command: hostname -F /etc/hostname

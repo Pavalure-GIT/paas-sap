@@ -12,10 +12,12 @@ dr_single_availability_zone: false
 ha: false
 #Setting ha to true will create a second FDE and SAP Router server in AZ2 for the DR compartment
 dr_ha: false
+#suma is set to true if Suse Manager servers are to be created.
+suma: true
 
 #Non-DR Vars
 #CIDR ranges for the Customer Primary VPC
-vpc_cidr: 172.17.24.0/21, 172.16.0.0/20, 172.16.16.0/22, 172.16.20.0/23
+vpc_cidr: 172.17.34.0/21, 172.16.0.0/20, 172.16.16.0/22, 172.16.20.0/23
 #Name to be given to Customer Primary VPC
 vpc_env_name: "Dev-Test"
 #Region for Customer Primary VPC
@@ -25,9 +27,9 @@ pubaz1_cidr: 172.16.16.0/25
 pubaz2_cidr: 172.16.16.128/25
 pubaz3_cidr: 172.16.17.0/25
 #Management Subnet CIDR ranges for each AZ
-manaz1_cidr: 172.17.24.0/23
-manaz2_cidr: 172.17.26.0/23
-manaz3_cidr: 172.17.28.0/23
+manaz1_cidr: 172.17.34.0/23
+manaz2_cidr: 172.17.36.0/23
+manaz3_cidr: 172.17.38.0/23
 #Customer Subnet CIDR ranges for each AZ
 custaz1_cidr: 172.16.0.0/22
 custaz2_cidr: 172.16.4.0/22
@@ -44,6 +46,14 @@ vpc_shortname: ts.aws.paas4sap.svcs.entsvcs.com
 vpc_longname: test.paas4sap.svcs.entsvcs.com
 #Key to be used for the provisioned machines, this must exist on the subscription and also the machine the automation is ran from, so it can be used for machine configuration
 key_name: SystemTeamAutomation
+
+#SIEMServer
+siem: true
+siem_image: ami-6871a115
+siem_instance_type: t2.micro
+siem_eth0_security_groups:
+  - mgmt-net-all
+siem_instance_profile_name: p4s-iam-role
 
 #FDE
 #Instance type/size
@@ -110,6 +120,18 @@ buaas_cb_image: ami-3c062943
 buaas_eth0_security_groups:
   - mgmt-net-all
   - buaas-mgt
+
+#SUMAServers
+#Instance type/size
+suma_instance_type: c5.2xlarge
+#Image to be used - this is the suse-manager byos image
+suma_image: ami-0fa907e11fe25489b
+#specific DNS short name for suma server
+suma_short: suma-srv
+#Security groups - assigned per network interface
+suma_eth0_security_groups:
+  - mgmt-net-all
+  - suma-mgt
 
 #MidServers-DR
 #DR Image - For alternate region (Ohio)
