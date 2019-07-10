@@ -5,13 +5,13 @@
     filters:
       requester-vpc-info.vpc-id: "{{ vpc }}"
   register: peering
-  when: dr == true
+  when: dr == 'true'
 
 #List the Peering connection to be removed
 - name: List VPC Peer  
   debug:
     msg: "{{ peering.result[0].vpc_peering_connection_id }}"
-  when: dr == true
+  when: dr == 'true'
 
 #Delete VPC Peering connection
 - name: Delete VPC Peer
@@ -19,7 +19,7 @@
     region: "{{ region }}"
     peering_id: "{{ peering.result[0].vpc_peering_connection_id }}"
     state: absent
-  when: dr == true
+  when: dr == 'true'
 
 #Get list of subnets for given VPC/region
 - ec2_vpc_subnet_facts:
