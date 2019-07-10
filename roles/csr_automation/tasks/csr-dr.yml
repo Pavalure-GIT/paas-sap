@@ -28,12 +28,13 @@
 
 - debug: var=vpc_id_value
 
-- name: Create a new unattached vgw
+#Create a new virtual private gateway with the tag for the DEV csr
+- name: Create a new unattached vgw for DEV
   ec2_vpc_vgw:
      state: present
      asn: 64513
-     region: "{{ dr_vpc_region }}"
-     name: "{{ dr_vgw_name }}"
+     region: "{{ vpc_region }}"
+     name: "{{ vgw_name }}"
      type: ipsec.1
      vpc_id: "{{ vpc.vpcs[0].vpc_id }}"
      tags:
@@ -42,6 +43,53 @@
      aws_access_key: "{{ lookup('env','AWS_ACCESS_KEY') }}"
      aws_secret_key: "{{ lookup('env','AWS_SECRET_KEY') }}"
   register: vgw
+  when: csr_tag == 'dev'
+
+- set_fact:
+    vgw_new: "{{ vgw }}"
+  when: csr_tag == 'dev'
+
+#Create a new virtual private gateway with the tag for the TEST csr
+- name: Create a new unattached vgw for TEST
+  ec2_vpc_vgw:
+     state: present
+     asn: 64513
+     region: "{{ vpc_region }}"
+     name: "{{ vgw_name }}"
+     type: ipsec.1
+     vpc_id: "{{ vpc.vpcs[0].vpc_id }}"
+     tags:
+       owner: "{{ vgw_owner }}"
+       transitvpc:spoke: 'true'
+     aws_access_key: "{{ lookup('env','AWS_ACCESS_KEY') }}"
+     aws_secret_key: "{{ lookup('env','AWS_SECRET_KEY') }}"
+  register: vgw
+  when: csr_tag == 'test'
+
+- set_fact:
+    vgw_new: "{{ vgw }}"
+  when: csr_tag == 'test'
+
+#Create a new virtual private gateway with the tag for the PROD csr
+- name: Create a new unattached vgw for PROD
+  ec2_vpc_vgw:
+     state: present
+     asn: 64513
+     region: "{{ vpc_region }}"
+     name: "{{ vgw_name }}"
+     type: ipsec.1
+     vpc_id: "{{ vpc.vpcs[0].vpc_id }}"
+     tags:
+       owner: "{{ vgw_owner }}"
+       transitvpc:devtest2: 'true'
+     aws_access_key: "{{ lookup('env','AWS_ACCESS_KEY') }}"
+     aws_secret_key: "{{ lookup('env','AWS_SECRET_KEY') }}"
+  register: vgw
+  when: csr_tag == 'prod'
+
+- set_fact:
+    vgw_new: "{{ vgw }}"
+  when: csr_tag == 'prod'
 
 - debug: var=vgw
 
@@ -58,4 +106,4 @@
     propagating_vgw_ids: "{{ vgw.vgw.id }}"
 
 - pause:
-    minutes: 5
+    minutes: 6
