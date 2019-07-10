@@ -45,6 +45,10 @@
   register: vgw
   when: csr_tag == 'dev'
 
+- set_fact:
+    vgw_new: "{{ vgw }}"
+  when: csr_tag == 'dev'
+
 #Create a new virtual private gateway with the tag for the TEST csr
 - name: Create a new unattached vgw for TEST
   ec2_vpc_vgw:
@@ -60,6 +64,10 @@
      aws_access_key: "{{ lookup('env','AWS_ACCESS_KEY') }}"
      aws_secret_key: "{{ lookup('env','AWS_SECRET_KEY') }}"
   register: vgw
+  when: csr_tag == 'test'
+
+- set_fact:
+    vgw_new: "{{ vgw }}"
   when: csr_tag == 'test'
 
 #Create a new virtual private gateway with the tag for the PROD csr
@@ -79,6 +87,10 @@
   register: vgw
   when: csr_tag == 'prod'
 
+- set_fact:
+    vgw_new: "{{ vgw }}"
+  when: csr_tag == 'prod'
+
 - debug: var=vgw
 
 - ec2_vpc_route_table:
@@ -94,4 +106,4 @@
     propagating_vgw_ids: "{{ vgw.vgw.id }}"
 
 - pause:
-    minutes: 5
+    minutes: 6

@@ -47,7 +47,7 @@
   when: csr_tag == 'dev'
 
 - set_fact:
-    vgw: "{{ vgw }}"
+    vgw_new: "{{ vgw }}"
   when: csr_tag == 'dev'
 
 - debug: var=vgw
@@ -70,7 +70,7 @@
   when: csr_tag == 'test'
 
 - set_fact:
-    vgw: "{{ vgw }}"
+    vgw_new: "{{ vgw }}"
   when: csr_tag == 'test'
 
 - debug: var=vgw
@@ -93,7 +93,7 @@
   when: csr_tag == 'prod'
 
 - set_fact:
-    vgw: "{{ vgw }}"
+    vgw_new: "{{ vgw }}"
   when: csr_tag == 'prod'
 
 - debug: var=vgw
@@ -102,14 +102,14 @@
 - debug: var=az1_nat_gateway.nat_gateway_id
 
 - ec2_vpc_route_table:
-    vpc_id: "{{ vgw.vgw.vpc_id }}"
+    vpc_id: "{{ vgw_new.vgw.vpc_id }}"
     region: "{{ vpc_region }}"
     tags:
       Name: Management AZ1
     routes:
       - dest: 0.0.0.0/0
         gateway_id: "{{ az1_nat_gateway.nat_gateway_id }}"
-    propagating_vgw_ids: "{{ vgw.vgw.id }}"
+    propagating_vgw_ids: "{{ vgw_new.vgw.id }}"
 
 - pause:
     minutes: 8
