@@ -1,8 +1,29 @@
 #Teardown DR
 
-- {include: natgateways.yml }
+- include: natgateways.yml
+  vars:
+    vpc: "{{ dr_vpc }}"
+    vpc_name: "{{ dr_vpc_name }}"
+    region: "{{ dr_region }}"
+    list: "{{ dr_list }}"
+    terminate: "{{ dr_terminate }}"
+    requester: "{{ dr_requester }}"
+  
+- include: ec2.yml
+  vars:
+    vpc: "{{ dr_vpc }}"
+    vpc_name: "{{ dr_vpc_name }}"
+    region: "{{ dr_region }}"
+    list: "{{ dr_list }}"
+    terminate: "{{ dr_terminate }}"
+    requester: "{{ dr_requester }}"
 
-- {include: ec2.yml }
-
-- {include: vpc.yml }
+- include: vpc.yml
+  vars:
+    vpc: "{{ dr_vpc }}"
+    vpc_name: "{{ dr_vpc_name }}"
+    region: "{{ dr_region }}"
+    list: "{{ dr_list }}"
+    terminate: "{{ dr_terminate }}"
+    requester: "{{ dr_requester }}"
 
