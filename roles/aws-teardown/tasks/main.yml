@@ -4,7 +4,7 @@
 #Run the teardown a second time for DR
 - include: dr.yml
   vars:
-    vpc: "{{ dr_vpc }}"
+    vpc: "{{ dr_vpc_id }}"
     vpc_name: "{{ dr_vpc_name }}"
     region: "{{ dr_region }}"
     list: "{{ dr_list }}"
