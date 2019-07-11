@@ -2,7 +2,7 @@
 
 - include: natgateways.yml
   vars:
-    vpc: "{{ dr_vpc }}"
+    vpc: "{{ dr_vpc_id }}"
     vpc_name: "{{ dr_vpc_name }}"
     region: "{{ dr_region }}"
     list: "{{ dr_list }}"
@@ -11,7 +11,7 @@
   
 - include: ec2.yml
   vars:
-    vpc: "{{ dr_vpc }}"
+    vpc: "{{ dr_vpc_id }}"
     vpc_name: "{{ dr_vpc_name }}"
     region: "{{ dr_region }}"
     list: "{{ dr_list }}"
@@ -20,7 +20,7 @@
 
 - include: vpc.yml
   vars:
-    vpc: "{{ dr_vpc }}"
+    vpc: "{{ dr_vpc_id }}"
     vpc_name: "{{ dr_vpc_name }}"
     region: "{{ dr_region }}"
     list: "{{ dr_list }}"
