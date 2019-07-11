@@ -1,5 +1,7 @@
 #Teardown DR
 
+- debug: var=vpc
+
 - {include: natgateways.yml }
 
 - {include: ec2.yml }
