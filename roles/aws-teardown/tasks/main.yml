@@ -1,5 +1,12 @@
 #Tear down the non-dr customer build
 #- include: non-dr.yml
+  vars:
+    vpc: "{{ st_vpc_id }}"
+    vpc_name: "{{ st_vpc_name }}"
+    region: "{{ st_region }}"
+    list: "{{ st_list }}"
+    terminate: "{{ st_terminate }}"
+    requester: "{{ st_requester }}"
 
 #Run the teardown a second time for DR
 - include: dr.yml

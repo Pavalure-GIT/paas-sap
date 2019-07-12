@@ -2,12 +2,12 @@ pipeline{
     agent any
 
     parameters{
-      string defaultValue: 'vpc name', description: 'Enter the VPC Name here', name: 'vpc_name', trim: true
-      string defaultValue: 'vpc-0944347d3badefgte', description: 'Enter the VPC ID here', name: 'vpc_id', trim: true
-      string defaultValue: 'region name', description: 'Enter the region Name here', name: 'region', trim: true
-      choice choices: ['true', 'false'], description: '', name: 'list'
-      choice choices: ['true', 'false'], description: '', name: 'terminate'
-      choice choices: ['false', 'true'], description: '', name: 'requester'
+      string defaultValue: 'vpc name', description: 'Enter the VPC Name here', name: 'st_vpc_name', trim: true
+      string defaultValue: 'vpc-0944347d3badefgte', description: 'Enter the VPC ID here', name: 'st_vpc_id', trim: true
+      string defaultValue: 'region name', description: 'Enter the region Name here', name: 'st_region', trim: true
+      choice choices: ['true', 'false'], description: '', name: 'st_list'
+      choice choices: ['true', 'false'], description: '', name: 'st_terminate'
+      choice choices: ['false', 'true'], description: '', name: 'st_requester'
       string defaultValue: 'xx.aws.paas4sap.svcs.entsvcs.com', description: 'enter vpc short name. Value can be found with the vars file used to build the VPC or use the VPC-ID to find shortname in route53', name: 'vpc_shortname', trim: true
       string defaultValue: 'Z19T3FXREVQ890', description: 'enter vpc short name id. Use the VPC-ID to find shortname ID in route53', name: 'vpc_shortname_id', trim: true
       string defaultValue: 'xxxxxx.paas4sap.svcs.entsvcs.com', description: 'enter vpc long name. Value can be found with the vars file used to build the VPC or use the VPC-ID to find longname in route53', name: 'vpc_longname', trim: true
