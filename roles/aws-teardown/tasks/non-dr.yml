@@ -6,6 +6,8 @@
 
 - include: csr.yml
 
+- include: peering.yml
+
 - include: vpc.yml
 
 - include: route53.yml
