@@ -52,17 +52,17 @@ pipeline{
                 export AWS_SECRET_ACCESS_KEY=${env.AWS_SECRET_KEY}
                 export AWS_DEFAULT_REGION=${env.AWS_DEFAULT_REGION}
                 ansible-playbook aws-teardown.yml --extra-vars '{
-    "vpc":"${params.vpc_id}",
-	"region":"${params.region}",
-	"list":"${params.list}",
-	"terminate":"${params.terminate}",
-	"requester":"${params.requester}",
+    "vpc":"${params.st_vpc_id}",
+	"region":"${params.st_region}",
+	"list":"${params.st_list}",
+	"terminate":"${params.st_terminate}",
+	"requester":"${params.st_requester}",
 	"route53_zones": {
 		"${params.vpc_shortname}": "${params.vpc_shortname_id}",
 		"${params.vpc_longname}": "${params.vpc_longname_id}",
 		"in-addr.arpa.": "${params.in_addr_arpa}"
 	},
-	"vpc_name": "${params.vpc_name}",
+	"vpc_name": "${params.st_vpc_name}",
     "vgw_name": "${params.vgw_name}",
 	"gateway_id": "${params.gateway_id}",
     "csr_tag": "${params.csr_tag}",
