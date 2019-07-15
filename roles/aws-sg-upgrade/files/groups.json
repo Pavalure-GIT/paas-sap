@@ -1,0 +1,171 @@
+{
+	"sg": [
+		{
+			"name": "sap-mgt",
+			"description": "The interfaces of any SAP servers on any management networks must be assigned to this security group.",
+			"rules": [
+				{
+					"protocol": "tcp",
+					"ports": "3900 - 3999",
+					"cidr_ip": "",
+					"group_name": "sap-mgt"
+				},
+				{
+					"protocol": "tcp",
+					"ports": "1128",
+					"cidr_ip": "10.4.0.0/21",
+					"group_name": ""
+				},
+				{
+					"protocol": "tcp",
+					"ports": "50013 - 59914",
+					"cidr_ip": "10.4.0.0/21",
+					"group_name": ""
+				},
+				{
+					"protocol": "tcp",
+					"ports": "3600 - 3699",
+					"cidr_ip": "",
+					"group_name": "sap-mgt"
+				},
+				{
+					"protocol": "tcp",
+					"ports": "3260",
+					"cidr_ip": "10.4.0.0/21",
+					"group_name": ""
+				},
+				{
+					"protocol": "tcp",
+					"ports": "2049",
+					"cidr_ip": "10.4.0.0/21",
+					"group_name": ""
+				},
+				{
+					"protocol": "tcp",
+					"ports": "1129",
+					"cidr_ip": "10.4.0.0/21",
+					"group_name": ""
+				},
+				{
+					"protocol": "tcp",
+					"ports": "3200 - 3299",
+					"cidr_ip": "10.4.0.0/21",
+					"group_name": ""
+				}
+			]
+		},
+		{
+			"name": "buaas-mgt",
+			"description": "The interfaces of any BUaaS servers on any management networks must be assigned to this security group",
+			"rules": [
+				{
+					"protocol": "tcp",
+					"ports": "3741",
+					"cidr_ip": "10.4.0.0/21",
+					"group_name": ""
+				},
+				{
+					"protocol": "tcp",
+					"ports": "9002",
+					"cidr_ip": "10.4.0.0/21",
+					"group_name": ""
+				},
+				{
+					"protocol": "tcp",
+					"ports": "7937 - 9936",
+					"cidr_ip": "10.4.0.0/21",
+					"group_name": ""
+				}
+			]
+		},
+		{
+			"name": "saprtr-pub",
+			"description": "The interfaces of any SAP routers on any management networks must be assigned to this security group",
+			"rules": [
+				{
+					"protocol": "tcp",
+					"ports": "3299",
+					"cidr_ip": "0.0.0.0/0",
+					"group_name": ""
+				}
+			]
+		},
+		{
+			"name": "cust-net-all",
+			"description": "Every AWS interface in the VPCs AZ1 2 3 customer networks must be assigned to this security group",
+			"rules": [
+				{
+					"protocol": "-1",
+					"ports": "0",
+					"cidr_ip": "",
+					"group_name": "cust-net-all"
+				},
+				{
+					"protocol": "tcp",
+					"ports": "3299",
+					"cidr_ip": "",
+					"group_name": "saprtr-pub"
+				},
+				{
+					"protocol": "tcp",
+					"ports": "3298",
+					"cidr_ip": "",
+					"group_name": "saprtr-pub"
+				}
+			]
+		},
+		{
+			"name": "mgmt-net-all",
+			"description": "Every AWS interface in the VPCs AZ1 2 3 customer networks must be assigned to this security group",
+			"rules": [
+				{
+					"protocol": "-1",
+					"ports": "0",
+					"cidr_ip": "",
+					"group_name": "cust-net-all"
+				},
+				{
+					"protocol": "tcp",
+					"ports": "3299",
+					"cidr_ip": "",
+					"group_name": "saprtr-pub"
+				},
+				{
+					"protocol": "tcp",
+					"ports": "3298",
+					"cidr_ip": "",
+					"group_name": "saprtr-pub"
+				}
+			]
+		},
+		{
+			"name": "pub-net-all",
+			"description": "Every AWS interface in the VPCs AZ1 2 3 customer networks must be assigned to this security group",
+			"rules": [
+				{
+					"protocol": "-1",
+					"ports": "0",
+					"cidr_ip": "",
+					"group_name": "cust-net-all"
+				},
+				{
+					"protocol": "tcp",
+					"ports": "3299",
+					"cidr_ip": "",
+					"group_name": "saprtr-pub"
+				},
+				{
+					"protocol": "tcp",
+					"ports": "3298",
+					"cidr_ip": "",
+					"group_name": "saprtr-pub"
+				}
+			]
+		},
+		{
+			"name": "hrs-sid-cst",
+			"description": "The interfaces of any HRS-SID servers on any customer networks must be assigned to this security group",
+			"rules": []
+		}
+	]
+}

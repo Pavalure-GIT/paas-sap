@@ -1,0 +1,20 @@
+---
+- name: Create new rule - cidr
+  set_fact:
+    list_new_item:
+      - proto: "{{ rule_protocol }}"
+        ports: "{{ rule_ports }}"
+        cidr_ip: "{{ rule_cidr_ip }}"
+  when: rule_cidr_ip != ""
+
+- name: Create new rule - group
+  set_fact:
+    list_new_item:
+      - proto: "{{ rule_protocol }}"
+        ports: "{{ rule_ports }}"
+        group_name: "{{ rule_group_name }}"
+  when: rule_group_name != ""
+
+- name: Add new rule
+  set_fact:
+    list: "{{ list  + list_new_item }}"

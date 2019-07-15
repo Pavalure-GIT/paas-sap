@@ -1,0 +1,21 @@
+---
+#- set_fact:
+#    sg_input: "{{ lookup('file','groups.json') | from_json }}"
+#
+#- include_tasks: create_sg.yml
+#  vars:
+#    sgtest: "{{ item }}"
+#    region: us-east-1
+#    vpc: vpc-051e2d6a02216970e
+#  with_items: "{{ sg_input.sg }}"
+
+- set_fact:
+    assignments_input: "{{ lookup('file','assignments.json') | from_json }}"
+
+- include: assign.yml
+  vars:
+    identity: "{{ item.server }}"
+    eth0_groups: "{{ item.eth0 }}"
+    eth1_groups: "{{ item.eth1 }}"
+    vpc: vpc-034f4ce28bb901c91
+  with_items: "{{ assignments_input.sg_assignments }}"
