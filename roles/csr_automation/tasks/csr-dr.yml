@@ -45,6 +45,8 @@
 
 - debug: var=vgw
 
+- debug: var=draz1ng
+
 - ec2_vpc_route_table:
     vpc_id: "{{ vgw.vgw.vpc_id }}"
     region: "{{ dr_vpc_region }}"
@@ -54,7 +56,7 @@
       - dest: "{{ manaz1_cidr }}"
         vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
       - dest: 0.0.0.0/0
-        gateway_id: "{{ az1_nat_gateway.nat_gateway_id }}"
+        gateway_id: "{{ draz1ng }}"
     propagating_vgw_ids: "{{ vgw.vgw.id }}"
 
 - pause:
