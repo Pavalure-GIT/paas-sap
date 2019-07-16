@@ -1,5 +1,5 @@
-#Tear down the non-dr customer build
-- include: non-dr.yml
+#Tear down the natgateways
+- include: natgateways.yml
   vars:
     vpc: "{{ st_vpc_id }}"
     vpc_name: "{{ st_vpc_name }}"
@@ -7,9 +7,8 @@
     list: "{{ st_list }}"
     terminate: "{{ st_terminate }}"
     requester: "{{ st_requester }}"
-
-#Run the teardown a second time for DR
-- include: dr.yml
+  
+- include: natgateways.yml
   vars:
     vpc: "{{ dr_vpc_id }}"
     vpc_name: "{{ dr_vpc_name }}"
@@ -19,3 +18,64 @@
     requester: "{{ dr_requester }}"
   when: dr == 'true'
 
+#Tear down the ec2 instances
+- include: ec2.yml
+  vars:
+    vpc: "{{ st_vpc_id }}"
+    vpc_name: "{{ st_vpc_name }}"
+    region: "{{ st_region }}"
+    list: "{{ st_list }}"
+    terminate: "{{ st_terminate }}"
+    requester: "{{ st_requester }}"
+
+- include: ec2.yml
+  vars:
+    vpc: "{{ dr_vpc_id }}"
+    vpc_name: "{{ dr_vpc_name }}"
+    region: "{{ dr_region }}"
+    list: "{{ dr_list }}"
+    terminate: "{{ dr_terminate }}"
+    requester: "{{ dr_requester }}"
+  when: dr == 'true'
+
+#Remove the peering connection for DR
+- include: peering.yml
+  vars:
+    vpc: "{{ dr_vpc_id }}"
+    vpc_name: "{{ dr_vpc_name }}"
+    region: "{{ dr_region }}"
+    list: "{{ dr_list }}"
+    terminate: "{{ dr_terminate }}"
+    requester: "{{ dr_requester }}"
+  when: dr == 'true'
+
+#Remove the VPC
+- include: vpc.yml 
+  vars:
+    vpc: "{{ st_vpc_id }}"
+    vpc_name: "{{ st_vpc_name }}"
+    region: "{{ st_region }}"
+    list: "{{ st_list }}"
+    terminate: "{{ st_terminate }}"
+    requester: "{{ st_requester }}"
+
+- include: vpc.yml
+  vars:
+    vpc: "{{ dr_vpc_id }}"
+    vpc_name: "{{ dr_vpc_name }}"
+    region: "{{ dr_region }}"
+    list: "{{ dr_list }}"
+    terminate: "{{ dr_terminate }}"
+    requester: "{{ dr_requester }}"
+  when: dr == 'true'
+
+#Remove the Route53 DNS entries
+- include: route53.yml
+  vars:
+    vpc: "{{ st_vpc_id }}"
+    vpc_name: "{{ st_vpc_name }}"
+    region: "{{ st_region }}"
+    list: "{{ st_list }}"
+    terminate: "{{ st_terminate }}"
+    requester: "{{ st_requester }}"
+  with_dict: "{{ route53_zones }}"
