@@ -49,6 +49,10 @@
     requester: "{{ dr_requester }}"
   when: dr == 'true'
 
+#Wait for 30 minutes to ensure components have been removed
+- pause:
+    minutes: 30
+
 #Remove the VPC
 - include: vpc.yml 
   vars:

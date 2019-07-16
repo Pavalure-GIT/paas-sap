@@ -91,10 +91,6 @@
     region: "{{ region }}"
   register: vpc_facts
 
-#Wait for 30 minutes to ensure components have been removed
-- pause:
-    minutes: 30
-
 #Remove the VPC
 - name: Remove the VPC
   ec2_vpc_net:
