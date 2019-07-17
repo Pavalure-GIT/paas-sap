@@ -38,6 +38,16 @@
     requester: "{{ dr_requester }}"
   when: dr == 'true'
 
+#Remove the virtual private gateway for CSR
+- include: csr.yml
+  vars:
+    vpc: "{{ st_vpc_id }}"
+    vpc_name: "{{ st_vpc_name }}"
+    region: "{{ st_region }}"
+    list: "{{ st_list }}"
+    terminate: "{{ st_terminate }}"
+    requester: "{{ st_requester }}"
+
 #Remove the peering connection for DR
 - include: peering.yml
   vars:
