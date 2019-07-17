@@ -68,7 +68,7 @@ pipeline{
     "csr_tag": "${params.csr_tag}",
     "st_name": "${params.stack_name}",
 	"dr": "${params.dr}",
-	"dr_vpc": "${params.dr_vpc_id}",
+	"dr_vpc_id": "${params.dr_vpc_id}",
 	"dr_vpc_name": "${params.dr_vpc_name}",
 	"dr_region": "${params.dr_region}",
 	"dr_list": "${params.dr_list}",
