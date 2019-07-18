@@ -1,13 +1,3 @@
-#Create an availability set to provision the machine into
-- name: Create availability set
-  azure_rm_availabilityset:
-    name: "{{ availability_set_name }}"
-    location: "{{ region }}"
-    resource_group: "{{azure_vm_resource_group}}"
-    platform_update_domain_count: 10
-    platform_fault_domain_count: 2
-    #sku: Aligned
-
 #Always create the first NIC
 - name: Create Nic1
   azure_rm_networkinterface:
@@ -36,7 +26,6 @@
   azure_rm_virtualmachine:
     name: "{{ azure_vm_name }}"
     resource_group: "{{azure_vm_resource_group}}"
-    availability_set: "{{ availability_set_name }}"
     vm_size: "{{azure_vm_size}}"
     network_interface_names: 
     - "{{nic1.state.name}}"
@@ -58,7 +47,6 @@
   azure_rm_virtualmachine:
     name: "{{ azure_vm_name }}"
     resource_group: "{{azure_vm_resource_group}}"
-    availability_set: "{{ availability_set_name }}"
     vm_size: "{{azure_vm_size}}"
     network_interface_names: 
     - "{{nic1.state.name}}"

@@ -1,0 +1,109 @@
+---
+- name: Create Server
+  hosts: localhost
+  vars:
+    man_subnet_name: 'Management'
+  tasks:
+    - name: Provision Azure Server
+      include_role:
+        name: azure-vm
+      vars:
+        azure_vm_name: "{{ vm_name }}"
+        azure_vm_resource_group: "{{ resource_group }}"
+        region: "{{ region }}"
+        azure_vm_dns_resource_group: "{{ dns_resource_group }}"
+        azure_vm_vnet: "{{ virtual_network_name }}" 
+        azure_vm_size: "{{ size }}"
+        azure_vm_image_offer: "{{ image_offer }}"
+        azure_vm_publisher: "{{ publisher }}"
+        azure_vm_sku: "{{ sku }}"
+        azure_vm_public_ssh: "{{ ssh_key }}"
+        azure_vm_nic1_subnet: "{{ nic1_subnet }}"
+        azure_vm_nic2_subnet: "{{ nic2_subnet }}"
+        azure_vm_nic1_nsg: "{{ nic1_nsg }}"
+        azure_vm_nic2_nsg: "{{ nic2_nsg }}"
+        azure_vm_nic1_dns: "{{ nic1_dns }}"
+        azure_vm_nic2_dns: "{{ nic2_dns }}"
+        azure_vm_nic1_reverse_dns: "{{ nic1_reverse_dns }}"
+        azure_vm_nic2_reverse_dns: "{{ nic2_reverse_dns }}"        
+        azure_vm_add_dns: true
+    
+    - set_fact:
+        nic1_multiple: "{{ nic1_asg | length > 1 }}"
+        nic2_multiple: "{{ nic1_asg | length > 1 }}"
+        create_nic2: "{{ nic2_subnet != '' }}"
+        
+    - name: Allocate ASG nic1 - Single ASG
+      include_role: 
+        name: azure-asg-allocate
+      vars:
+        asgs:
+          - { resource_group: "{{ resource_group }}", name: "{{ nic1_asg[0] }}"  }
+        azure_vm_nic: "{{ vm_name }}-nic1"
+      when: not nic1_multiple
+      
+    - name: Allocate ASG nic1 - Double ASG
+      include_role: 
+        name: azure-asg-allocate
+      vars:
+        asgs:
+          - { resource_group: "{{ resource_group }}", name: "{{ nic1_asg[0] }}"  }
+          - { resource_group: "{{ resource_group }}", name: "{{ nic1_asg[1] }}"  }
+        azure_vm_nic: "{{ vm_name }}-nic1"
+      when: nic1_multiple
+      
+    - name: Allocate ASG nic2 - Single ASG
+      include_role: 
+        name: azure-asg-allocate
+      vars:
+        asgs:
+          - { resource_group: "{{ resource_group }}", name: "{{ nic2_asg[0] }}"  }
+        azure_vm_nic: "{{ vm_name }}-nic2"
+      when: not nic2_multiple and create_nic2
+      
+    - name: Allocate ASG nic2 - Double ASG
+      include_role: 
+        name: azure-asg-allocate
+      vars:
+        asgs:
+          - { resource_group: "{{ resource_group }}", name: "{{ nic2_asg[0] }}"  }
+          - { resource_group: "{{ resource_group }}", name: "{{ nic2_asg[1] }}"  }
+        azure_vm_nic: "{{ vm_name }}-nic2"
+      when: nic2_multiple and create_nic2
+      
+    - name: Set IP if Nic1 management
+      set_fact:
+        management_ip: "{{ nic1.state.ip_configuration.private_ip_address }}"
+      when: "{{ nic1_subnet == man_subnet_name }}"
+        
+    - name: Set IP if Nic2 management
+      set_fact:
+        management_ip: "{{ nic2.state.ip_configuration.private_ip_address }}"
+      when: "{{ nic2_subnet == man_subnet_name }}"
+      
+    - name: Add server to Group
+      add_host:
+        name: "{{ management_ip }}"
+        groups: provisioned_server
+      
+    - name: Wait for network access to host
+      wait_for:
+        host: "{{ management_ip }}"
+
+- name: Configure Server
+  hosts: provisioned_server
+  tasks:
+    - name: Configure SAP Router
+      include_role:
+        name: saprouter
+      vars:
+        management_subnet_cidr: "{{ management_range }}"
+        acl_localnet_src_a: "{{ management_subnet_az1 }}"
+        acl_localnet_src_b: "{{ management_subnet_az2 }}"
+        static_route: route add default gw "{{ static_route_ip  }}" eth1
+        azure_region: "{{ region }}"
+      when: saprouter
+    - name: Configure Mid Server
+      include_role:
+        name: midserver
+      when: midserver
