@@ -48,7 +48,7 @@
     terminate: "{{ st_terminate }}"
     requester: "{{ st_requester }}"
 
-Remove the peering connection for DR
+#Remove the peering connection for DR
 - include: peering.yml
   vars:
     vpc: "{{ dr_vpc_id }}"
