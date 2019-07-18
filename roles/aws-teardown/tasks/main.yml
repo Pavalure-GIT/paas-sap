@@ -48,20 +48,20 @@
     terminate: "{{ st_terminate }}"
     requester: "{{ st_requester }}"
 
-#Remove the peering connection for DR
-#- include: peering.yml
-#  vars:
-#    vpc: "{{ dr_vpc_id }}"
-#    vpc_name: "{{ dr_vpc_name }}"
-#    region: "{{ dr_region }}"
-#    list: "{{ dr_list }}"
-#    terminate: "{{ dr_terminate }}"
-#    requester: "{{ dr_requester }}"
-#  when: dr == 'true'
+Remove the peering connection for DR
+- include: peering.yml
+  vars:
+    vpc: "{{ dr_vpc_id }}"
+    vpc_name: "{{ dr_vpc_name }}"
+    region: "{{ dr_region }}"
+    list: "{{ dr_list }}"
+    terminate: "{{ dr_terminate }}"
+    requester: "{{ dr_requester }}"
+  when: dr == 'true'
 
 #Wait for 30 minutes to ensure components have been removed
 - pause:
-    minutes: 30
+    minutes: 40
 
 #Remove the VPC
 - include: vpc.yml 
