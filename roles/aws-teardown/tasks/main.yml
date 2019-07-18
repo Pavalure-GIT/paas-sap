@@ -8,15 +8,15 @@
     terminate: "{{ st_terminate }}"
     requester: "{{ st_requester }}"
   
-- include: natgateways.yml
-  vars:
-    vpc: "{{ dr_vpc_id }}"
-    vpc_name: "{{ dr_vpc_name }}"
-    region: "{{ dr_region }}"
-    list: "{{ dr_list }}"
-    terminate: "{{ dr_terminate }}"
-    requester: "{{ dr_requester }}"
-  when: dr == 'true'
+#- include: natgateways.yml
+#  vars:
+#    vpc: "{{ dr_vpc_id }}"
+#    vpc_name: "{{ dr_vpc_name }}"
+#    region: "{{ dr_region }}"
+#    list: "{{ dr_list }}"
+#    terminate: "{{ dr_terminate }}"
+#    requester: "{{ dr_requester }}"
+#  when: dr == 'true'
 
 #Tear down the ec2 instances
 - include: ec2.yml
