@@ -107,3 +107,19 @@
       include_role:
         name: midserver
       when: midserver
+    - name: Configure FDE Server
+      include_role:
+        name: fde
+      vars:
+        proxy_domain: "proxy.{{ management_zone }}"
+        lama_ip: "10.4.0.41"
+        customer_lan: "172.16.0.0/12"
+        management_lan: "172.17.0.0/12"
+        dns_ip_dev: "10.4.0.5"
+        dns_ip_test: "10.2.0.5"
+        reverse_zone: "in-addr.arpa"
+        fde_customer_domain: "{{ management_zone }}"
+        fde_ip: "{{ ansible_default_ipv4.address }}"
+        fde_virualhostname: "fde.{{ management_zone }}"
+      when: fde
+

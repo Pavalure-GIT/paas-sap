@@ -84,7 +84,7 @@
     - name: Wait for network access to host
       wait_for:
         host: "{{ management_ip }}"
-#
+
 - name: Configure Server
   hosts: provisioned_server
   tasks:
@@ -102,3 +102,21 @@
       include_role:
         name: midserver
       when: midserver
+    - name: Configure FDE Server
+      include_role:
+        name: fde
+      vars:
+        lama_ip: "10.4.0.41"
+        customer_lan: "172.16.0.0/12"
+        management_lan: "172.17.0.0/12"
+        dns_ip_dev: "10.4.0.5"
+        dns_ip_test: "10.2.0.5"
+        reverse_zone: "in-addr.arpa"
+        management_forwarders: "{{ forwarder_ip }};"
+        customer_forwarders: "{{ forwarder_ip }};"
+        reverse_forwarders: "{{ forwarder_ip }};"
+        fde_customer_domain: "{{ customer_zone }}"
+        fde_ip: "{{ ansible_default_ipv4.address }}"
+        proxy_domain: "proxy.{{ management_zone }}"
+        fde_virualhostname: "fde.{{ management_zone }}"
+      when: fde
