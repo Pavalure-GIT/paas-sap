@@ -9,6 +9,8 @@
   register: peering
   when: dr == 'true'
 
+- debug: var=peering
+
 #List the Peering connection to be removed
 - name: List VPC Peer
   debug:
