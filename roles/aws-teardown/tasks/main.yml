@@ -1,5 +1,7 @@
 ---
 
+- debug: var=dr_vpc_id
+
 - include: vpc.yml
   vars:
     vpc: "{{ dr_vpc_id }}"
