@@ -15,9 +15,7 @@
 - name: List VPC Peer
   debug:
     msg: "{{ peering.result[0].vpc_peering_connection_id }}"
-  when: dr == 'true'
-
-- debug: var=peering.result[0].vpc_peering_connection_id
+  when: peering.result != [] and dr == 'true'
 
 #Delete VPC Peering connection
 - name: Delete VPC Peer
@@ -25,7 +23,7 @@
     region: "{{ region }}"
     peering_id: "{{ peering.result[0].vpc_peering_connection_id }}"
     state: absent
-  when: peering.result[0].vpc_peering_connection_id != [] and dr == 'true'
+  when: peering.result != [] and dr == 'true'
 
 #Wait for 10 minutes to ensure components have been removed
 - pause:
