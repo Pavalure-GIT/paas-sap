@@ -13,14 +13,16 @@ pipeline{
       string defaultValue: 'xxxxxx.paas4sap.svcs.entsvcs.com', description: 'enter vpc long name. Value can be found with the vars file used to build the VPC or use the VPC-ID to find longname in route53', name: 'vpc_longname', trim: true
       string defaultValue: 'Z19T3FXREVEDR9', description: 'enter vpc long name id. Use the VPC-ID to find longname ID in route53', name: 'vpc_longname_id', trim: true
       string defaultValue: 'Z19T3DERRVEDR9', description: 'in-addr.arpa VPC-ID to find longname ID in route53', name: 'in_addr_arpa', trim: true
-      string defaultValue: '-', description: 'virtual private gateway name', name: 'vgw_name', trim: true
-      string defaultValue: 'vgw-0f73c280059aa00d2', description: 'virtual private gateway ID', name: 'gateway_id', trim: true
-      choice choices: ['transitvpc:spoke','-'], description: 'The CSR tag for the virtual private gateway', name: 'csr_tag'
-      string defaultValue: '-', description: 'Name of the CSR stack', name: 'stack_name', trim: true
+      string defaultValue: '-', description: 'virtual private gateway name', name: 'st_vgw_name', trim: true
+      string defaultValue: 'vgw-0f73c280059aa00d2', description: 'virtual private gateway ID', name: 'st_gateway_id', trim: true
+      string defaultValue: '-', description: 'Name of the CSR stack', name: 'st_stack_name', trim: true
       choice choices: ['false', 'true'], description: 'tear down DR', name: 'dr'
       string defaultValue: 'vpc-0af9bf39247934d58', description: 'Enter the DR VPC ID', name: 'dr_vpc_id', trim: true
       string defaultValue: 'DR-Dev-Example', description: 'Enter the VPC Name here', name: 'dr_vpc_name', trim: true
       string defaultValue: 'us-east-2', description: 'Enter the region here', name: 'dr_region', trim: true
+      string defaultValue: '-', description: 'DR virtual private gateway name', name: 'dr_vgw_name', trim: true
+      string defaultValue: 'vgw-0f73c280059aa00d2', description: 'DR virtual private gateway ID', name: 'dr_gateway_id', trim: true
+      string defaultValue: '-', description: 'Name of the DR CSR stack', name: 'dr_stack_name', trim: true
       choice choices: ['false','true'], description: 'dr list', name: 'dr_list'
       choice choices: ['false', 'true'], description: 'dr terminate', name: 'dr_terminate'
       
@@ -54,8 +56,8 @@ pipeline{
                 ansible-playbook aws-teardown.yml --extra-vars '{
     "st_vpc_id":"${params.st_vpc_id}",
 	"st_region":"${params.st_region}",
-	"list":"${params.st_list}",
-	"terminate":"${params.st_terminate}",
+	"st_list":"${params.st_list}",
+	"st_terminate":"${params.st_terminate}",
 	"requester":"${params.st_requester}",
 	"route53_zones": {
 		"${params.vpc_shortname}": "${params.vpc_shortname_id}",
@@ -63,14 +65,17 @@ pipeline{
 		"in-addr.arpa.": "${params.in_addr_arpa}"
 	},
 	"st_vpc_name": "${params.st_vpc_name}",
-    "vgw_name": "${params.vgw_name}",
-	"gateway_id": "${params.gateway_id}",
-    "csr_tag": "${params.csr_tag}",
-    "st_name": "${params.stack_name}",
+    "st_vgw_name": "${params.st_vgw_name}",
+	"st_gateway_id": "${params.st_gateway_id}",
+    "st_stack_name": "${params.st_stack_name}",
 	"dr": "${params.dr}",
 	"dr_vpc_id": "${params.dr_vpc_id}",
 	"dr_vpc_name": "${params.dr_vpc_name}",
 	"dr_region": "${params.dr_region}",
+    "dr_vpc_name": "${params.dr_vpc_name}",
+    "dr_vgw_name": "${params.dr_vgw_name}",
+	"dr_gateway_id": "${params.dr_gateway_id}",
+    "dr_stack_name": "${params.dr_stack_name}",
 	"dr_list": "${params.dr_list}",
 	"dr_terminate": "${params.dr_terminate}"
 }'
