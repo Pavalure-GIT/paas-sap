@@ -17,13 +17,15 @@
     msg: "{{ peering.result[0].vpc_peering_connection_id }}"
   when: dr == 'true'
 
+- deubg: var=peering.result[0].vpc_peering_connection_id
+
 #Delete VPC Peering connection
 - name: Delete VPC Peer
   ec2_vpc_peer:
     region: "{{ region }}"
     peering_id: "{{ peering.result[0].vpc_peering_connection_id }}"
     state: absent
-  when: peering.result[0].vpc_peering_connection_id.result != [] and dr == 'true'
+  when: peering.result[0].vpc_peering_connection_id != [] and dr == 'true'
 
 #Wait for 10 minutes to ensure components have been removed
 - pause:
