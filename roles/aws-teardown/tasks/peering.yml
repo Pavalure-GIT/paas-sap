@@ -17,7 +17,7 @@
     msg: "{{ peering.result[0].vpc_peering_connection_id }}"
   when: dr == 'true'
 
-- deubg: var=peering.result[0].vpc_peering_connection_id
+- debug: var=peering.result[0].vpc_peering_connection_id
 
 #Delete VPC Peering connection
 - name: Delete VPC Peer
