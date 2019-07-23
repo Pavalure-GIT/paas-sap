@@ -23,7 +23,7 @@
     region: "{{ region }}"
     peering_id: "{{ peering.result[0].vpc_peering_connection_id }}"
     state: absent
-  when: peering.result != '[]' and dr == 'true'
+  when: peering.result[0].vpc_peering_connection_id.result != [] and dr == 'true'
 
 #Wait for 10 minutes to ensure components have been removed
 - pause:
