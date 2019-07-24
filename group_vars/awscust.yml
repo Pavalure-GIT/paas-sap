@@ -47,6 +47,9 @@ vpc_longname: kavtest.paas4sap.svcs.entsvcs.com
 #Key to be used for the provisioned machines, this must exist on the subscription and also the machine the automation is ran from, so it can be used for machine configuration
 key_name: SystemTeamAutomation
 
+#flags
+aws: true
+
 #SIEMServer
 siem: true
 siem_image: ami-6871a115

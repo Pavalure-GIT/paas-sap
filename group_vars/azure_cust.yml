@@ -15,7 +15,7 @@ vm_public_keys: "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAgKPo2E32TDYoeSsSJgqEVlShiAp
 
 #Standard
 #the resource group in which the build will reside
-st_resource_group: "P4S-Prototype-Automation"
+st_resource_group: "P4S-Prototype-Automation-Siem"
 #Name to be given to Customer Primary VPC
 st_virtual_network_name: "VNET-ESO4SAP3-azureProto"
 #region for the Primary VPC
@@ -55,6 +55,19 @@ dr_management_subnet: "100.65.24.0/23"
 dr_gateway_subnet: "100.79.0.0/28"
 dr_customer_reverse_dns: 0.64.100.in-addr.arpa
 dr_management_reverse_dns: 24.65.100.in-addr.arpa
+
+#flags
+azure: true
+#SIEM
+#VM type/size
+siem: true
+siem_size: "Standard_B2s"
+#the image for VM's are specific to each region so ensure they are correct for the desired regions
+siem_image_offer: "RHEL"
+#the OS to be used
+siem_publisher: "RedHat"
+siem_sku: "7-RAW"
+
   
 #FDE
 #VM type/size
@@ -73,6 +86,16 @@ saprouter_image_offer: "SLES-Standard"
 #the OS to be used
 saprouter_publisher: "SUSE"
 saprouter_sku: "12-SP3"
+
+#SUMA
+suma: true
+suma_size: "Standard_F8s"
+#the image for VM's are specific to each region so ensure they are correct for the desired regions
+suma_image_offer: "SUSE-Manager-Server-BYOS"
+#the OS to be used
+suma_publisher: "SUSE"
+suma_sku: "3-2"
+suma_short: suma-srv
 
 #MidServers
 #VM type/size

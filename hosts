@@ -1,0 +1,4 @@
+[siem]
+172.17.184.9	ansible_user=ec2-user
+[suma]
+172.17.184.8

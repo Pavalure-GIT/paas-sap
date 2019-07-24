@@ -1,0 +1,13 @@
+    - name: install log analytics monitor (OMS Agent)
+      azure_rm_virtualmachineextension:
+        state: present
+        type_handler_version: "1.7"
+        name: oms-agent
+        location: "{{ st_region }}"
+        resource_group: "{{ st_resource_group }}"
+        virtual_machine_name: siem
+        publisher: Microsoft.EnterpriseCloud.Monitoring
+        virtual_machine_extension_type: OmsAgentForLinux
+        settings: '{"workspaceId": "{{lookup("env","workspaceId")}}"}'
+        protected_settings: '{"workspaceKey": "{{lookup("env","workspaceKey")}}"}'
+ 
