@@ -10,6 +10,12 @@
 - zypper:
     name: '*'
     state: latest
+
+- name: zypper ref
+  command: zypper ref
+
+- name: zypper migration
+  command: zypper migration
  
 
  
