@@ -1,0 +1,87 @@
+---
+- name: Get facts by name/type
+  azure_rm_virtualmachine_facts:
+    resource_group: "{{ resource_group }}"
+    name: "{{ vm_type }}"
+  register: assign
+
+- name: Set facts for Network Interfaces
+  set_fact:
+    interface_names: "{{ assign.vms[0].network_interface_names }}"
+
+- name: Get facts for "{{ interface_names[0] }}"
+  azure_rm_networkinterface_facts:
+    resource_group: "{{ resource_group }}"
+    name: "{{ interface_names[0] }}"
+  register: nic_info
+
+- name: Update network security group on "{{ interface_names[0] }}"
+  azure_rm_networkinterface:
+    name: "{{ interface_names[0] }}"
+    resource_group: "{{ resource_group }}"
+    security_group: "{{ nsg_list.nic0 }}"
+    subnet_name: "{{ nic_info.networkinterfaces[0].subnet }}"
+    virtual_network: "{{ vnet }}"
+
+- name: Get facts for NIC1
+  azure_rm_networkinterface_facts:
+    resource_group: "{{ resource_group }}"
+    name: "{{ interface_names[1] }}"
+  register: nic_info
+  when: interface_names[1] is defined
+
+- name: Update network security group on NIC1
+  azure_rm_networkinterface:
+    name: "{{ interface_names[1] }}"
+    resource_group: "{{ resource_group }}"
+    security_group: "{{ nsg_list.nic1 }}"
+    subnet_name: "{{ nic_info.networkinterfaces[0].subnet }}"
+    virtual_network: "{{ vnet }}"
+  when: interface_names[1] is defined
+
+- name: Create blank ASG List "{{ interface_names[0] }}"
+  set_fact:
+    asgs: []
+
+- name: Add ASG "{{ item }}" to ASG List "{{ interface_names[0] }}"
+  include: create_asg_list.yml
+  vars:
+    asg: "{{ item }}"
+  with_items: "{{ asg_list.nic0 }}"
+
+- name: Assign ASG List to Network Interface "{{ interface_names[0] }}"
+  azure_rm_networkinterface_asg:
+    subscription_id: '{{ lookup("env", "AZURE_SUBSCRIPTION_ID") }}'
+    client_id: '{{ lookup("env", "AZURE_CLIENT_ID") }}'
+    secret: '{{ lookup("env", "AZURE_SECRET") }}'
+    tenant: '{{ lookup("env", "AZURE_TENANT") }}'
+    resource_group: "{{ resource_group }}"
+    name: "{{ interface_names[0] }}"
+    ip_configurations:
+      - name: "default"
+        application_security_groups: "{{ asgs }}"
+
+- name: Create blank ASG List "{{ interface_names[1] }}"
+  set_fact:
+    asgs: []
+  when: interface_names[1] is defined
+
+- name: Add ASG "{{ item }}" to ASG List "{{ interface_names[1] }}"
+  include: create_asg_list.yml
+  vars:
+    asg: "{{ item }}"
+  with_items: "{{ asg_list.nic1 }}"
+  when: interface_names[1] is defined
+
+- name: Assign ASG List to Network Interface "{{ interface_names[0] }}"
+  azure_rm_networkinterface_asg:
+    subscription_id: '{{ lookup("env", "AZURE_SUBSCRIPTION_ID") }}'
+    client_id: '{{ lookup("env", "AZURE_CLIENT_ID") }}'
+    secret: '{{ lookup("env", "AZURE_SECRET") }}'
+    tenant: '{{ lookup("env", "AZURE_TENANT") }}'
+    resource_group: "{{ resource_group }}"
+    name: "{{ interface_names[1] }}"
+    ip_configurations:
+      - name: "default"
+        application_security_groups: "{{ asgs }}"
+  when: interface_names[1] is defined

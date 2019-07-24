@@ -1,0 +1,9 @@
+---
+- name: Update ASG/NSG design in Azure
+  hosts: localhost
+  vars:
+    resource_group: P4S-Prototype-Automation-Test
+    vnet: VNET-ESO4SAP3-azureTest
+  tasks:
+    - include_role:
+        name: azure-sg-upgrade

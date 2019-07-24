@@ -1,9 +1,0 @@
----
-- name: Call role
-  hosts: localhost
-  tasks:
-    - name: Call role
-      include_role:
-        name: aws-sg-upgrade
-      vars:
-        region: us-east-1

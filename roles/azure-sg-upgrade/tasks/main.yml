@@ -1,0 +1,14 @@
+---
+
+#- include: create_rules.yml
+
+- set_fact:
+    assignments_input: "{{ lookup('file','assign.json') | from_json }}"
+
+- include: assign_groups.yml
+  vars:
+    vm_type: "{{ item.vm_name }}"
+    asg_list: "{{ item.ASG }}"
+    nsg_list: "{{ item.NSG }}"
+  with_items: "{{ assignments_input.assign_groups }}"
+
