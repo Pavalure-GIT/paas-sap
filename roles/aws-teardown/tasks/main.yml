@@ -87,6 +87,10 @@
     terminate: "{{ st_terminate }}"
     requester: "{{ st_requester }}"
 
+#Wait for 10 minutes to ensure components have been removed
+- pause:
+    minutes: 10
+
 - include: vpc.yml
   vars:
     vpc: "{{ dr_vpc_id }}"
