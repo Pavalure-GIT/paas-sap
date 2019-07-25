@@ -1,15 +1,95 @@
----
+#Tear down the natgateways
+- include: natgateways.yml
+  vars:
+    vpc: "{{ st_vpc_id }}"
+    vpc_name: "{{ st_vpc_name }}"
+    region: "{{ st_region }}"
+    list: "{{ st_list }}"
+    terminate: "{{ st_terminate }}"
+    requester: "{{ st_requester }}"
+  
+- include: natgateways.yml
+  vars:
+    vpc: "{{ dr_vpc_id }}"
+    vpc_name: "{{ dr_vpc_name }}"
+    region: "{{ dr_region }}"
+    list: "{{ dr_list }}"
+    terminate: "{{ dr_terminate }}"
+    requester: "{{ dr_requester }}"
+  when: dr == 'true'
+
+#Tear down the ec2 instances
+- include: ec2.yml
+  vars:
+    vpc: "{{ st_vpc_id }}"
+    vpc_name: "{{ st_vpc_name }}"
+    region: "{{ st_region }}"
+    list: "{{ st_list }}"
+    terminate: "{{ st_terminate }}"
+    requester: "{{ st_requester }}"
+
+- include: ec2.yml
+  vars:
+    vpc: "{{ dr_vpc_id }}"
+    vpc_name: "{{ dr_vpc_name }}"
+    region: "{{ dr_region }}"
+    list: "{{ dr_list }}"
+    terminate: "{{ dr_terminate }}"
+    requester: "{{ dr_requester }}"
+  when: dr == 'true'
+
+#Remove the peering connection for DR
+- include: peering.yml
+  vars:
+    vpc: "{{ st_vpc_id }}"
+    vpc_name: "{{ st_vpc_name }}"
+    region: "{{ st_region }}"
+    list: "{{ st_list }}"
+    terminate: "{{ st_terminate }}"
+    requester: "{{ st_requester }}"
+  when: dr == 'true'
+
+#Remove the virtual private gateway for CSR
+- include: csr.yml
+  vars:
+    vpc: "{{ st_vpc_id }}"
+    vpc_name: "{{ st_vpc_name }}"
+    region: "{{ st_region }}"
+    gateway_id: "{{ st_gateway_id }}"
+    vgw_name: "{{ st_vgw_name }}"
+    list: "{{ st_list }}"
+    terminate: "{{ st_terminate }}"
+    requester: "{{ st_requester }}"
+
+#Remove the virtual private gateway for CSR DR
+- include: csr.yml
+  vars:
+    vpc: "{{ dr_vpc_id }}"
+    vpc_name: "{{ dr_vpc_name }}"
+    region: "{{ dr_region }}"
+    gateway_id: "{{ dr_gateway_id }}"
+    vgw_name: "{{ dr_vgw_name }}"
+    list: "{{ dr_list }}"
+    terminate: "{{ dr_terminate }}"
+    requester: "{{ dr_requester }}"
+
+#Wait for 60 minutes to ensure components have been removed
+- pause:
+    minutes: 60
 
 #Remove the VPC
-#- include: vpc.yml
-#  vars:
-#    vpc: "{{ st_vpc_id }}"
-#    vpc_name: "{{ st_vpc_name }}"
-#    region: "{{ st_region }}"
-#    list: "{{ st_list }}"
-#    terminate: "{{ st_terminate }}"
-#    requester: "{{ st_requester }}"
+- include: vpc.yml 
+  vars:
+    vpc: "{{ st_vpc_id }}"
+    vpc_name: "{{ st_vpc_name }}"
+    region: "{{ st_region }}"
+    list: "{{ st_list }}"
+    terminate: "{{ st_terminate }}"
+    requester: "{{ st_requester }}"
 
+#Wait for 10 minutes to ensure components have been removed
+- pause:
+    minutes: 20
 
 - include: vpc.yml
   vars:
@@ -31,4 +111,3 @@
     terminate: "{{ st_terminate }}"
     requester: "{{ st_requester }}"
   with_dict: "{{ route53_zones }}"
-
