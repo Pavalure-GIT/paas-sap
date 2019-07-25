@@ -56,6 +56,7 @@
         storage_blob_name: suse_manager.vhd
         storage_blob: suma_osdisk.vhd
         data_disk_size: 200
+        lun: 0
       when: suma
 #This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Public
