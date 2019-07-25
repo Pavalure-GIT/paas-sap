@@ -1,19 +1,48 @@
 ---
-#- set_fact:
-#    sg_input: "{{ lookup('file','groups.json') | from_json }}"
-#
-#- include_tasks: create_sg.yml
-#  vars:
-#    sgtest: "{{ item }}"
-#    region: us-east-1
-#    vpc: vpc-051e2d6a02216970e
-#  with_items: "{{ sg_input.sg }}"
+- name: Get facts for current SG and SG Rules
+  ec2_group_facts:
+    region: "{{ vpc_region }}"
+    filters:
+      vpc-id: "{{ vpc_id }}"
+  register: existing_groups
 
-- set_fact:
+- name: Write existing SGs and SG rules to File in JSON Format
+  copy:
+    content: "{{ existing_groups | to_nice_json  }}"
+    dest: "~/old_sg.json"
+
+- name: Get facts for machines in VPC
+  ec2_instance_facts:
+    region: "{{ vpc_region }}"
+    filters:
+      vpc-id: "{{ vpc_id }}"
+  register: existing_assignments
+
+- name: Write existing assignments to File in JSON Format
+  copy:
+    content: "{{ existing_assignments | to_nice_json  }}"
+    dest: "~/old_assignments.json"
+
+- name: Read in SG/SG Rules from groups JSON file
+  set_fact:
+    sg_input: "{{ lookup('file','groups.json') | from_json }}"
+
+- name: Create the SGs based on Input from JSON File
+  include_tasks: create_sg.yml
+  vars:
+    sgtest: "{{ item }}"
+    region: "{{ vpc_region }}"
+    vpc: "{{ vpc_id }}"
+  with_items: "{{ sg_input.sg }}"
+
+- name: Read in Assignments from assignments JSON File
+  set_fact:
     assignments_input: "{{ lookup('file','assignments.json') | from_json }}"
 
-- include: assign.yml
+- name: Assign SGs to VMs based on input from JSON File
+  include: assign.yml
   vars:
+    vpc: "{{ vpc_id }}"
     identity: "{{ item.server }}"
     eth0_groups: "{{ item.eth0 }}"
     eth1_groups: "{{ item.eth1 }}"

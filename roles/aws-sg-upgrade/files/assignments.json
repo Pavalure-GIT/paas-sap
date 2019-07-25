@@ -2,18 +2,23 @@
 	"sg_assignments": [
 		{
 			"server": "SAPRouter",
-			"eth0": [ "mgmt-net-all", "saprtr-pub" ],
-			"eth1": [ "cust-net-all" ]
+			"eth0": [ "pub-net-all", "saprtr-pub" ],
+			"eth1": [ "mgmt-net-all", "saprtr-mgt" ]
 		},
 		{
-			"server": "SIEM",
-			"eth0": [ "cust-net-all" ],
+			"server": "Mid",
+			"eth0": [ "mgmt-net-all", "mid-mgt" ],
 			"eth1": []
 		},
 		{
 			"server": "FDE",
-			"eth0": [ "mid-mgt" ],
-			"eth1": [ "cust-net-all" ]
+			"eth0": [ "cust-net-all", "fde-cst" ],
+			"eth1": [ "mgmt-net-all", "fde-mgt" ]
+		},
+		{
+			"server": "SAP",
+			"eth0": [ "cust-net-all", "sap-cst" ],
+			"eth1": [ "mgmt-net-all", "sap-mgt" ]
 		}
 	]
 }

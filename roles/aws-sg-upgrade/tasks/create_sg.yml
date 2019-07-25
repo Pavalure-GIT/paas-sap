@@ -10,11 +10,12 @@
     rule_group_name: "{{ item.group_name }}"
   with_items: "{{ sgtest.rules }}"
 
-- ec2_group:
+- name: Create "{{ sgtest.name }}" group
+  ec2_group:
     name: "{{ sgtest.name }}"
     description: "{{ sgtest.description }}"
     vpc_id: "{{ vpc }}"
-    region: "{{ region }}"
-    tags:
-      Name: "{{ sgtest.name }}"
+    region: "{{ vpc_region }}"
+    state: present
     rules: "{{ list }}"
+

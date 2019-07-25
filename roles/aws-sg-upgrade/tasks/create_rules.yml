@@ -18,3 +18,4 @@
 - name: Add new rule
   set_fact:
     list: "{{ list  + list_new_item }}"
+  when: rule_protocol != ""

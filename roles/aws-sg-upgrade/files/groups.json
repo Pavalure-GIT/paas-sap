@@ -6,7 +6,7 @@
 			"rules": [
 				{
 					"protocol": "tcp",
-					"ports": "3900 - 3999",
+					"ports": "3900-3999",
 					"cidr_ip": "",
 					"group_name": "sap-mgt"
 				},
@@ -18,13 +18,13 @@
 				},
 				{
 					"protocol": "tcp",
-					"ports": "50013 - 59914",
+					"ports": "50013-59914",
 					"cidr_ip": "10.4.0.0/21",
 					"group_name": ""
 				},
 				{
 					"protocol": "tcp",
-					"ports": "3600 - 3699",
+					"ports": "3600-3699",
 					"cidr_ip": "",
 					"group_name": "sap-mgt"
 				},
@@ -48,7 +48,7 @@
 				},
 				{
 					"protocol": "tcp",
-					"ports": "3200 - 3299",
+					"ports": "3200-3299",
 					"cidr_ip": "10.4.0.0/21",
 					"group_name": ""
 				}
@@ -72,7 +72,7 @@
 				},
 				{
 					"protocol": "tcp",
-					"ports": "7937 - 9936",
+					"ports": "7937-9936",
 					"cidr_ip": "10.4.0.0/21",
 					"group_name": ""
 				}
@@ -92,7 +92,7 @@
 		},
 		{
 			"name": "cust-net-all",
-			"description": "Every AWS interface in the VPCs AZ1 2 3 customer networks must be assigned to this security group",
+			"description": "Every AWS interface   in the VPCs AZ1 2 3 customer subnets must be assigned to this security group.",
 			"rules": [
 				{
 					"protocol": "-1",
@@ -102,39 +102,213 @@
 				},
 				{
 					"protocol": "tcp",
-					"ports": "3299",
-					"cidr_ip": "",
-					"group_name": "saprtr-pub"
+					"ports": "9002",
+					"cidr_ip": "10.4.0.0/21",
+					"group_name": ""
 				},
 				{
 					"protocol": "tcp",
-					"ports": "3298",
+					"ports": "7937 - 9936",
+					"cidr_ip": "10.4.0.0/21",
+					"group_name": ""
+				}
+			]
+		},
+		{
+			"name": "hrs-sid-cst",
+			"description": "The interfaces of any HRS-SID servers on any customer networks must be assigned to this security group",
+			"rules": [
+				{
+					"protocol": "",
+					"ports": "",
 					"cidr_ip": "",
-					"group_name": "saprtr-pub"
+					"group_name": ""
+				}
+			]
+		},
+		{
+			"name": "hrs-sid-mid",
+			"description": "The interfaces of any HRS-SID servers on any management networks must be assigned to this security group",
+			"rules": [
+				{
+					"protocol": "",
+					"ports": "",
+					"cidr_ip": "",
+					"group_name": ""
+				}
+			]
+		},
+		{
+			"name": "cc-pub",
+			"description": "SAP cloud connector",
+			"rules": [
+				{
+					"protocol": "",
+					"ports": "",
+					"cidr_ip": "",
+					"group_name": ""
+				}
+			]
+		},
+		{
+			"name": "wd-pub",
+			"description": "SAP Web Dispatcher",
+			"rules": [
+				{
+					"protocol": "",
+					"ports": "",
+					"cidr_ip": "",
+					"group_name": ""
 				}
 			]
 		},
 		{
 			"name": "mgmt-net-all",
-			"description": "Every AWS interface in the VPCs AZ1 2 3 customer networks must be assigned to this security group",
+			"description": "Every AWS interface in the VPCs AZ1 2 3 management subnets must be assigned to this security group",
 			"rules": [
 				{
 					"protocol": "-1",
 					"ports": "0",
 					"cidr_ip": "",
-					"group_name": "cust-net-all"
+					"group_name": "mgmt-net-all"
+				},
+				{
+					"protocol": "-1",
+					"ports": "0",
+					"cidr_ip": "100.64.0.0/12",
+					"group_name": ""
+				},
+    			{
+					"protocol": "tcp",
+					"ports": "22",
+					"cidr_ip": "10.4.0.0/21",
+					"group_name": ""
+				},
+				{
+					"protocol": "tcp",
+					"ports": "3389",
+					"cidr_ip": "10.165.1.0/26",
+					"group_name": ""
+				},
+				{
+					"protocol": "tcp",
+					"ports": "3389",
+					"cidr_ip": "10.208.0.0/27",
+					"group_name": ""
+				},
+				{
+					"protocol": "tcp",
+					"ports": "3389",
+					"cidr_ip": "10.208.0.64/27",
+					"group_name": ""
+				},
+				{
+					"protocol": "tcp",
+					"ports": "8080",
+					"cidr_ip": "10.165.1.0/26",
+					"group_name": ""
+				}
+			]
+		},
+		{
+			"name": "mid-mgt",
+			"description": "The interfaces of any MID servers on any management networks must be assigned to this security group",
+			"rules": [
+				{
+					"protocol": "",
+					"ports": "",
+					"cidr_ip": "",
+					"group_name": ""
+				}
+			]
+		},
+		{
+			"name": "suse-mgt",
+			"description": "SUSE bring your own license",
+			"rules": [
+				{
+					"protocol": "",
+					"ports": "",
+					"cidr_ip": "",
+					"group_name": ""
+				}
+			]
+		},
+		{
+			"name": "fde-cst",
+			"description": "The interfaces of any proxy/DNS servers on any customer networks must be assigned to this security group",
+			"rules": [
+				{
+					"protocol": "tcp",
+					"ports": "3128",
+					"cidr_ip": "0.0.0.0/0",
+					"group_name": ""
+				},
+				{
+					"protocol": "tcp",
+					"ports": "53",
+					"cidr_ip": "0.0.0.0/0",
+					"group_name": ""
+				},
+				{
+					"protocol": "udp",
+					"ports": "53",
+					"cidr_ip": "0.0.0.0/0",
+					"group_name": ""
+				},
+				{
+					"protocol": "tcp",
+					"ports": "50013",
+					"cidr_ip": "10.4.0.0/21",
+					"group_name": ""
+				}
+			]
+		},
+		{
+			"name": "fde-mgt",
+			"description": "The interfaces of any proxy/DNS servers on any management networks must be assigned to this security group",
+			"rules": [
+				{
+					"protocol": "tcp",
+					"ports": "1128",
+					"cidr_ip": "10.4.0.0/21",
+					"group_name": ""
 				},
 				{
 					"protocol": "tcp",
 					"ports": "3299",
-					"cidr_ip": "",
-					"group_name": "saprtr-pub"
+					"cidr_ip": "10.4.0.0/21",
+					"group_name": ""
 				},
 				{
 					"protocol": "tcp",
-					"ports": "3298",
-					"cidr_ip": "",
-					"group_name": "saprtr-pub"
+					"ports": "3128",
+					"cidr_ip": "10.4.0.0/21",
+					"group_name": ""
+				},
+				{
+					"protocol": "udp",
+					"ports": "53",
+					"cidr_ip": "10.4.0.0/21",
+					"group_name": ""
+				},
+				{
+					"protocol": "tcp",
+					"ports": "53",
+					"cidr_ip": "10.4.0.0/21",
+					"group_name": ""
+				},
+				{
+					"protocol": "tcp",
+					"ports": "1129",
+					"cidr_ip": "10.4.0.0/21",
+					"group_name": ""
+				},
+				{
+					"protocol": "tcp",
+					"ports": "50013",
+					"cidr_ip": "10.4.0.0/21",
+					"group_name": ""
 				}
 			]
 		},
@@ -147,25 +321,38 @@
 					"ports": "0",
 					"cidr_ip": "",
 					"group_name": "cust-net-all"
-				},
-				{
-					"protocol": "tcp",
-					"ports": "3299",
-					"cidr_ip": "",
-					"group_name": "saprtr-pub"
-				},
-				{
-					"protocol": "tcp",
-					"ports": "3298",
-					"cidr_ip": "",
-					"group_name": "saprtr-pub"
 				}
 			]
 		},
 		{
-			"name": "hrs-sid-cst",
-			"description": "The interfaces of any HRS-SID servers on any customer networks must be assigned to this security group",
-			"rules": []
+			"name": "saprtr-mgt",
+			"description": "The interfaces of any SAP routers on any management networks must be assigned to this security group",
+			"rules": [
+				{
+					"protocol": "tcp",
+					"ports": "8080",
+					"cidr_ip": "",
+					"group_name": "mgmt-net-all"
+				},
+				{
+					"protocol": "tcp",
+					"ports": "8081",
+					"cidr_ip": "",
+					"group_name": "mgmt-net-all"
+				}
+			]
+		},
+		{
+			"name": "sap-cst",
+			"description": "The interfaces of any SAP servers on any customer networks must be assigned to this security group",
+			"rules": [
+				{
+					"protocol": "tcp",
+					"ports": "6001",
+					"cidr_ip": "",
+					"group_name": "proxy-dns-cst"
+				}
+			]
 		}
 	]
 }
