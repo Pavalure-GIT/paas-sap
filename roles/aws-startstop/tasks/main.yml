@@ -1,6 +1,8 @@
 ---
 - include_tasks: start.yml
-  when: action == 'start'
-
+  when: action == 'start' and (facts.instances[0].state.name | match("running"))
+  
 - include_tasks: stop.yml
-  when: action == 'stop'
+  when: action == 'stop' and (facts.instances[0].state.name | match("running"))
+
+

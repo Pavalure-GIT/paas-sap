@@ -1,21 +1,14 @@
-#Stop all the instances which is running from the final list
+#Stop all the instances which is running from the list
 
 - debug:
-    msg: "Stop"
+    msg: "Stop Instance"
 
-#- name: "read a file and store value into variable"
-#  set_fact:
-#     file1:  "{{ lookup('file', '/home/sureshpavalure/github/SystemTeam/roles/aws-startstop/files/compared.txt').splitlines() }}"
+- name: EC2 instance stop when instance is running
+  ec2_instance:
+    region: "{{ aws_region }}"
+    state: stopped
+    filters:
+      instance_id: "{{ item }}"
+  register: ec2_instance
+  with_items: "{{ instance_list }}"
 
-#- name: EC2 instance stop when we found the instance 
-#  ec2_instance:
-#    region: "{{ region }}"
-#    state: stopped
-#    filters:
-#      instance_id: "{{ item }}"
-#  register: ec2_instance
-#  with_items: "{{ file1 }}"
-
-#- name: instance list output
-#  debug:
-#    msg: "{{ ec2_instance }}"

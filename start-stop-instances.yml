@@ -10,19 +10,22 @@
 
 - name: Start/Stop SAP Service
   hosts: instances
+  become: yes
   tasks:
     - name: Call Start Stop
       include_role:
         name: sap-startstop
       vars:
         action: stop
-
+       
 - name: Run Start/Stop Instances
   hosts: localhost
   tasks:
-    - name: Start/Stop Instance
-      include_role:
-        name: aws-startstop
-      vars:
-        action: stop
+   - name: Start/Stop Instance
+     include_role:
+       name: aws-startstop
+     vars:
+       action: stop
+       aws_region: us-east-1
+  
 

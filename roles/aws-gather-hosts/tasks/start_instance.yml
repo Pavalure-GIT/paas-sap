@@ -1,0 +1,17 @@
+#Start all the instances which is stopped before
+
+- debug:
+    msg: "Start insance before SAP System start"
+
+- name: EC2 instance start when we found the instance 
+  ec2_instance:
+    region: "{{ aws_region }}"
+    state: started
+    filters:
+      instance_id: "{{ item }}"
+  register: ec2_instance
+  with_items: "{{ instance_list }}"
+
+- pause:
+    minutes: 5
+  

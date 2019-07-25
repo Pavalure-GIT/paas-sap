@@ -1,16 +1,19 @@
-- name: "read a file and store value into variable"
-  set_fact:
-     file1:  "{{ lookup('file', '/home/sureshpavalure/github/SystemTeam/roles/aws-startstop/files/approved.txt').splitlines() }}"
+#Start all the instances which is stopped
 
-- name: EC2 instance stop when we found the instance 
+- debug:
+    msg: "Start Instance"
+
+- name: EC2 instance start when stopped 
   ec2_instance:
-    region: "{{ region }}"
+    region: "{{ aws_region }}"
     state: started
     filters:
       instance_id: "{{ item }}"
   register: ec2_instance
-  with_items: "{{ file1 }}"
+  with_items: "{{ instance_list }}"
 
-- name: instance list output
-  debug:
-    msg: "{{ ec2_instance }}"
+  
+
+
+
+
