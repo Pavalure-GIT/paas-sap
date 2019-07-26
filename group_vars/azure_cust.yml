@@ -15,7 +15,7 @@ vm_public_keys: "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAgKPo2E32TDYoeSsSJgqEVlShiAp
 
 #Standard
 #the resource group in which the build will reside
-st_resource_group: "P4S-Prototype-Automation"
+st_resource_group: "P4S-Prototype-AutomationDO"
 #Name to be given to Customer Primary VPC
 st_virtual_network_name: "VNET-ESO4SAP3-azureProto"
 #region for the Primary VPC
@@ -63,7 +63,7 @@ fde_size: "Standard_B4ms"
 fde_image_offer: "SLES-Standard"
 #the OS to be used
 fde_publisher: "SUSE"
-fde_sku: "12-SP3"
+fde_sku: "12-SP4"
 
 #SAPRouter
 #VM type/size
@@ -72,7 +72,7 @@ saprouter_size: "Standard_B4ms"
 saprouter_image_offer: "SLES-Standard"
 #the OS to be used
 saprouter_publisher: "SUSE"
-saprouter_sku: "12-SP3"
+saprouter_sku: "12-SP4"
 
 #MidServers
 #VM type/size
@@ -90,7 +90,7 @@ cloudboost_size: "Standard_D8_v3"
 cloudboost_image_offer: "SLES-Standard"
 #the OS to be used
 cloudboost_publisher: "SUSE"
-cloudboost_sku: "12-SP3"
+cloudboost_sku: "12-SP4"
 
 #VM type/size
 networker_size: "Standard_A8_v2"
