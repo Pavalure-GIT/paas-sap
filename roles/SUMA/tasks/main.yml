@@ -1,8 +1,21 @@
 #re-image and patch
-- { include: image_update.yml, become: yes }
+- name: reimage and patch
+  include_tasks: image_update.yml
+
+- name: reimage and patch
+  include_tasks: filesystem_config.yml
+  when: aws is defined
+
+- name: reimage and patch
+  include_tasks: filesystem_config_azure.yml
+  when: azure is defined
+
+- name: reimage and patch
+  include_tasks: SUSEManager_setup.yml
+#- { include: image_update.yml, become: yes }
 
 #disk partition and swap
-- { include: filesystem_config.yml, become: yes }
+# - { include: filesystem_config.yml, become: yes }
 
 #SUSEManager Setup
-- { include: SUSEManager_setup.yml, become: yes }
+# - { include: SUSEManager_setup.yml, become: yes }

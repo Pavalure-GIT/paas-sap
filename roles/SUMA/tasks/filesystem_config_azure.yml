@@ -1,0 +1,22 @@
+- name: Edit the file /etc/waagent.conf
+  command: sed -i 's/ResourceDisk.EnableSwap=n/ResourceDisk.EnableSwap=y/' /etc/waagent.conf
+
+- name: Edit /etc/waagent.conf
+  command: sed -i 's/ResourceDisk.SwapSizeMB=0/ResourceDisk.SwapSizeMB=4096/' /etc/waagent.conf
+
+- name: restart waagent
+  service:
+    state: restarted
+    name: waagent.service
+  
+#This command is cloud dedicated and used to prepare the disk you are adding.
+- name: prepare the disk
+  command: /usr/bin/suma-storage /dev/sdc
+
+- name: Modify the file /etc/fstab in order to use this disk each time you restart
+  command: echo "/dev/sdc1 /manager_storage xfs defaults 1 1" >> /etc/fstab
+
+
+
+
+
