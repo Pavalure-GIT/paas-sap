@@ -68,10 +68,10 @@
         azure_vm_nic: "suma-nic1"
       when: suma
       
-    - name: Add SIEM to siem host group
+    - name: Add SUMA to suma host group
       add_host:
         name: "{{ nic1.state.ip_configuration.private_ip_address }}"
-        groups: siem
+        groups: suma
 
 
 #Create SIEM server     
@@ -120,6 +120,11 @@
         name: siem
         tasks_from: azure-oms-install.yml
       when: siem
+
+    - name: Add siem to siem host group
+      add_host:
+        name: "{{ nic1.state.ip_configuration.private_ip_address }}"
+        groups: siem
 
 #Create BUaaS servers        
 - name: Provision Component VMs
