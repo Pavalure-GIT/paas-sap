@@ -1,0 +1,24 @@
+
+- debug: 
+    msg: "Start SAP"
+
+- name: retrieve the <sid>adm users
+  shell: cat /etc/passwd | sed -n '/adm/p' | awk -F ':' '{print $1}' | cut -c1-3 
+  register: sid_user
+
+- name: Check HANA is installed or not
+  stat:
+    path: /hana/shared
+  register: dir_exist
+
+- name: find sid
+  shell: ls
+  args:
+    chdir: /hana/shared
+  register: db_sid
+  when: dir_exist.stat.exists and dir_exist.stat.isdir
+
+- include: "{{ 'hana_db_instance.yml' if dir_exist.stat.exists else 'syb_db_instance.yml' }}"
+  vars:
+    dbpass: "{{ lookup('env','DBPASS') }}"
+  
