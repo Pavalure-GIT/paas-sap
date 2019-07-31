@@ -17,7 +17,7 @@ vm_public_keys: "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAgKPo2E32TDYoeSsSJgqEVlShiAp
 
 #Standard
 #the resource group in which the build will reside
-st_resource_group: "P4S-Prototype-Automation-Siem"
+st_resource_group: "P4S-Prototype-AutomationDO"
 #Name to be given to Customer Primary VPC
 st_virtual_network_name: "VNET-ESO4SAP3-azureProto"
 #region for the Primary VPC
