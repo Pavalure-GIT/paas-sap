@@ -1,0 +1,19 @@
+#Start all the instances which is stopped
+
+- debug:
+    msg: "Start Instance"
+
+- name: EC2 instance start when stopped 
+  ec2_instance:
+    region: "{{ aws_region }}"
+    state: started
+    filters:
+      instance_id: "{{ item }}"
+  register: ec2_instance
+  with_items: "{{ instance_list }}"
+
+  
+
+
+
+

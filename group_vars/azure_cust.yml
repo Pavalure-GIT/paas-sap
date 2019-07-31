@@ -1,3 +1,5 @@
+#cloud provider
+azure: true
 #Options
 #define the parameters for the compartments by changing the options to 'yes' and 'no'
 #dr_compartment is set to yes if a DR compartment is required, this will create the compartment and peer it to the primary compartment?
@@ -55,12 +57,23 @@ dr_management_subnet: "100.65.24.0/23"
 dr_gateway_subnet: "100.79.0.0/28"
 dr_customer_reverse_dns: 0.64.100.in-addr.arpa
 dr_management_reverse_dns: 24.65.100.in-addr.arpa
+
+#SIEM
+#VM type/size
+siem: true
+siem_size: "Standard_B2s"
+#the image for VM's are specific to each region so ensure they are correct for the desired regions
+siem_image_offer: "RHEL"
+#the OS to be used
+siem_publisher: "RedHat"
+siem_sku: "7-RAW"
+
   
 #FDE
 #VM type/size
 fde_size: "Standard_B4ms"
 #the image for VM's are specific to each region so ensure they are correct for the desired regions
-fde_image_offer: "SLES-Standard"
+fde_image_offer: "SLES"
 #the OS to be used
 fde_publisher: "SUSE"
 fde_sku: "12-SP4"
@@ -69,10 +82,20 @@ fde_sku: "12-SP4"
 #VM type/size
 saprouter_size: "Standard_B4ms"
 #the image for VM's are specific to each region so ensure they are correct for the desired regions
-saprouter_image_offer: "SLES-Standard"
+saprouter_image_offer: "SLES"
 #the OS to be used
 saprouter_publisher: "SUSE"
 saprouter_sku: "12-SP4"
+
+#SUMA
+suma: true
+suma_size: "Standard_F8s"
+#the image for VM's are specific to each region so ensure they are correct for the desired regions
+suma_image_offer: "SUSE-Manager-Server-BYOS"
+#the OS to be used
+suma_publisher: "SUSE"
+suma_sku: "3-2"
+suma_short: suma-srv
 
 #MidServers
 #VM type/size
@@ -87,7 +110,7 @@ mids_sku: "7-RAW"
 #VM type/size
 cloudboost_size: "Standard_D8_v3"
 #the image for VM's are specific to each region so ensure they are correct for the desired regions
-cloudboost_image_offer: "SLES-Standard"
+cloudboost_image_offer: "SLES"
 #the OS to be used
 cloudboost_publisher: "SUSE"
 cloudboost_sku: "12-SP4"

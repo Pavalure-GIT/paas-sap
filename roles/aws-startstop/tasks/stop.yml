@@ -1,0 +1,14 @@
+#Stop all the instances which is running from the list
+
+- debug:
+    msg: "Stop Instance"
+
+- name: EC2 instance stop when instance is running
+  ec2_instance:
+    region: "{{ aws_region }}"
+    state: stopped
+    filters:
+      instance_id: "{{ item }}"
+  register: ec2_instance
+  with_items: "{{ instance_list }}"
+
