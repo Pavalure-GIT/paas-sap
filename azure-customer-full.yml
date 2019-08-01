@@ -126,6 +126,7 @@
       add_host:
         name: "{{ nic1.state.ip_configuration.private_ip_address }}"
         groups: siem
+      when: siem
 
 #Create BUaaS servers        
 - name: Provision Component VMs
