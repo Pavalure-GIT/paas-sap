@@ -86,6 +86,7 @@
       add_host:
         name: "{{ eth0.interface.private_ip_address }}"
         groups: siem
+      when: siem
 
 
 - name: Provision Component Machines
