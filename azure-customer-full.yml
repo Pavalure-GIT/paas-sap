@@ -262,6 +262,7 @@
         azure_vm_nic1_reverse_dns: ""
         azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_add_dns: true
+        availability_set: "{{ availability_set_name }}"
 #This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Public
       include_role: 
@@ -370,6 +371,7 @@
         azure_vm_nic1_reverse_dns: "{{ st_customer_reverse_dns }}"
         azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_add_dns: true
+        availability_set: "{{ availability_set_name }}"
 #This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Customer
       include_role: 
@@ -411,6 +413,7 @@
         azure_vm_nic1_reverse_dns: ""
         azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_add_dns: false
+        availability_set: "{{ availability_set_name }}"
       when: ha_compartment
 #This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Public
@@ -458,6 +461,7 @@
         azure_vm_nic1_reverse_dns: "{{ st_customer_reverse_dns }}"
         azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_add_dns: false
+        availability_set: "{{ availability_set_name }}"
       when: ha_compartment
 
     - name: Allocate ASG nic1 - Customer
@@ -760,7 +764,7 @@
           - { resource_group: "{{ dr_resource_group }}", name: asg-mgmt  }
         azure_vm_nic: "FDE-HA-dr-nic2"
       when: dr_compartment and dr_ha_compartment
-    
+
     - azure_rm_virtualnetworkpeering:
         resource_group: "{{ st_resource_group }}"
         virtual_network: "{{ st_virtual_network_name }}"
