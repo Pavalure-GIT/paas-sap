@@ -1,0 +1,67 @@
+---
+
+##Create the new rule when there are no application security groups within the rules source and destination
+- name: Create new rule - No ASG's
+  set_fact:
+    list_new_item:
+      - name: "{{ rule_name }}"
+        protocol: "{{ rule_protocol }}"
+        source_port_range: "{{ rule_source_port_range }}"
+        source_address_prefix: "{{ rule_source_address_prefix }}"
+        destination_port_range: "{{ rule_destination_port_range }}"
+        access: "{{ rule_access }}"
+        priority: "{{ rule_priority }}"
+        direction: "{{ rule_direction }}"
+  when: rule_source_application_security_groups == "" and rule_destination_application_security_groups == ""
+
+#Create the new rule when the source is an application security group
+- name: Create new rule - Source ASG
+  set_fact:
+    list_new_item:
+      - name: "{{ rule_name }}"
+        protocol: "{{ rule_protocol }}"
+        source_port_range: "{{ rule_source_port_range }}"
+        source_application_security_groups: "{{ rule_source_application_security_groups }}"
+        destination_port_range: "{{ rule_destination_port_range }}"
+        access: "{{ rule_access }}"
+        priority: "{{ rule_priority }}"
+        direction: "{{ rule_direction }}"
+  when: rule_source_application_security_groups != ""
+
+#Create the new rule when the destination is an application security group
+- name: Create new rule - Destination ASG
+  set_fact:
+    list_new_item:
+      - name: "{{ rule_name }}"
+        protocol: "{{ rule_protocol }}"
+        source_port_range: "{{ rule_source_port_range }}"
+        source_address_prefix: "{{ rule_source_address_prefix }}"
+        destination_application_security_groups: "{{ rule_destination_application_security_groups }}"
+        destination_port_range: "{{ rule_destination_port_range }}"
+        access: "{{ rule_access }}"
+        priority: "{{ rule_priority }}"
+        direction: "{{ rule_direction }}"
+  when: rule_destination_application_security_groups != ""
+
+#Create the new rule when both source and destinations are application security groups
+- name: Create new rule - Both source and destination ASG's
+  set_fact:
+    list_new_item:
+      - name: "{{ rule_name }}"
+        protocol: "{{ rule_protocol }}"
+        source_port_range: "{{ rule_source_port_range }}"
+        source_application_security_groups: "{{ rule_source_application_security_groups }}"
+        destination_application_security_groups: "{{ rule_destination_application_security_groups }}"
+        destination_port_range: "{{ rule_destination_port_range }}"
+        access: "{{ rule_access }}"
+        priority: "{{ rule_priority }}"
+        direction: "{{ rule_direction }}"
+  when: rule_source_application_security_groups != "" and rule_destination_application_security_groups != ""
+
+#Add the items of each rule to a list
+- name: Add new rule
+  set_fact:
+    list: "{{ list  + list_new_item }}"
+
+- debug: var=list
+

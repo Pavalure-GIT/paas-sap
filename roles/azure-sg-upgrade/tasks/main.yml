@@ -1,14 +1,34 @@
 ---
 
-#- include: create_rules.yml
+#- set_fact:
+#    assignments_input: "{{ lookup('file','assign.json') | from_json }}"
 
-- set_fact:
-    assignments_input: "{{ lookup('file','assign.json') | from_json }}"
+#- include: assign_groups.yml
+#  vars:
+#    vm_type: "{{ item.vm_name }}"
+#    asg_list: "{{ item.ASG }}"
+#    nsg_list: "{{ item.NSG }}"
+#  with_items: "{{ assignments_input.assign_groups }}"
 
-- include: assign_groups.yml
+
+- name: Set the application security group file as a fact
+  set_fact:
+     asg: "{{ lookup('file', 'asg.json') | from_json }}"
+
+- include_tasks: application_security_groups.yml
   vars:
-    vm_type: "{{ item.vm_name }}"
-    asg_list: "{{ item.ASG }}"
-    nsg_list: "{{ item.NSG }}"
-  with_items: "{{ assignments_input.assign_groups }}"
+    asgtest: "{{ item }}"
+  with_items: "{{ asg.application_security_groups }}"
+
+- debug:
+    var=management_ip_range
+
+- name: Set the security group file as a fact
+  set_fact:
+     sg: "{{ lookup('file', 'security_groups.json') | from_json }}"
+
+- include_tasks: security_groups.yml
+  vars:
+    sgtest: "{{ item }}"
+  with_items: "{{ sg.security_groups }}"
 

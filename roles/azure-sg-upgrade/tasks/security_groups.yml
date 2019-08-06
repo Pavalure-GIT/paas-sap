@@ -1,0 +1,26 @@
+---
+
+- set_fact:
+    list: []
+ 
+- include: security_rules.yml
+  vars:
+    rule_name: "{{ item.name }}"
+    rule_protocol: "{{ item.protocol }}"
+    rule_source_port_range: "{{ item.source_port_range }}"
+    rule_source_address_prefix: "{{ item.source_address_prefix }}"
+    rule_source_application_security_groups: "{{ item.source_application_security_groups }}"
+    rule_destination_application_security_groups: "{{ item.destination_application_security_groups }}"
+    rule_destination_port_range: "{{ item.destination_port_range }}"
+    rule_access: "{{ item.access }}"
+    rule_priority: "{{ item.priority }}"
+    rule_direction: "{{ item.direction }}"
+  with_items: "{{ sgtest.rules }}"
+
+
+- name: Create security group with set of rules
+  azure_rm_securitygroup:
+    resource_group: "{{ resource_group }}"
+    name: "{{ sgtest.name }}"
+    purge_rules: yes
+    rules: "{{ list }}"

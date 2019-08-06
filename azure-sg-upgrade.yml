@@ -1,9 +1,10 @@
 ---
-- name: Update ASG/NSG design in Azure
+
+- name: Azure Security Groups
   hosts: localhost
-  vars:
-    resource_group: P4S-Prototype-Automation-Test
-    vnet: VNET-ESO4SAP3-azureTest
   tasks:
-    - include_role:
+    - name: Azure upgrade security groups
+      include_role:
         name: azure-sg-upgrade
+      vars:
+        resource_group: P4S-Prototype-Automation-CB

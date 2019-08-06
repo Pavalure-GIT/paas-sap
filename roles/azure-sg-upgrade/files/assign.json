@@ -1,33 +1,15 @@
 {
-	"assign_groups": [{
-			"vm_name": "sg-test",
-			"NSG": {
-				"nic0": "nsg-sap-mgt"
-			},
-			"ASG": {
-				"nic0": [
-					"asg-mgmt",
-					"asg-mid-mgt"
-				]
-			}
-		},
-		{
-			"vm_name": "sg-test-charlotte",
-			"NSG": {
-				"nic0": "nsg-sap-mgt",
-				"nic1": "nsg-sap-cst"
-			},
-			"ASG": {
-				"nic0": [
-					"asg-mgmt",
-					"asg-mid-mgt",
-					"asg-test-alex"
-				],
-				"nic1": [
-					""
-				]
-			}
-		}
-
-	]
+        "assign_groups": [
+                      {
+                        "vm_name": "testvm",
+                        "nic0": [ "mgmt-net-all", "saprtr-pub" ],
+                        "nic1": [ "cust-net-all" ]
+                      },
+                      {
+                        "vm_name": "testvm",
+                        "nic0": [ "mgmt-net-all", "saprtr-pub" ],
+                        "nic1": [ "cust-net-all" ]
+                      }
+                        
+        ]
 }

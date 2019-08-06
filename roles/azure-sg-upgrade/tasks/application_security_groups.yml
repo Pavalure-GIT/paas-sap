@@ -1,0 +1,4 @@
+- name: Create the application security groups
+  azure_rm_applicationsecuritygroup:
+    resource_group: "{{ resource_group }}"
+    name: "{{ asgtest.name }}"
