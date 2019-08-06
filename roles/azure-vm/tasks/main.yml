@@ -9,9 +9,11 @@
 #    #sku: Aligned
 
 #Create an availability set to provision the HA machine into
-- name: Create availability set
+- name: Create availability sets
   azure_rm_availabilityset:
-    name: "{{ availability_set_name }}"
+    name: 
+         - "{{ availability_set_name1 }}"
+         - "{{ availability_set_name2 }}"
     location: "{{ region }}"
     resource_group: "{{ azure_vm_resource_group }}"
     platform_update_domain_count: 10
@@ -134,7 +136,14 @@
   azure_rm_virtualmachine:
     name: "{{ azure_vm_name }}"
     resource_group: "{{azure_vm_resource_group}}"
-    availability_set: "{{ availability_set_name }}"
+    availability_set: "{{ availability_set_name1 }}"
+    when: azure_vm_name == 
+                            - FDE
+                            - FDEHA
+    availability_set: "{{ availability_set_name2 }}"
+    when: azure_vm_name == 
+                            - SAPRouter
+                            - SAPRouter-HA
     vm_size: "{{azure_vm_size}}"
     network_interface_names: 
     - "{{nic1.state.name}}"
