@@ -102,7 +102,9 @@
       - path: /home/{{ username }}/.ssh/authorized_keys
         key_data: "{{azure_vm_public_ssh}}"
     state: present
-  when: nic2.state is defined and ha_compartment == no
+  when:
+       - nic2.state is defined
+       - ha_compartment == no
 
 #Provisioning a HA VM with one NIC, dependant on the output of the NIC creation
 - name: Provision virtual machine with 1 nic
@@ -148,7 +150,9 @@
       - path: /home/{{ username }}/.ssh/authorized_keys
         key_data: "{{azure_vm_public_ssh}}"
     state: present
-  when: nic2.state is defined and ha_compartment == true
+  when: 
+       - nic2.state is defined
+       - ha_compartment == true
 
   #create suma VM
 - include_tasks: azure-vm-suma.yml
