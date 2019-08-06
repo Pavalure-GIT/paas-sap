@@ -78,7 +78,7 @@
     state: present
   when: 
     - nic2.state is not defined and azure_vm_name != "suma"
-    - ha_compartment == "false"
+    - ha_compartment == no
 
 
 
@@ -102,7 +102,7 @@
       - path: /home/{{ username }}/.ssh/authorized_keys
         key_data: "{{azure_vm_public_ssh}}"
     state: present
-  when: nic2.state is defined and ha_compartment == "false"
+  when: nic2.state is defined and ha_compartment == no
 
 #Provisioning a HA VM with one NIC, dependant on the output of the NIC creation
 - name: Provision virtual machine with 1 nic
@@ -125,7 +125,7 @@
     state: present
   when: 
     - nic2.state is not defined and azure_vm_name != "suma"
-    - ha_compartment == "true"
+    - ha_compartment == true
 
 #Provisioning a HA VM with two NIC, if we have a defined output for nic2 response     
 - name: Provision virtual machine with 2 nics 
@@ -148,7 +148,7 @@
       - path: /home/{{ username }}/.ssh/authorized_keys
         key_data: "{{azure_vm_public_ssh}}"
     state: present
-  when: nic2.state is defined and ha_compartment == "true"
+  when: nic2.state is defined and ha_compartment == true
 
   #create suma VM
 - include_tasks: azure-vm-suma.yml
