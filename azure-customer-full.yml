@@ -262,7 +262,7 @@
         azure_vm_nic1_reverse_dns: ""
         azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_add_dns: true
-        availability_set: "{{ availability_set_name }}"
+        availability_set: "{{ availability_set_SAPR }}"
 #This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Public
       include_role: 
@@ -371,7 +371,7 @@
         azure_vm_nic1_reverse_dns: "{{ st_customer_reverse_dns }}"
         azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_add_dns: true
-        availability_set: "{{ availability_set_name }}"
+        availability_set: "{{ availability_set_FDE }}"
 #This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Customer
       include_role: 
@@ -413,7 +413,7 @@
         azure_vm_nic1_reverse_dns: ""
         azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_add_dns: false
-        availability_set: "{{ availability_set_name }}"
+        availability_set: "{{ availability_set_SAPR }}"
       when: ha_compartment
 #This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Public
@@ -461,7 +461,7 @@
         azure_vm_nic1_reverse_dns: "{{ st_customer_reverse_dns }}"
         azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_add_dns: false
-        availability_set: "{{ availability_set_name }}"
+        availability_set: "{{ availability_set_FDE }}"
       when: ha_compartment
 
     - name: Allocate ASG nic1 - Customer
