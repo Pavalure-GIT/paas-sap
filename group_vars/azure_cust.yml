@@ -5,7 +5,7 @@ azure: true
 #dr_compartment is set to yes if a DR compartment is required, this will create the compartment and peer it to the primary compartment?
 dr_compartment: no
 #Setting ha as yes will create a second FDE and SAP Router server in AZ2?
-ha_compartment: no
+ha_compartment: yes
 #busaas is set to yes if BUaaS management servers are to be created, please note this requires the correct AMIs to be shared to the subscription in advance
 buaas: no
 #Setting ha to yes will create a second FDE and SAP Router server in AZ2? for the DR compartment
@@ -17,9 +17,9 @@ vm_public_keys: "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAgKPo2E32TDYoeSsSJgqEVlShiAp
 
 #Standard
 #the resource group in which the build will reside
-st_resource_group: "P4S-Prototype-AutomationDO"
+st_resource_group: "P4S-Prototype-AutomationKAV"
 #Name to be given to Customer Primary VPC
-st_virtual_network_name: "VNET-ESO4SAP3-azureProto"
+st_virtual_network_name: "VNET-ESO4SAP3-azureProtoKA"
 #region for the Primary VPC
 st_region: "UK South"
 #specify the address space to be used for the VPC
@@ -31,14 +31,15 @@ st_customer_subnet: "172.64.0.0/22"
 st_management_subnet: "172.65.24.0/23"
 st_gateway_subnet: "172.79.0.0/28"
 #this is the management dns
-st_management_dns: proto.azure.paas4sap.svcs.entsvcs.com
+st_management_dns: protoKA.azure.paas4sap.svcs.entsvcs.com
 #this is the customer dns
-st_customer_dns: proto-customer.paas4sap.svcs.entsvcs.com
+st_customer_dns: proto-customerKA.paas4sap.svcs.entsvcs.com
 st_management_reverse_dns: 24.65.172.in-addr.arpa
 st_customer_reverse_dns: 0.64.172.in-addr.arpa
 
 #Name to be given to the availability set
-availability_set_name: "P4S-Prototype-AS"
+availability_set_name1: "P4S-Prototype-KAV-FDE"
+availability_set_name2: "P4S-Prototype-KAV-SAPR"
 
 #DR
 #the DR resource group in which the build will reside
