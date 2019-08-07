@@ -140,20 +140,17 @@
     - ha_compartment == true
 
 #Provisioning a HA VM with two NIC, if we have a defined output for nic2 response     
-- name: Provision virtual machine with 2 nics 
+
+- name: Provision virtual machine with 2 nics
   azure_rm_virtualmachine:
     name: "{{ azure_vm_name }}"
     resource_group: "{{azure_vm_resource_group}}"
     availability_set: "{{ availability_set_name1 }}"
-      when: 
-        - azure_vm_name == "FDE"
-        - azure_vm_name == "FDE-HA" 
-    availability_set: "{{ availability_set_name2 }}"
-      when: 
-        - azure_vm_name == "SAPRouter"
-        - azure_vm_name == "SAPRouter-HA"
+  when:
+       - azure_vm_name == "FDE"
+       - azure_vm_name == "FDE-HA"
     vm_size: "{{azure_vm_size}}"
-    network_interface_names: 
+    network_interface_names:
     - "{{nic1.state.name}}"
     - "{{nic2.state.name}}"
     image:
@@ -162,12 +159,40 @@
       sku: "{{azure_vm_sku}}"
       version: latest
     admin_username: "{{ username }}"
-    ssh_password_enabled: false  
+    ssh_password_enabled: false
     ssh_public_keys:
       - path: /home/{{ username }}/.ssh/authorized_keys
         key_data: "{{azure_vm_public_ssh}}"
     state: present
-  when: 
+  when:
+       - nic2.state is defined
+       - ha_compartment == true
+
+
+- name: Provision virtual machine with 2 nics
+  azure_rm_virtualmachine:
+    name: "{{ azure_vm_name }}"
+    resource_group: "{{azure_vm_resource_group}}"
+    availability_set: "{{ availability_set_name2 }}"
+  when:
+       - azure_vm_name == "SAPRouter"
+       - azure_vm_name == "SAPRouter-HA"
+    vm_size: "{{azure_vm_size}}"
+    network_interface_names:
+    - "{{nic1.state.name}}"
+    - "{{nic2.state.name}}"
+    image:
+      offer: "{{azure_vm_image_offer}}"
+      publisher: "{{azure_vm_publisher}}"
+      sku: "{{azure_vm_sku}}"
+      version: latest
+    admin_username: "{{ username }}"
+    ssh_password_enabled: false
+    ssh_public_keys:
+      - path: /home/{{ username }}/.ssh/authorized_keys
+        key_data: "{{azure_vm_public_ssh}}"
+    state: present
+  when:
        - nic2.state is defined
        - ha_compartment == true
 
