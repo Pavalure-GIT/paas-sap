@@ -146,9 +146,6 @@
     name: "{{ azure_vm_name }}"
     resource_group: "{{azure_vm_resource_group}}"
     availability_set: "{{ availability_set_name1 }}"
-  when:
-       - azure_vm_name == "FDE"
-       - azure_vm_name == "FDE-HA"
     vm_size: "{{azure_vm_size}}"
     network_interface_names:
     - "{{nic1.state.name}}"
@@ -167,6 +164,9 @@
   when:
        - nic2.state is defined
        - ha_compartment == true
+  when:
+       - azure_vm_name == "FDE"
+       - azure_vm_name == "FDE-HA"
 
 
 - name: Provision virtual machine with 2 nics
@@ -174,9 +174,6 @@
     name: "{{ azure_vm_name }}"
     resource_group: "{{azure_vm_resource_group}}"
     availability_set: "{{ availability_set_name2 }}"
-  when:
-       - azure_vm_name == "SAPRouter"
-       - azure_vm_name == "SAPRouter-HA"
     vm_size: "{{azure_vm_size}}"
     network_interface_names:
     - "{{nic1.state.name}}"
@@ -195,6 +192,11 @@
   when:
        - nic2.state is defined
        - ha_compartment == true
+  when:
+       - azure_vm_name == "SAPRouter"
+       - azure_vm_name == "SAPRouter-HA"
+
+
 
   #create suma VM
 - include_tasks: azure-vm-suma.yml
