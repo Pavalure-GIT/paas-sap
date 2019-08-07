@@ -145,9 +145,9 @@
     name: "{{ azure_vm_name }}"
     resource_group: "{{azure_vm_resource_group}}"
     availability_set: "{{ availability_set_name1 }}"
-      when: azure_vm_name == "FDE" or "FDE-HA" 
+      when: azure_vm_name == '"FDE" or "FDE-HA"' 
     availability_set: "{{ availability_set_name2 }}"
-      when: azure_vm_name == "SAPRouter" or "SAPRouter-HA"
+      when: azure_vm_name == '"SAPRouter" or "SAPRouter-HA"'
     vm_size: "{{azure_vm_size}}"
     network_interface_names: 
     - "{{nic1.state.name}}"
