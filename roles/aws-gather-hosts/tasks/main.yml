@@ -1,0 +1,24 @@
+---
+- set_fact:
+    approved:  "{{ lookup('file', 'approved.txt').splitlines() }}"
+
+- set_fact:
+    exceptions:  "{{ lookup('file', 'exceptions.txt').splitlines() }}"
+
+- set_fact:
+    instance_list: "{{ approved | difference(exceptions) }}"
+    
+- include_tasks: add_to_group.yml
+  vars:
+    instance: "{{ item }}"
+    instance_region: "{{ aws_region }}"
+  with_items: "{{ instance_list }}"
+
+# start all instance which is stopped before call SAP System
+
+- include_tasks: start_instance.yml
+  vars:
+    instance: "{{ item }}"
+    instance_region: "{{ aws_region }}"
+  when: facts.instances[0].state.name | match("stopped")
+

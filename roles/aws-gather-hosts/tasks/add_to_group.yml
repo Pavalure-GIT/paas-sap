@@ -1,0 +1,22 @@
+---
+- ec2_instance_facts:
+    region: "{{ instance_region }}"
+    instance_ids:
+      - "{{ instance }}" 
+  register: facts
+
+
+- set_fact:
+    ip: "{{ facts.instances[0].network_interfaces[0].private_ip_addresses[0].private_ip_address }}" 
+  when: facts.instances[0].network_interfaces[0].private_ip_addresses[0].private_ip_address | match("172.17.")
+
+- set_fact:
+    ip: "{{ facts.instances[0].network_interfaces[1].private_ip_addresses[0].private_ip_address }}" 
+  when: facts.instances[0].network_interfaces[1].private_ip_addresses[0].private_ip_address | match("172.17.")
+
+- name: Add to group
+  add_host:
+    name: "{{ ip }}" 
+    groups: instances
+
+    
