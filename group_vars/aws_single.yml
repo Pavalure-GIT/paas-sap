@@ -1,0 +1,37 @@
+vm_name: fdeTest
+region: us-east-1
+key_name: SystemTeamAutomation
+instance_type: c5.large
+image: ami-3c062943
+dns_prefix: fde2
+management_nic: eth1
+single_nic: false
+
+eth0_subnet_id: subnet-fbf48bb1
+eth0_groups:
+  - cust-net-all
+  - proxy-dns-cst
+eth0_dns: "dev-customer.dxc.paas4sap.svcs.entsvcs.com"
+eth1_subnet_id: subnet-5ff18e15
+eth1_groups:
+  - mgmt-net-all
+  - proxy-dns-mgt
+eth1_dns: "dev.aws.paas4sap.svcs.entsvcs.com"
+reverse_dns_id: "Z3URQYCKT7OC20"
+
+midserver: false
+saprouter: false
+fde: false
+
+#FDE Variables
+customer_subnet_cidr: "172.16.0.0/22"
+customer_management_subnet_cidr: "172.17.112.0/22"
+management_zone: "dev.aws.paas4sap.svcs.entsvcs.com"
+customer_zone: "dev-customer.dxc.paas4sap.svcs.entsvcs.com"
+forwarder_ip: "172.17.112.2"
+
+#SAP Router
+management_range: 10.4.0.0/24
+management_subnet_az1: 172.17.184.0/23
+management_subnet_az2: 172.17.184.0/23
+static_route_ip: 172.17.184.1

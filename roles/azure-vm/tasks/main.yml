@@ -15,6 +15,7 @@
     name: "{{ storage_account_name }}"
     type: Standard_LRS
   when: azure_vm_name == "suma"
+
 #create a container in storage account for store osdisk and data disk
 - name: create container
   azure_rm_storageblob:
@@ -52,7 +53,6 @@
   azure_rm_virtualmachine:
     name: "{{ azure_vm_name }}"
     resource_group: "{{azure_vm_resource_group}}"
-    availability_set: "{{ availability_set_name }}"
     vm_size: "{{azure_vm_size}}"
     network_interface_names: 
     - "{{nic1.state.name}}"
@@ -69,14 +69,11 @@
     state: present
   when: nic2.state is not defined and azure_vm_name != "suma"
 
-
-
 #Provisioning a VM with two NIC, if we have a defined output for nic2 response     
 - name: Provision virtual machine with 2 nics 
   azure_rm_virtualmachine:
     name: "{{ azure_vm_name }}"
     resource_group: "{{azure_vm_resource_group}}"
-    availability_set: "{{ availability_set_name }}"
     vm_size: "{{azure_vm_size}}"
     network_interface_names: 
     - "{{nic1.state.name}}"
@@ -107,5 +104,3 @@
 #Calling DNS entries to add the NIC(s) to the required DNS
 - include_tasks: dns-entries.yml
   when: azure_vm_add_dns
-
-

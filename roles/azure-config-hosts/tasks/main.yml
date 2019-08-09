@@ -1,0 +1,56 @@
+---
+- name: Find Management IP of SAP Router
+  azure_rm_resource_facts:
+    resource_group: "{{ resource_group }}"
+    resource_name: SAPRouter-nic2
+    provider: network
+    resource_type: networkInterfaces
+    api_version: "2019-06-01"
+  register: sr
+
+- name: Add SAP Router to SAP Router Group
+  add_host:
+    name: "{{ sr.response[0].properties.ipConfigurations[0].properties.privateIPAddress }}"
+    groups: saprouter
+
+- name: Find Management IP of FDE
+  azure_rm_resource_facts:
+    resource_group: "{{ resource_group }}"
+    resource_name: FDE-nic2
+    provider: network
+    resource_type: networkInterfaces
+    api_version: "2019-06-01"
+  register: fde
+
+- name: Add FDE to FDE Group
+  add_host:
+    name: "{{ fde.response[0].properties.ipConfigurations[0].properties.privateIPAddress }}"
+    groups: fde
+
+- name: Find Management IP of MidServerA
+  azure_rm_resource_facts:
+    resource_group: "{{ resource_group }}"
+    resource_name: MidServerA-nic1
+    provider: network
+    resource_type: networkInterfaces
+    api_version: "2019-06-01"
+  register: mida
+
+- name: Add MidServerA to Mids Group
+  add_host:
+    name: "{{ mida.response[0].properties.ipConfigurations[0].properties.privateIPAddress }}"
+    groups: mids
+
+- name: Find Management IP of MidServerB
+  azure_rm_resource_facts:
+    resource_group: "{{ resource_group }}"
+    resource_name: MidServerB-nic1
+    provider: network
+    resource_type: networkInterfaces
+    api_version: "2019-06-01"
+  register: midb
+
+- name: Add MidServerB to Mids Group
+  add_host:
+    name: "{{ midb.response[0].properties.ipConfigurations[0].properties.privateIPAddress }}"
+    groups: mids

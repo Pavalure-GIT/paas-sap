@@ -1,0 +1,50 @@
+saprouter: false
+midserver: false
+fde: false
+
+username: "ec2-user"
+cloud: azure
+vm_name: "suma2"
+nic1_subnet: "Management"
+nic1_nsg: "nsg-mgmt"
+nic1_asg:
+  - asg-mgmt
+nic1_dns: "proto.azure.paas4sap.svcs.entsvcs.com"
+nic1_reverse_dns: "184.17.172.in-addr.arpa"
+
+nic2_subnet: ""
+nic2_nsg: ""
+nic2_asg:
+  - ""
+nic2_dns: ""
+nic2_reverse_dns: ""
+
+#Azure
+resource_group: "P4S-Prototype-Automation-Test"
+region: "UK South"
+dns_resource_group: "P4S-Prototype-Automation-Test"
+virtual_network_name: "VNET-ESO4SAP3-azureTest"
+
+size: "Standard_A8_v2"
+image_offer: "SUSE-Manager-Server-BYOS"
+publisher: "SUSE"
+sku: "3-2"
+ssh_key: "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEA1crernS20R0x+hUyZx74HqT/SAa7hi+a/mh2I93inKAmLxmircoSuPRcYwjJT5ynO7q6AnAfVvBhHtj/TtBcmM2VRSYPxCCkljYAaIdceiWRS7YcFLyvAZm8tsI22SDNw44abOWY2rq2P5iOZSYxdxVEPUiMWm4PaDxlb5brt3mxFQU0eN/6wbaNpVdX+BAeVb7xmAc+34WToqXxn+x10D+8pWkt2DiBUuBOxyRU5HlvQy+gIWCwx3brOja+4UF1LwzqcbpLlaP3vBCZMSnce7fBKcgo8JN954qLNpbQG2TNgsmaUFm/P7uirZXxn5ByRjJbbJmHk2ZxKsKmca7Sww== SystemTeamAutomation"
+
+#SAP Router
+management_range: 10.4.0.0/24
+management_subnet_az1: 172.17.184.0/23
+management_subnet_az2: 172.17.184.0/23
+static_route_ip: 172.17.184.1
+
+#FDE
+management_zone: "dev.aws.paas4sap.svcs.entsvcs.com"
+customer_zone: "dev-customer.dxc.paas4sap.svcs.entsvcs.com"
+management_forwarders: "172.17.104.2;"
+customer_forwarders: "172.17.104.2;"
+reverse_forwarders: "172.17.104.2;"
+forwarder_ip: "172.17.104.2"
+customer_subnet_cidr: "172.16.32.0/22"
+customer_management_subnet_cidr: "172.17.32.0/22"
+
+

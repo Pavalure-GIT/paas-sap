@@ -1,7 +1,6 @@
----
 #Create eth0 - Network Interface
 - ec2_eni:
-    security_groups: "{{ aws_ec2_vm_eth0_groups }}"
+    security_groups: "{{ aws_eth0_security_groups }}"
     subnet_id: "{{ aws_ec2_vm_eth0_subnet }}"
     region: "{{ aws_ec2_vm_region }}"
     state: present
@@ -16,7 +15,7 @@
 
 #Create eth1 - Network Interface
 - ec2_eni:
-    security_groups: "{{ aws_ec2_vm_eth1_groups }}"
+    security_groups: "{{ aws_eth1_security_groups }}"
     subnet_id: "{{ aws_ec2_vm_eth1_subnet }}"
     region: "{{ aws_ec2_vm_region }}"
     state: present
