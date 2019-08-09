@@ -96,10 +96,12 @@
     vgw_new: "{{ vgw }}"
   when: csr_tag == 'prod'
 
-- debug: var=vgw
 
 - debug: var=az1ngw
 - debug: var=az1_nat_gateway.nat_gateway_id
+
+- debug: var=vgw
+- debug: var=vgw_new
 
 - ec2_vpc_route_table:
     vpc_id: "{{ vgw_new.vgw.vpc_id }}"
