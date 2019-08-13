@@ -72,6 +72,7 @@
     list: "{{ dr_list }}"
     terminate: "{{ dr_terminate }}"
     requester: "{{ dr_requester }}"
+  when: dr == 'true'
 
 #Remove the Route53 DNS entries
 - include: route53.yml
