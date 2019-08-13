@@ -110,7 +110,7 @@
       Name: Management AZ1
     routes:
       - dest: 0.0.0.0/0
-        gateway_id: "{{ az1_nat_gateway.nat_gateway_id }}"
+        gateway_id: "{{ az1ngw }}"
     propagating_vgw_ids: "{{ vgw_new.vgw.id }}"
 
 - pause:
