@@ -73,9 +73,20 @@
     terminate: "{{ dr_terminate }}"
     requester: "{{ dr_requester }}"
 
-#Wait for 40 minutes to ensure components have been removed
+#Remove the Route53 DNS entries
+- include: route53.yml
+  vars:
+    vpc: "{{ st_vpc_id }}"
+    vpc_name: "{{ st_vpc_name }}"
+    region: "{{ st_region }}"
+    list: "{{ st_list }}"
+    terminate: "{{ st_terminate }}"
+    requester: "{{ st_requester }}"
+  with_dict: "{{ route53_zones }}"
+
+#Wait for 10 minutes to ensure components have been removed
 - pause:
-    minutes: 40
+    minutes: 10
 
 #Remove the VPC
 - include: vpc.yml 
@@ -100,14 +111,3 @@
     terminate: "{{ dr_terminate }}"
     requester: "{{ dr_requester }}"
   when: dr == 'true'
-
-#Remove the Route53 DNS entries
-- include: route53.yml
-  vars:
-    vpc: "{{ st_vpc_id }}"
-    vpc_name: "{{ st_vpc_name }}"
-    region: "{{ st_region }}"
-    list: "{{ st_list }}"
-    terminate: "{{ st_terminate }}"
-    requester: "{{ st_requester }}"
-  with_dict: "{{ route53_zones }}"
