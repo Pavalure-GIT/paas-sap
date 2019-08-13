@@ -88,7 +88,7 @@
     state: present
   when: 
     - nic2.state is not defined and azure_vm_name != "suma"
-    - ha_compartment == false
+   ### - ha_compartment == false
 
 
 
@@ -114,7 +114,7 @@
     state: present
   when:
        - nic2.state is defined
-       - ha_compartment == false
+      ### - ha_compartment == false
 
 #Provisioning a HA VM with one NIC, dependant on the output of the NIC creation
 - name: Provision virtual machine with 1 nic
