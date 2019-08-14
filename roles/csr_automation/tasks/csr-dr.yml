@@ -55,7 +55,7 @@
      state: present
      asn: 64513
      region: "{{ vpc_region }}"
-     name: "{{ vgw_name }}"
+     name: "{{ dr_vgw_name }}"
      type: ipsec.1
      vpc_id: "{{ vpc.vpcs[0].vpc_id }}"
      tags:
@@ -75,7 +75,7 @@
   ec2_vpc_vgw:
      state: present
      asn: 64513
-     region: "{{ vpc_region }}"
+     region: "{{ dr_vpc_region }}"
      name: "{{ vgw_name }}"
      type: ipsec.1
      vpc_id: "{{ vpc.vpcs[0].vpc_id }}"
