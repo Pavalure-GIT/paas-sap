@@ -94,7 +94,7 @@
 - debug: var=vgw
 
 - ec2_vpc_route_table:
-    vpc_id: "{{ vgw.vgw.vpc_id }}"
+    vpc_id: "{{ vgw_new.vgw.vpc_id }}"
     region: "{{ dr_vpc_region }}"
     tags:
       Name: Management AZ1
