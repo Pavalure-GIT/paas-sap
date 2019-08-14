@@ -75,8 +75,8 @@
   when: dr == 'true'
 
 #Wait for 10 minutes to ensure components have been removed
-#- pause:
-#    minutes: 10
+- pause:
+    minutes: 15
 
 #Remove the VPC
 - include: vpc.yml 
