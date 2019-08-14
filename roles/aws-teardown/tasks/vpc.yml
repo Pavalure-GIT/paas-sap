@@ -82,6 +82,9 @@
 - debug: var=region
 - debug: var=vpc
 
+- pause:
+    minutes: 2
+
 #Get VPC facts
 - ec2_vpc_net_facts:
     region: "{{ region }}"
@@ -107,7 +110,7 @@
     tags:
        Name: "{{ vpc_name }}"
   retries: 3
-  delay: 20
+  delay: 120
   register: result
   until: result is succeeded
   with_items: "{{ vpc_facts.vpcs }}"
