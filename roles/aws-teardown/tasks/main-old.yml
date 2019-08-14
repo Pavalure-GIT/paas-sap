@@ -76,7 +76,7 @@
 
 #Wait for 10 minutes to ensure components have been removed
 - pause:
-    minutes: 10
+    minutes: 15
 
 #Remove the VPC
 - include: vpc.yml 
