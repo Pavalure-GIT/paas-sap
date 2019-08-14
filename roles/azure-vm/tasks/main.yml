@@ -16,7 +16,7 @@
     resource_group: "{{ azure_vm_resource_group }}"
     platform_update_domain_count: 10
     platform_fault_domain_count: 2
-  when: ha
+  when: ha_compartment
  ## when: ha_compartment == true
 
   #Create an availability set 2 to provision the Saprouter & Saprouter HA machine into
@@ -27,7 +27,7 @@
     resource_group: "{{ azure_vm_resource_group }}"
     platform_update_domain_count: 10
     platform_fault_domain_count: 2
-  when: ha
+  when: ha_compartment
   ##when: ha_compartment == true
 
 
@@ -140,7 +140,7 @@
     state: present
   when: 
     - nic2.state is not defined and azure_vm_name != "suma"
-    - ha 
+    - ha_compartment
  ## - ha_compartment == true
 
 #Provisioning a HA VM with two NIC, if we have a defined output for nic2 response     
@@ -167,7 +167,7 @@
     state: present
   when:
        - nic2.state is defined
-       - ha
+       - ha_compartment
       ## - ha_compartment == true
   when:
        - azure_vm_name == "FDE"
@@ -196,7 +196,7 @@
     state: present
   when:
        - nic2.state is defined
-       - ha
+       - ha_compartment
       ## - ha_compartment == true
   when:
        - azure_vm_name == "SAPRouter"
