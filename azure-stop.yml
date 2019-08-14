@@ -1,0 +1,32 @@
+---
+- name: Compare VMs in a subscription
+  hosts: localhost
+  tasks:
+    - name: Read in exceptions
+      set_fact:
+        json_in: "{{ lookup('file',json_file) | from_json }}"
+
+    - set_fact:
+        machine_list: []
+
+    - name: Get facts for given subscription
+      azure_rm_resourcegroup_facts:
+      register: all
+
+    - set_fact:
+        resource_groups: "{{ resource_groups|default([]) + [item.name] }}"
+      with_items: "{{ all.ansible_facts.azure_resourcegroups }}"
+    
+    - include_role:
+       name: azure-gather-hosts
+      vars:
+        action: 'stop'
+        rg: "{{ item }}"
+        exceptions: "{{ json_in.exceptions }}"
+      with_items: "{{ resource_groups }}"
+
+    - debug:
+        var=machine_list
+
+    - debug:
+        var=groups.sap_list

@@ -1,0 +1,24 @@
+---
+- name: Setup hosts for start 
+  hosts: localhost
+  tasks:
+    - name: Read in approved list
+      set_fact:
+        json_in: "{{ lookup('file',json_file) | from_json }}"
+
+    - set_fact:
+        machine_list: []
+
+    - include_role:
+       name: azure-gather-hosts
+      vars:
+        action: 'start'
+        rg: "{{ item.resource_group }}"
+        machines: "{{ item.virtual_machines }}"
+      with_items: "{{ json_in.approved }}" 
+   
+    - debug:
+        var=machine_list
+
+    - debug:
+        var=groups.sap_list 
