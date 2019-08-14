@@ -38,8 +38,8 @@ st_management_reverse_dns: 24.65.172.in-addr.arpa
 st_customer_reverse_dns: 0.64.172.in-addr.arpa
 
 #Name to be given to the availability set
-availability_set_name1: "P4S-Prototype-KAV-FDE"
-availability_set_name2: "P4S-Prototype-KAV-SAPR"
+##availability_set_name1: "P4S-Prototype-KAV-FDE"
+#####availability_set_name2: "P4S-Prototype-KAV-SAPR"
 
 #DR
 #the DR resource group in which the build will reside

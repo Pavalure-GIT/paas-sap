@@ -262,7 +262,7 @@
         azure_vm_nic1_reverse_dns: ""
         azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_add_dns: true
-        availability_set: "{{ availability_set_name2 }}"
+        availability_set_name: "SAPRouter"
 #This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Public
       include_role: 
@@ -371,7 +371,7 @@
         azure_vm_nic1_reverse_dns: "{{ st_customer_reverse_dns }}"
         azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_add_dns: true
-        availability_set: "{{ availability_set_name1 }}"
+        availability_set_name: "FDE"
 #This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Customer
       include_role: 
@@ -413,9 +413,9 @@
         azure_vm_nic1_reverse_dns: ""
         azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_add_dns: false
-        availability_set: "{{ availability_set_name2 }}"
+        availability_set_name: "SAPRouter"
       when: ha_compartment   
- ##when: ha_compartment == true
+
 #This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Public
       include_role: 
@@ -436,7 +436,6 @@
           - { resource_group: "{{ st_resource_group }}", name: asg-mgmt }
         azure_vm_nic: "SAPRouter-HA-nic2"
       when: ha_compartment     
- ##when: ha_compartment == true 
 
 #Note this machine has two nics 
 
@@ -463,9 +462,8 @@
         azure_vm_nic1_reverse_dns: "{{ st_customer_reverse_dns }}"
         azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_add_dns: false
-        availability_set: "{{ availability_set_name1 }}"
+        availability_set_name: "FDE"
       when: ha_compartment  
- ##   when: ha_compartment == true
 
     - name: Allocate ASG nic1 - Customer
       include_role: 
@@ -486,7 +484,6 @@
           - { resource_group: "{{ st_resource_group }}", name: asg-mgmt }
         azure_vm_nic: "FDE-HA-nic2"
       when: ha_compartment     
-## when: ha_compartment == true
 
 ##########################DR###########################
 #this will build the DR compartment if enabled in the vars file, ensure you select a different region from the primary compartment and select the correct virtal machine image for that region.

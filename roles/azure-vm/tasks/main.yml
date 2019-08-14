@@ -8,27 +8,27 @@
 #    platform_fault_domain_count: 2
 #    #sku: Aligned
 
-#Create an availability set 1 to provision the FDE & FDE HA machine into
-- name: Create availability sets
-  azure_rm_availabilityset:
-    name: "{{ availability_set_name1 }}"
-    location: "{{ region }}"
-    resource_group: "{{ azure_vm_resource_group }}"
-    platform_update_domain_count: 10
-    platform_fault_domain_count: 2
-  when: ha_compartment
- ## when: ha_compartment == true
+#KAV#Create an availability set 1 to provision the FDE & FDE HA machine into
+#- name: Create availability sets
+#  azure_rm_availabilityset:
+#    name: "{{ availability_set_name1 }}"
+#    location: "{{ region }}"
+#    resource_group: "{{ azure_vm_resource_group }}"
+#    platform_update_domain_count: 10
+#    platform_fault_domain_count: 2
+#  when: ha_compartment
+# ## when: ha_compartment == true
 
-  #Create an availability set 2 to provision the Saprouter & Saprouter HA machine into
-- name: Create availability sets
-  azure_rm_availabilityset:
-    name: "{{ availability_set_name2 }}"
-    location: "{{ region }}"
-    resource_group: "{{ azure_vm_resource_group }}"
-    platform_update_domain_count: 10
-    platform_fault_domain_count: 2
-  when: ha_compartment
-  ##when: ha_compartment == true
+#KAV  #Create an availability set 2 to provision the Saprouter & Saprouter HA machine into
+#- name: Create availability sets
+#  azure_rm_availabilityset:
+#    name: "{{ availability_set_name2 }}"
+#    location: "{{ region }}"
+#    resource_group: "{{ azure_vm_resource_group }}"
+#    platform_update_domain_count: 10
+#    platform_fault_domain_count: 2
+#  when: ha_compartment
+#  ##when: ha_compartment == true
 
 
 #create a storage account when suma is true in azure group vars 
@@ -149,7 +149,6 @@
   azure_rm_virtualmachine:
     name: "{{ azure_vm_name }}"
     resource_group: "{{azure_vm_resource_group}}"
-    availability_set: "{{ availability_set_name1 }}"
     vm_size: "{{azure_vm_size}}"
     network_interface_names:
     - "{{nic1.state.name}}"
@@ -169,16 +168,16 @@
        - nic2.state is defined
        - ha_compartment
       ## - ha_compartment == true
-  when:
-       - azure_vm_name == "FDE"
-       - azure_vm_name == "FDE-HA"
+###KAV  when:
+#       - azure_vm_name == "FDE"
+#       - azure_vm_name == "FDE-HA"
 
 
 - name: Provision virtual machine with 2 nics
   azure_rm_virtualmachine:
     name: "{{ azure_vm_name }}"
     resource_group: "{{azure_vm_resource_group}}"
-    availability_set: "{{ availability_set_name2 }}"
+####    availability_set: "{{ availability_set_name2 }}"
     vm_size: "{{azure_vm_size}}"
     network_interface_names:
     - "{{nic1.state.name}}"
@@ -198,9 +197,9 @@
        - nic2.state is defined
        - ha_compartment
       ## - ha_compartment == true
-  when:
-       - azure_vm_name == "SAPRouter"
-       - azure_vm_name == "SAPRouter-HA"
+###  when:
+##########       - azure_vm_name == "SAPRouter"
+#########       - azure_vm_name == "SAPRouter-HA"
 
 
 
