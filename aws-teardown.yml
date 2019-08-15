@@ -5,3 +5,26 @@
     - name: Call Teardown Role
       include_role:
         name: aws-teardown
+
+    - name: Call The VPC Teardown Role
+      include_role:
+        name: vpc-teardown
+      vars:
+        vpc: "{{ st_vpc_id }}"
+        vpc_name: "{{ st_vpc_name }}"
+        region: "{{ st_region }}"
+        list: "{{ st_list }}"
+        terminate: "{{ st_terminate }}"
+        requester: "{{ st_requester }}"
+
+    - name: Call The VPC Teardown Role for DR
+      include_role:
+        name: vpc-teardown
+      vars:
+        vpc: "{{ dr_vpc_id }}"
+        vpc_name: "{{ dr_vpc_name }}"
+        region: "{{ dr_region }}"
+        list: "{{ dr_list }}"
+        terminate: "{{ dr_terminate }}"
+        requester: "{{ dr_requester }}"
+      when: dr == 'true'
