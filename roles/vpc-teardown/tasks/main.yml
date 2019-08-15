@@ -99,6 +99,9 @@
     region: "{{ region }}"
   register: vpc_facts
 
+- pause:
+    minutes: 10
+
 #Remove the VPC
 - name: Remove the VPC
   ec2_vpc_net:
@@ -109,8 +112,8 @@
     purge_cidrs: yes
     tags:
        Name: "{{ vpc_name }}"
-  retries: 3
-  delay: 120
+  retries: 4
+  delay: 20
   register: result
   until: result is succeeded
   with_items: "{{ vpc_facts.vpcs }}"
