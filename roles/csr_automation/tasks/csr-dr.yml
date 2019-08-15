@@ -92,6 +92,7 @@
   when: csr_tag == 'prod'
 
 - debug: var=vgw
+- debug: var=vgw_new
 
 - ec2_vpc_route_table:
     vpc_id: "{{ vgw_new.vgw.vpc_id }}"
@@ -103,7 +104,7 @@
         vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
       - dest: 0.0.0.0/0
         gateway_id: "{{ az1_nat_gateway.nat_gateway_id }}"
-    propagating_vgw_ids: "{{ vgw.vgw.id }}"
+    propagating_vgw_ids: "{{ vgw_new.vgw.id }}"
 
 - pause:
     minutes: 6
