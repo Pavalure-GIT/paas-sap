@@ -2,12 +2,12 @@
 - name: AWS Teardown
   hosts: localhost
   tasks:
-    - name: Call Teardown Role
-      include_role:
-        name: aws-teardown
+#    - name: Call Teardown Role
+#      include_role:
+#        name: aws-teardown
   
-    - pause:
-        minutes: 10
+#    - pause:
+#        minutes: 10
 
     - name: Call The VPC Teardown Role
       include_role:
@@ -20,8 +20,8 @@
         terminate: "{{ st_terminate }}"
         requester: "{{ st_requester }}"
 
-    - pause:
-        minutes: 10
+#    - pause:
+#        minutes: 10
 
     - name: Call The VPC Teardown Role for DR
       include_role:
