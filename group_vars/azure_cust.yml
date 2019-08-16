@@ -38,8 +38,8 @@ st_management_reverse_dns: 24.65.172.in-addr.arpa
 st_customer_reverse_dns: 0.64.172.in-addr.arpa
 
 #Name to be given to the availability set
-##availability_set_name1: "P4S-Prototype-KAV-FDE"
-#####availability_set_name2: "P4S-Prototype-KAV-SAPR"
+availability_set_name1: "KAV-FDE"
+availability_set_name2: "KAV-SAPR"
 
 #DR
 #the DR resource group in which the build will reside
@@ -61,7 +61,7 @@ dr_management_reverse_dns: 24.65.100.in-addr.arpa
 
 #SIEM
 #VM type/size
-siem: true
+siem: false
 siem_size: "Standard_B2s"
 #the image for VM's are specific to each region so ensure they are correct for the desired regions
 siem_image_offer: "RHEL"
@@ -89,7 +89,7 @@ saprouter_publisher: "SUSE"
 saprouter_sku: "12-SP4"
 
 #SUMA
-suma: true
+suma: false
 suma_size: "Standard_F8s"
 #the image for VM's are specific to each region so ensure they are correct for the desired regions
 suma_image_offer: "SUSE-Manager-Server-BYOS"

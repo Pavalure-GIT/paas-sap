@@ -1,35 +1,4 @@
-#Create an availability set to provision the machine into
-#- name: Create availability set
-#  azure_rm_availabilityset:
-#    name: "{{ availability_set_name }}"
-#    location: "{{ region }}"
-#    resource_group: "{{ azure_vm_resource_group }}"
-#    platform_update_domain_count: 10
-#    platform_fault_domain_count: 2
-#    #sku: Aligned
-
-#KAV#Create an availability set 1 to provision the FDE & FDE HA machine into
-#- name: Create availability sets
-#  azure_rm_availabilityset:
-#    name: "{{ availability_set_name1 }}"
-#    location: "{{ region }}"
-#    resource_group: "{{ azure_vm_resource_group }}"
-#    platform_update_domain_count: 10
-#    platform_fault_domain_count: 2
-#  when: ha_compartment
-# ## when: ha_compartment == true
-
-#KAV  #Create an availability set 2 to provision the Saprouter & Saprouter HA machine into
-#- name: Create availability sets
-#  azure_rm_availabilityset:
-#    name: "{{ availability_set_name2 }}"
-#    location: "{{ region }}"
-#    resource_group: "{{ azure_vm_resource_group }}"
-#    platform_update_domain_count: 10
-#    platform_fault_domain_count: 2
-#  when: ha_compartment
-#  ##when: ha_compartment == true
-
+####later if needed- include: azure-vm-availabilitysets.yml 
 
 #create a storage account when suma is true in azure group vars 
 - name: create an account
@@ -91,11 +60,34 @@
     state: present
   when: 
     - nic2.state is not defined and azure_vm_name != "suma"
-   ### - ha_compartment == false
 
 
+#Provisioning a VM with two NIC, if we have a defined output for nic2 response
+- name: Provision virtual machine with 2 nics
+  azure_rm_virtualmachine:
+    name: "{{ azure_vm_name }}"
+    resource_group: "{{azure_vm_resource_group}}"
+    vm_size: "{{azure_vm_size}}"
+    network_interface_names:
+    - "{{nic1.state.name}}"
+    - "{{nic2.state.name}}"
+    image:
+      offer: "{{azure_vm_image_offer}}"
+      publisher: "{{azure_vm_publisher}}"
+      sku: "{{azure_vm_sku}}"
+      version: latest
+    admin_username: "{{ username }}"
+    ssh_password_enabled: false
+    ssh_public_keys:
+      - path: /home/{{ username }}/.ssh/authorized_keys
+        key_data: "{{azure_vm_public_ssh}}"
+    state: present
+  when:
+       - nic2.state is defined
+       - not ha_compartment
 
-#Provisioning a VM with two NIC, if we have a defined output for nic2 response     
+- debug: var=availability_set_name
+#Provisioning a VM with two NIC, if we have a defined output for nic2 response and it needs to be in an availability set
 - name: Provision virtual machine with 2 nics 
   azure_rm_virtualmachine:
     name: "{{ azure_vm_name }}"
@@ -114,10 +106,11 @@
     ssh_public_keys:
       - path: /home/{{ username }}/.ssh/authorized_keys
         key_data: "{{azure_vm_public_ssh}}"
+    availability_set: "{{azure_vm_availability_set_name}}"
     state: present
   when:
        - nic2.state is defined
-      ### - ha_compartment == false
+       - ha_compartment
 
 #Provisioning a HA VM with one NIC, dependant on the output of the NIC creation
 - name: Provision virtual machine with 1 nic
@@ -141,7 +134,6 @@
   when: 
     - nic2.state is not defined and azure_vm_name != "suma"
     - ha_compartment
- ## - ha_compartment == true
 
 #Provisioning a HA VM with two NIC, if we have a defined output for nic2 response     
 
@@ -163,44 +155,11 @@
     ssh_public_keys:
       - path: /home/{{ username }}/.ssh/authorized_keys
         key_data: "{{azure_vm_public_ssh}}"
+    availability_set: "{{availability_set_name}}"
     state: present
   when:
        - nic2.state is defined
        - ha_compartment
-      ## - ha_compartment == true
-###KAV  when:
-#       - azure_vm_name == "FDE"
-#       - azure_vm_name == "FDE-HA"
-
-
-- name: Provision virtual machine with 2 nics
-  azure_rm_virtualmachine:
-    name: "{{ azure_vm_name }}"
-    resource_group: "{{azure_vm_resource_group}}"
-####    availability_set: "{{ availability_set_name2 }}"
-    vm_size: "{{azure_vm_size}}"
-    network_interface_names:
-    - "{{nic1.state.name}}"
-    - "{{nic2.state.name}}"
-    image:
-      offer: "{{azure_vm_image_offer}}"
-      publisher: "{{azure_vm_publisher}}"
-      sku: "{{azure_vm_sku}}"
-      version: latest
-    admin_username: "{{ username }}"
-    ssh_password_enabled: false
-    ssh_public_keys:
-      - path: /home/{{ username }}/.ssh/authorized_keys
-        key_data: "{{azure_vm_public_ssh}}"
-    state: present
-  when:
-       - nic2.state is defined
-       - ha_compartment
-      ## - ha_compartment == true
-###  when:
-##########       - azure_vm_name == "SAPRouter"
-#########       - azure_vm_name == "SAPRouter-HA"
-
 
 
   #create suma VM

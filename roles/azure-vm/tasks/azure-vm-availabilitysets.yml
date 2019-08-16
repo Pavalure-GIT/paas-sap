@@ -1,7 +1,17 @@
 #Create an availability set 1 to provision the FDE & FDE HA machine into
 - name: Create availability sets
   azure_rm_availabilityset:
-    ##name: "{{ availability_set_name1 }}"
+    name: "{{ availability_set_name1 }}"
+    location: "{{ region }}"
+    resource_group: "{{ azure_vm_resource_group }}"
+    platform_update_domain_count: 10
+    platform_fault_domain_count: 2
+  when: ha_compartment
+
+#Create an availability set 1 to provision the FDE & FDE HA machine into
+- name: Create availability sets
+  azure_rm_availabilityset:
+    name: "{{ availability_set_name2 }}"
     location: "{{ region }}"
     resource_group: "{{ azure_vm_resource_group }}"
     platform_update_domain_count: 10
