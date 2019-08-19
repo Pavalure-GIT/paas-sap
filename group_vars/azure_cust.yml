@@ -5,7 +5,7 @@ azure: true
 #dr_compartment is set to yes if a DR compartment is required, this will create the compartment and peer it to the primary compartment?
 dr_compartment: no
 #Setting ha as yes will create a second FDE and SAP Router server in AZ2?
-ha_compartment: yes
+ha_compartment: no
 #busaas is set to yes if BUaaS management servers are to be created, please note this requires the correct AMIs to be shared to the subscription in advance
 buaas: no
 #Setting ha to yes will create a second FDE and SAP Router server in AZ2? for the DR compartment

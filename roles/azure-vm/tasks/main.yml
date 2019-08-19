@@ -7,6 +7,7 @@
     name: "{{ storage_account_name }}"
     type: Standard_LRS
   when: azure_vm_name == "suma"
+
 #create a container in storage account for store osdisk and data disk
 - name: create container
   azure_rm_storageblob:
@@ -61,7 +62,6 @@
   when: 
     - nic2.state is not defined and azure_vm_name != "suma"
 
-
 #Provisioning a VM with two NIC, if we have a defined output for nic2 response
 - name: Provision virtual machine with 2 nics
   azure_rm_virtualmachine:
@@ -87,6 +87,7 @@
        - not ha_compartment
 
 - debug: var=availability_set_name
+
 #Provisioning a VM with two NIC, if we have a defined output for nic2 response and it needs to be in an availability set
 - name: Provision virtual machine with 2 nics 
   azure_rm_virtualmachine:
