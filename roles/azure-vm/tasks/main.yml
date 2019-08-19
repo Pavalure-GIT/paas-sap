@@ -1,4 +1,4 @@
-####later if needed- include: azure-vm-availabilitysets.yml 
+
 
 #create a storage account when suma is true in azure group vars 
 - name: create an account
