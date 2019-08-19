@@ -51,7 +51,7 @@
 
   - debug: var=availability_set_name1
   - debug: var=availability_set_name2
-
+  - debug: var=cloudboost_size 
 
 
 #Create SUMA server     
@@ -273,57 +273,9 @@
           - { resource_group: "{{ st_resource_group }}", name: asg-mgmt }
         azure_vm_nic: "nmc-nic1"
       when: buaas
-        
-    - name: Provision SAP Router
-      include_role:
-        name: azure-vm
-      vars:
-        azure_vm_name: "SAPRouter"
-        azure_vm_resource_group: "{{ st_resource_group }}"
-        region: "{{ st_region }}"
-        azure_vm_dns_resource_group: "{{ st_resource_group }}"
-        azure_vm_vnet: "{{ st_virtual_network_name }}" 
-        azure_vm_size: "{{ saprouter_size }}"
-        azure_vm_image_offer: "{{ saprouter_image_offer }}"
-        azure_vm_publisher: "{{ saprouter_publisher }}"
-        azure_vm_sku: "{{ saprouter_sku }}"
-        azure_vm_public_ssh: "{{vm_public_keys}}"
-        azure_vm_nic1_subnet: "Public"
-        azure_vm_nic2_subnet: "Management"
-        azure_vm_nic1_dns: ""
-        azure_vm_nic1_nsg: "nsg-saprtr-pub"
-        azure_vm_nic2_nsg: "nsg-saprtr-mgmt"
-        azure_vm_nic2_dns: "{{ st_management_dns }}"
-        azure_vm_nic1_reverse_dns: ""
-        azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
-        azure_vm_add_dns: true
-#This will Allocate the ASG's to the VM
-    - name: Allocate ASG nic1 - Public
-      include_role: 
-        name: azure-asg-allocate
-      vars:
-        asgs:
-          - { resource_group: "{{ st_resource_group }}", name: asg-saprtr-pub  }
-          - { resource_group: "{{ st_resource_group }}", name: asg-pub }
-        azure_vm_nic: "SAPRouter-nic1"
-    - name: Allocate ASG nic2 - Management
-      include_role: 
-        name: azure-asg-allocate
-      vars:
-        asgs:
-          - { resource_group: "{{ st_resource_group }}", name: asg-saprtr-mgmt }
-          - { resource_group: "{{ st_resource_group }}", name: asg-mgmt }
-        azure_vm_nic: "SAPRouter-nic2"
-      when: not ha_compartment
-
-    - debug: var=availability_set_name1
-    - debug: var=availability_set_name2
-    - fail:
-        msg: after debug
-
 
 ###when HA is TRUE and needs to be in the SAPR availability set
-    - name: Provision SAP Router
+    - name: Provision SAP Router into availability set
       include_role:
         name: azure-vm
       vars:
@@ -364,7 +316,6 @@
           - { resource_group: "{{ st_resource_group }}", name: asg-saprtr-mgmt }
           - { resource_group: "{{ st_resource_group }}", name: asg-mgmt }
         azure_vm_nic: "SAPRouter-nic2"
-      when: ha_compartment
 
 
 
@@ -436,50 +387,8 @@
         azure_vm_nic: "MidServerB-nic1"
 
  
-    - name: Provision FDE
-      include_role:
-        name: azure-vm  
-      vars:
-        azure_vm_name: "FDE"
-        azure_vm_resource_group: "{{ st_resource_group }}"
-        region: "{{ st_region }}"
-        azure_vm_dns_resource_group: "{{ st_resource_group }}"
-        azure_vm_vnet: "{{ st_virtual_network_name }}" 
-        azure_vm_size: "{{ fde_size }}"
-        azure_vm_image_offer: "{{ fde_image_offer }}"
-        azure_vm_publisher: "{{ fde_publisher }}"
-        azure_vm_sku: "{{ fde_sku }}"
-        azure_vm_public_ssh: "{{ vm_public_keys }}"
-        azure_vm_nic1_subnet: "Customer"
-        azure_vm_nic2_subnet: "Management"
-        azure_vm_nic1_nsg: "nsg-fde-cust"
-        azure_vm_nic2_nsg: "nsg-fde-mgmt"
-        azure_vm_nic1_dns: "{{ st_customer_dns }}"
-        azure_vm_nic2_dns: "{{ st_management_dns }}"
-        azure_vm_nic1_reverse_dns: "{{ st_customer_reverse_dns }}"
-        azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
-        azure_vm_add_dns: true
-#This will Allocate the ASG's to the VM
-    - name: Allocate ASG nic1 - Customer
-      include_role: 
-        name: azure-asg-allocate
-      vars:
-        asgs:
-          - { resource_group: "{{ st_resource_group }}", name: asg-fde-cust  }
-          - { resource_group: "{{ st_resource_group }}", name: asg-cust }
-        azure_vm_nic: "FDE-nic1"
-    - name: Allocate ASG nic2 - Management
-      include_role: 
-        name: azure-asg-allocate
-      vars:
-        asgs:
-          - { resource_group: "{{ st_resource_group }}", name: asg-fde-mgmt  }
-          - { resource_group: "{{ st_resource_group }}", name: asg-mgmt }
-        azure_vm_nic: "FDE-nic2"
-      when: not ha_compartment
- 
 ##when HA is TRUE and FDE needs to be in an availability set
-    - name: Provision FDE
+    - name: Provision FDE into availability set
       include_role:
         name: azure-vm
       vars:
@@ -502,7 +411,7 @@
         azure_vm_nic1_reverse_dns: "{{ st_customer_reverse_dns }}"
         azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_add_dns: true
-        availability_set_name: "{{ availability_set_name1 }}"
+        azure_vm_availability_set_name: "{{ availability_set_name1 }}"
 #This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Customer
       include_role:
@@ -520,7 +429,7 @@
           - { resource_group: "{{ st_resource_group }}", name: asg-fde-mgmt  }
           - { resource_group: "{{ st_resource_group }}", name: asg-mgmt }
         azure_vm_nic: "FDE-nic2"
-      when: ha_compartment
+
 
 
    ##Duplicating provisions for HA requirements     
@@ -547,7 +456,7 @@
         azure_vm_nic1_reverse_dns: ""
         azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_add_dns: false
-        availability_set_name: "{{ availability_set_name2 }}"
+        azure_vm_availability_set_name: "{{ availability_set_name2 }}"
       when: ha_compartment   
 
 #This will Allocate the ASG's to the VM
@@ -596,7 +505,7 @@
         azure_vm_nic1_reverse_dns: "{{ st_customer_reverse_dns }}"
         azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_add_dns: false
-        availability_set_name: "{{ availability_set_name1 }}"
+        azure_vm_availability_set_name: "{{ availability_set_name1 }}"
       when: ha_compartment  
 
     - name: Allocate ASG nic1 - Customer
