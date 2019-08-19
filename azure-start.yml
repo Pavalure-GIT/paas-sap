@@ -21,4 +21,26 @@
         var=machine_list
 
     - debug:
-        var=groups.sap_list 
+        var=groups.sap_list
+
+- name: Start mahcines
+  hosts: localhost
+  tasks:
+    - name: Power On machines
+      azure_rm_virtualmachine:
+        resource_group: "{{ item.rg }}"
+        name: "{{ item.name }}"
+        started: yes
+      with_items: "{{ machine_list }}"
+    - pause:
+        minutes: 2
+
+- name: Start/Stop SAP Service
+  hosts: sap_list
+  become: yes
+  tasks:
+    - name: Call Start Stop
+      include_role:
+        name: sap-startstop
+      vars:
+        action: start

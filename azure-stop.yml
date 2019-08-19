@@ -30,3 +30,26 @@
 
     - debug:
         var=groups.sap_list
+
+    - pause:
+        minutes: 5
+
+- name: Start/Stop SAP Service
+  hosts: sap_list
+  become: yes
+  tasks:
+    - name: Call Start Stop
+      include_role:
+        name: sap-startstop
+      vars:
+        action: stop
+
+- name: Compare VMs in a subscription
+  hosts: localhost
+  tasks:
+    - name: Power Off
+      azure_rm_virtualmachine:
+        resource_group: "{{ item.rg }}"
+        name: "{{ item.name }}"
+        started: no
+      with_items: "{{ machine_list }}"
