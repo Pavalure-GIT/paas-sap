@@ -3,7 +3,7 @@
   set_fact:
     asg_item: "{{ asg != '' }}"
 
-- name: Create new item for  "{{ asg }}"
+- name: Create new item for "{{ asg }}"
   set_fact:
     asg_new_item:
       - { resource_group: "{{ resource_group }}", name: "{{ asg }}" }
@@ -11,5 +11,5 @@
 
 - name: Add new item to ASG List
   set_fact:
-    asgs: "{{ asgs + asg_new_item }}"
+    add_asg_list: "{{ add_asg_list + asg_new_item }}"
   when: asg_item

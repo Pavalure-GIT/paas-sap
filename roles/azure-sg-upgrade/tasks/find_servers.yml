@@ -1,0 +1,24 @@
+---
+- name: Get facts by name/type
+  azure_rm_virtualmachine_facts:
+    resource_group: "{{ resource_group }}"
+  register: assign
+
+- set_fact:
+    machine_list: []
+    machine_type: "{{ vm_type }}"
+
+- set_fact:
+    machine_list: '{{machine_list + [item.name]}}'
+  when: item.tags.type == machine_type
+  with_items: "{{ assign.vms }}"
+
+- include: assign_groups.yml
+  vars:
+    server_name: "{{ server }}"
+    asg_list: "{{ type_asg_list }}"
+    nsg_list: "{{ type_nsg_list }}"
+  with_items: "{{ machine_list }}"
+  loop_control:
+    loop_var: server
+  when: machine_list != []

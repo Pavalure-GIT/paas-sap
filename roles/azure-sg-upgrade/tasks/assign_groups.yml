@@ -2,7 +2,7 @@
 - name: Get facts by name/type
   azure_rm_virtualmachine_facts:
     resource_group: "{{ resource_group }}"
-    name: "{{ vm_type }}"
+    name: "{{ server_name }}"
   register: assign
 
 - name: Set facts for Network Interfaces
@@ -41,7 +41,7 @@
 
 - name: Create blank ASG List "{{ interface_names[0] }}"
   set_fact:
-    asgs: []
+    add_asg_list: []
 
 - name: Add ASG "{{ item }}" to ASG List "{{ interface_names[0] }}"
   include: create_asg_list.yml
@@ -59,11 +59,11 @@
     name: "{{ interface_names[0] }}"
     ip_configurations:
       - name: "default"
-        application_security_groups: "{{ asgs }}"
+        application_security_groups: "{{ add_asg_list }}"
 
 - name: Create blank ASG List "{{ interface_names[1] }}"
   set_fact:
-    asgs: []
+    add_asg_list: []
   when: interface_names[1] is defined
 
 - name: Add ASG "{{ item }}" to ASG List "{{ interface_names[1] }}"
@@ -83,5 +83,5 @@
     name: "{{ interface_names[1] }}"
     ip_configurations:
       - name: "default"
-        application_security_groups: "{{ asgs }}"
+        application_security_groups: "{{ add_asg_list }}"
   when: interface_names[1] is defined

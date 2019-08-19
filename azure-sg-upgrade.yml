@@ -1,5 +1,4 @@
 ---
-
 - name: Azure Security Groups
   hosts: localhost
   tasks:
