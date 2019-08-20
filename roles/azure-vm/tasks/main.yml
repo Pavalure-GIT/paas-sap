@@ -1,22 +1,3 @@
-
-
-#create a storage account when suma is true in azure group vars 
-- name: create an account
-  azure_rm_storageaccount:
-    resource_group:  "{{ azure_vm_resource_group }}"
-    name: "{{ storage_account_name }}"
-    type: Standard_LRS
-  when: azure_vm_name == "suma"
-
-#create a container in storage account for store osdisk and data disk
-- name: create container
-  azure_rm_storageblob:
-    resource_group:  "{{ azure_vm_resource_group }}"
-    storage_account_name: "{{ storage_account_name }}"
-    container: "{{storage_container_name}}"
-    state: present
-  when: azure_vm_name == "suma"
-
 #Always create the first NIC
 - name: Create Nic1
   azure_rm_networkinterface:
@@ -40,7 +21,6 @@
   when: (azure_vm_nic2_subnet != "" ) #Check to see if two NIC's are required
   register: nic2
 
-#Provisioning a VM with one NIC, dependant on the output of the NIC creation
 - name: Provision virtual machine with 1 nic
   azure_rm_virtualmachine:
     name: "{{ azure_vm_name }}"
@@ -48,55 +28,6 @@
     vm_size: "{{azure_vm_size}}"
     network_interface_names: 
     - "{{nic1.state.name}}"
-    image:
-      offer: "{{azure_vm_image_offer}}"
-      publisher: "{{azure_vm_publisher}}"
-      sku: "{{azure_vm_sku}}"
-      version: latest
-    admin_username: "{{ username }}"
-    ssh_password_enabled: false  
-    ssh_public_keys:
-      - path: /home/{{ username }}/.ssh/authorized_keys
-        key_data: "{{azure_vm_public_ssh}}"
-    state: present
-  when: 
-    - nic2.state is not defined and azure_vm_name != "suma"
-
-#Provisioning a VM with two NIC, if we have a defined output for nic2 response
-- name: Provision virtual machine with 2 nics
-  azure_rm_virtualmachine:
-    name: "{{ azure_vm_name }}"
-    resource_group: "{{azure_vm_resource_group}}"
-    vm_size: "{{azure_vm_size}}"
-    network_interface_names:
-    - "{{nic1.state.name}}"
-    - "{{nic2.state.name}}"
-    image:
-      offer: "{{azure_vm_image_offer}}"
-      publisher: "{{azure_vm_publisher}}"
-      sku: "{{azure_vm_sku}}"
-      version: latest
-    admin_username: "{{ username }}"
-    ssh_password_enabled: false
-    ssh_public_keys:
-      - path: /home/{{ username }}/.ssh/authorized_keys
-        key_data: "{{azure_vm_public_ssh}}"
-    state: present
-  when:
-       - nic2.state is defined
-       - not ha_compartment
-
-- debug: var=availability_set_name
-
-#Provisioning a VM with two NIC, if we have a defined output for nic2 response and it needs to be in an availability set
-- name: Provision virtual machine with 2 nics 
-  azure_rm_virtualmachine:
-    name: "{{ azure_vm_name }}"
-    resource_group: "{{azure_vm_resource_group}}"
-    vm_size: "{{azure_vm_size}}"
-    network_interface_names: 
-    - "{{nic1.state.name}}"
-    - "{{nic2.state.name}}"
     image:
       offer: "{{azure_vm_image_offer}}"
       publisher: "{{azure_vm_publisher}}"
@@ -109,34 +40,8 @@
         key_data: "{{azure_vm_public_ssh}}"
     availability_set: "{{azure_vm_availability_set_name}}"
     state: present
-  when:
-       - nic2.state is defined
-       - ha_compartment
-
-#Provisioning a HA VM with one NIC, dependant on the output of the NIC creation
-- name: Provision virtual machine with 1 nic
-  azure_rm_virtualmachine:
-    name: "{{ azure_vm_name }}"
-    resource_group: "{{azure_vm_resource_group}}"
-    vm_size: "{{azure_vm_size}}"
-    network_interface_names: 
-    - "{{nic1.state.name}}"
-    image:
-      offer: "{{azure_vm_image_offer}}"
-      publisher: "{{azure_vm_publisher}}"
-      sku: "{{azure_vm_sku}}"
-      version: latest
-    admin_username: "{{ username }}"
-    ssh_password_enabled: false  
-    ssh_public_keys:
-      - path: /home/{{ username }}/.ssh/authorized_keys
-        key_data: "{{azure_vm_public_ssh}}"
-    state: present
   when: 
-    - nic2.state is not defined and azure_vm_name != "suma"
-    - ha_compartment
-
-#Provisioning a HA VM with two NIC, if we have a defined output for nic2 response     
+    - nic2.state is not defined and azure_vm_name != "suma" 
 
 - name: Provision virtual machine with 2 nics
   azure_rm_virtualmachine:
@@ -159,9 +64,7 @@
     availability_set: "{{azure_vm_availability_set_name}}"
     state: present
   when:
-       - nic2.state is defined
-       - ha_compartment
-
+       - nic2.state is defined and azure_vm_name != "suma" 
 
   #create suma VM
 - include_tasks: azure-vm-suma.yml

@@ -1,4 +1,4 @@
-#This creates the Infrastructure
+#Infrastructure is created
 - name: Azure Compartment Configuration
   vars_files:
       - group_vars/azure_cust.yml
@@ -22,39 +22,26 @@
         management_reverse_dns: "{{ st_management_reverse_dns }}"
         customer_reverse_dns: "{{ st_customer_reverse_dns }}"
 
+    #Create an availability set 1 to provision the FDE & FDE HA machine into
+    - name: Create availability sets
+      azure_rm_availabilityset:
+        name: "{{ availability_set_name1 }}"
+        location: "{{ st_region }}"
+        resource_group: "{{ st_resource_group }}"
+        platform_update_domain_count: 10
+        platform_fault_domain_count: 2
+      when: ha_compartment
 
-
-##Create an availability set 1 to provision the FDE & FDE HA machine into
-- name: Create availability sets
-  vars_files:
-      - group_vars/azure_cust.yml
-  hosts: localhost
-  tasks:
-  - name: Create availability sets
-    azure_rm_availabilityset:
-      name: "{{ availability_set_name1 }}"
-      location: "{{ st_region }}"
-      resource_group: "{{ st_resource_group }}"
-      platform_update_domain_count: 10
-      platform_fault_domain_count: 2
-    when: ha_compartment
-
-#Create an availability set 1 to provision the SAPRouter & SAprouter HA machine into
-  - name: Create availability sets
-    azure_rm_availabilityset:
-      name: "{{ availability_set_name2 }}"
-      location: "{{ st_region }}"
-      resource_group: "{{ st_resource_group }}"
-      platform_update_domain_count: 10
-      platform_fault_domain_count: 2
-    when: ha_compartment
-
-  - debug: var=availability_set_name1
-  - debug: var=availability_set_name2
-  - debug: var=cloudboost_size 
-
-
-#Create SUMA server     
+    #Create an availability set 1 to provision the SAPRouter & SAprouter HA machine into
+    - name: Create availability sets
+      azure_rm_availabilityset:
+        name: "{{ availability_set_name2 }}"
+        location: "{{ st_region }}"
+        resource_group: "{{ st_resource_group }}"
+        platform_update_domain_count: 10
+        platform_fault_domain_count: 2
+      when: ha_compartment
+    
 - name: Provision Component VMs
   vars_files:
       - group_vars/azure_cust.yml 
@@ -64,7 +51,6 @@
       include_role:
         name: azure-vm
       vars:
-
         azure_vm_name: "suma"
         azure_vm_resource_group: "{{ st_resource_group }}"
         region: "{{ st_region }}"
@@ -90,8 +76,10 @@
         storage_blob: suma_osdisk.vhd
         data_disk_size: 200
         lun: 0
+        azure_vm_availability_set_name: ""
       when: suma
-#This will Allocate the ASG's to the VM
+
+    #This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Public
       include_role: 
         name: azure-asg-allocate
@@ -107,13 +95,6 @@
         groups: suma
       when: suma
 
-
-#Create SIEM server     
-- name: Provision Component VMs
-  vars_files:
-      - group_vars/azure_cust.yml 
-  hosts: localhost 
-  tasks:
     - name: Provision siem server
       include_role:
         name: azure-vm
@@ -137,8 +118,10 @@
         azure_vm_nic1_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_nic2_reverse_dns: ""
         azure_vm_add_dns: true
+        azure_vm_availability_set_name: ""
       when: siem
-#This will Allocate the ASG's to the VM
+
+    #This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Public
       include_role: 
         name: azure-asg-allocate
@@ -148,7 +131,7 @@
         azure_vm_nic: "siem-nic1"
       when: siem
 
-#This will Allocate the ASG's to the VM
+    #This will Allocate the ASG's to the VM
     - name: install OMS agent
       include_role: 
         name: siem
@@ -161,14 +144,6 @@
         groups: siem
       when: siem
 
-
-
-
-#- name: Provision Component VMs
-##  vars_files:
-##      - group_vars/azure_cust.yml 
- # hosts: localhost 
- # tasks:
     - name: Provision BUaaScloudboost
       include_role:
         name: azure-vm
@@ -192,8 +167,10 @@
         azure_vm_nic1_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_nic2_reverse_dns: ""
         azure_vm_add_dns: true
+        azure_vm_availability_set_name: ""
       when: buaas
-#This will Allocate the ASG's to the VM
+
+    #This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Public
       include_role: 
         name: azure-asg-allocate
@@ -227,8 +204,10 @@
         azure_vm_nic1_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_nic2_reverse_dns: ""
         azure_vm_add_dns: true
+        azure_vm_availability_set_name: ""
       when: buaas
-#This will Allocate the ASG's to the VM
+
+    #This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Public
       include_role:
         name: azure-asg-allocate
@@ -262,8 +241,10 @@
         azure_vm_nic1_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_nic2_reverse_dns: ""
         azure_vm_add_dns: true
+        azure_vm_availability_set_name: ""
       when: buaas
-#This will Allocate the ASG's to the VM
+
+    #This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Public
       include_role:
         name: azure-asg-allocate
@@ -274,7 +255,7 @@
         azure_vm_nic: "nmc-nic1"
       when: buaas
 
-###when HA is TRUE and needs to be in the SAPR availability set
+    #When HA is TRUE and needs to be in the SAPR availability set
     - name: Provision SAP Router into availability set
       include_role:
         name: azure-vm
@@ -299,7 +280,8 @@
         azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_add_dns: true
         azure_vm_availability_set_name: "{{ availability_set_name2 }}"
-#This will Allocate the ASG's to the VM
+
+    #This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Public
       include_role:
         name: azure-asg-allocate
@@ -308,6 +290,7 @@
           - { resource_group: "{{ st_resource_group }}", name: asg-saprtr-pub  }
           - { resource_group: "{{ st_resource_group }}", name: asg-pub }
         azure_vm_nic: "SAPRouter-nic1"
+
     - name: Allocate ASG nic2 - Management
       include_role:
         name: azure-asg-allocate
@@ -316,8 +299,6 @@
           - { resource_group: "{{ st_resource_group }}", name: asg-saprtr-mgmt }
           - { resource_group: "{{ st_resource_group }}", name: asg-mgmt }
         azure_vm_nic: "SAPRouter-nic2"
-
-
 
     - name: Provison MidServerA
       include_role:
@@ -342,7 +323,8 @@
         azure_vm_nic1_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_nic2_reverse_dns: ""
         azure_vm_add_dns: true
-#This will Allocate the ASG's to the VM
+        azure_vm_availability_set_name: ""
+    #This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Management
       include_role: 
         name: azure-asg-allocate
@@ -351,7 +333,6 @@
           - { resource_group: "{{ st_resource_group }}", name: asg-mid-mgmt }
           - { resource_group: "{{ st_resource_group }}", name: asg-mgmt }
         azure_vm_nic: "MidServerA-nic1"
-    
 
     - name: Provison MidServerB
       include_role:
@@ -376,7 +357,9 @@
         azure_vm_nic1_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_nic2_reverse_dns: ""
         azure_vm_add_dns: true
-#This will Allocate the ASG's to the VM
+        azure_vm_availability_set_name: ""
+
+    #This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Management
       include_role: 
         name: azure-asg-allocate
@@ -386,8 +369,7 @@
           - { resource_group: "{{ st_resource_group }}", name: asg-mgmt }
         azure_vm_nic: "MidServerB-nic1"
 
- 
-##when HA is TRUE and FDE needs to be in an availability set
+    #When HA is TRUE and FDE needs to be in an availability set
     - name: Provision FDE into availability set
       include_role:
         name: azure-vm
@@ -412,7 +394,8 @@
         azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_add_dns: true
         azure_vm_availability_set_name: "{{ availability_set_name1 }}"
-#This will Allocate the ASG's to the VM
+
+    #This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Customer
       include_role:
         name: azure-asg-allocate
@@ -421,6 +404,7 @@
           - { resource_group: "{{ st_resource_group }}", name: asg-fde-cust  }
           - { resource_group: "{{ st_resource_group }}", name: asg-cust }
         azure_vm_nic: "FDE-nic1"
+
     - name: Allocate ASG nic2 - Management
       include_role:
         name: azure-asg-allocate
@@ -430,9 +414,7 @@
           - { resource_group: "{{ st_resource_group }}", name: asg-mgmt }
         azure_vm_nic: "FDE-nic2"
 
-
-
-   ##Duplicating provisions for HA requirements     
+   #Duplicating provisions for HA requirements     
     - name: Provision SAP Router
       include_role:
         name: azure-vm
@@ -459,7 +441,7 @@
         azure_vm_availability_set_name: "{{ availability_set_name2 }}"
       when: ha_compartment   
 
-#This will Allocate the ASG's to the VM
+    #This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Public
       include_role: 
         name: azure-asg-allocate
@@ -480,8 +462,7 @@
         azure_vm_nic: "SAPRouter-HA-nic2"
       when: ha_compartment     
 
-#Note this machine has two nics 
-
+    #This machine has two nics 
     - name: Provision FDE
       include_role:
         name: azure-vm  
@@ -528,10 +509,8 @@
         azure_vm_nic: "FDE-HA-nic2"
       when: ha_compartment     
 
-##########################DR###########################
-#this will build the DR compartment if enabled in the vars file, ensure you select a different region from the primary compartment and select the correct virtal machine image for that region.
-
-- name: Azure Compartment Configuration
+#This will build the DR compartment if enabled in the vars file, ensure you select a different region from the primary compartment and select the correct virtal machine image for that region.
+- name: Azure Compartment Configuration for DR
   vars_files:
       - group_vars/azure_cust.yml
   hosts: localhost
@@ -583,10 +562,10 @@
         azure_vm_nic1_reverse_dns: ""
         azure_vm_nic2_reverse_dns: "{{ dr_management_reverse_dns }}"
         azure_vm_add_dns: true
+        azure_vm_availability_set_name: ""
       when: dr_compartment
 
-#Note, this machine has 2 nics
-
+    #This machine has 2 nics
     - name: Allocate ASG nic1 - Public
       include_role: 
         name: azure-asg-allocate
@@ -630,7 +609,9 @@
         azure_vm_nic1_reverse_dns: "{{ dr_management_reverse_dns }}"
         azure_vm_nic2_reverse_dns: ""
         azure_vm_add_dns: true
+        azure_vm_availability_set_name: ""
       when: dr_compartment
+
     - name: Allocate ASG nic1 - Management
       include_role: 
         name: azure-asg-allocate
@@ -664,7 +645,9 @@
         azure_vm_nic1_reverse_dns: "{{ dr_management_reverse_dns }}"
         azure_vm_nic2_reverse_dns: ""
         azure_vm_add_dns: true
+        azure_vm_availability_set_name: ""
       when: dr_compartment
+
     - name: Allocate ASG nic1 - Management
       include_role: 
         name: azure-asg-allocate
@@ -675,8 +658,7 @@
         azure_vm_nic: "MidServerB-dr-nic1"
       when: dr_compartment
 
-#Note, this machine has 2nics
- 
+    #This machine has 2 nics 
     - name: Provision FDE
       include_role:
         name: azure-vm  
@@ -700,7 +682,9 @@
         azure_vm_nic1_reverse_dns: "{{ dr_customer_reverse_dns }}"
         azure_vm_nic2_reverse_dns: "{{ dr_management_reverse_dns }}"
         azure_vm_add_dns: true
+        azure_vm_availability_set_name: ""
       when: dr_compartment
+
     - name: Allocate ASG nic1 - Customer
       include_role: 
         name: azure-asg-allocate
@@ -710,6 +694,7 @@
           - { resource_group: "{{ dr_resource_group }}", name: asg-cust }
         azure_vm_nic: "FDE-dr-nic1"
       when: dr_compartment
+
     - name: Allocate ASG nic2 - Management
       include_role: 
         name: azure-asg-allocate
@@ -720,7 +705,7 @@
         azure_vm_nic: "FDE-dr-nic2"
       when: dr_compartment
 
-#Note   ####################### ##Duplicating provisions for HA requirements#########################     
+    #Duplicating provisions for HA requirements
     - name: Provision SAP Router
       include_role:
         name: azure-vm
@@ -744,7 +729,9 @@
         azure_vm_nic1_reverse_dns: ""
         azure_vm_nic2_reverse_dns: "{{ dr_management_reverse_dns }}"
         azure_vm_add_dns: false
+        azure_vm_availability_set_name: ""
       when: dr_compartment and dr_ha_compartment
+
     - name: Allocate ASG nic1 - Public
       include_role: 
         name: azure-asg-allocate
@@ -788,7 +775,9 @@
         azure_vm_nic1_reverse_dns: "{{ dr_customer_reverse_dns }}"
         azure_vm_nic2_reverse_dns: "{{ dr_management_reverse_dns }}"
         azure_vm_add_dns: false
+        azure_vm_availability_set_name: ""
       when: dr_compartment and dr_ha_compartment
+
     - name: Allocate ASG nic1 - Customer
       include_role: 
         name: azure-asg-allocate
@@ -832,25 +821,3 @@
             priority: 190
             direction: Inbound
       when: dr_compartment
-
-- name: SUMA Server Configuration
-  hosts: suma
-  become: yes
-  vars_files:
-      - group_vars/azure_cust.yml
-  tasks:
-    - name: Call SUMA Server Role
-      include_role:
-        name: SUMA
-      vars:
-        #This is the registration code for SUSEConnect found in SCC
-        SUSEConnect_reg_code: 5490FA1496BF2C
-        #This is the email address for main account (System-Team)
-        Email_address: e4s-publiccloud_system@dxc.com
-        #This is the registration code for SUSE Manager Service found in SCC
-        SUSEManager_reg_code: 692572E0C0DAA8
-        fstab: /dev/nvme2n1p1 /manager_storage xfs defaults,nofail 0 1
-        FQDN: '{{ suma_short }}.{{ st_management_dns }}'
-        #IP address of box
-        IP: "{{ ansible_default_ipv4.address }}"
-        Short_name: '{{ suma_short }}'
