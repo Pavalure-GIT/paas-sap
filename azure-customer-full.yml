@@ -21,38 +21,8 @@
         customer_dns: "{{ st_customer_dns }}"
         management_reverse_dns: "{{ st_management_reverse_dns }}"
         customer_reverse_dns: "{{ st_customer_reverse_dns }}"
+        az_compartment: "{{ ha_compartment }}"
 
-    - set_fact:
-        as_sapr: ""
-        as_fde: ""
-
-    #Create an availability set 1 to provision the FDE & FDE HA machine into
-    - name: Create availability sets
-      azure_rm_availabilityset:
-        name: "{{ availability_set_name_fde }}"
-        location: "{{ st_region }}"
-        resource_group: "{{ st_resource_group }}"
-        platform_update_domain_count: 10
-        platform_fault_domain_count: 2
-      when: ha_compartment
-
-    - set_fact:
-        as_fde: "{{ availability_set_name_fde }}"
-      when: ha_compartment
-    
-    #Create an availability set 1 to provision the SAPRouter & SAprouter HA machine into
-    - name: Create availability sets
-      azure_rm_availabilityset:
-        name: "{{ availability_set_name_sapr }}"
-        location: "{{ st_region }}"
-        resource_group: "{{ st_resource_group }}"
-        platform_update_domain_count: 10
-        platform_fault_domain_count: 2
-      when: ha_compartment
-
-    - set_fact:
-        as_sapr: "{{ availability_set_name_sapr }}"
-      when: ha_compartment
     
 - name: Provision Component VMs
   vars_files:
@@ -544,6 +514,7 @@
         customer_dns: ""
         management_reverse_dns: "{{ dr_management_reverse_dns }}"
         customer_reverse_dns: "{{ dr_customer_reverse_dns }}"
+        az_compartment: "{{dr_ha_compartment }}"
       when: dr_compartment
         
 - name: Provision Component VMs
@@ -574,7 +545,7 @@
         azure_vm_nic1_reverse_dns: ""
         azure_vm_nic2_reverse_dns: "{{ dr_management_reverse_dns }}"
         azure_vm_add_dns: true
-        azure_vm_availability_set_name: ""
+        azure_vm_availability_set_name: "{{ as_sapr }}"
       when: dr_compartment
 
     #This machine has 2 nics
@@ -694,7 +665,7 @@
         azure_vm_nic1_reverse_dns: "{{ dr_customer_reverse_dns }}"
         azure_vm_nic2_reverse_dns: "{{ dr_management_reverse_dns }}"
         azure_vm_add_dns: true
-        azure_vm_availability_set_name: ""
+        azure_vm_availability_set_name: "{{ as_fde }}"
       when: dr_compartment
 
     - name: Allocate ASG nic1 - Customer
@@ -741,7 +712,7 @@
         azure_vm_nic1_reverse_dns: ""
         azure_vm_nic2_reverse_dns: "{{ dr_management_reverse_dns }}"
         azure_vm_add_dns: false
-        azure_vm_availability_set_name: ""
+        azure_vm_availability_set_name: "{{ as_sapr }}"
       when: dr_compartment and dr_ha_compartment
 
     - name: Allocate ASG nic1 - Public
@@ -787,7 +758,7 @@
         azure_vm_nic1_reverse_dns: "{{ dr_customer_reverse_dns }}"
         azure_vm_nic2_reverse_dns: "{{ dr_management_reverse_dns }}"
         azure_vm_add_dns: false
-        azure_vm_availability_set_name: ""
+        azure_vm_availability_set_name: "{{ as_fde }}"
       when: dr_compartment and dr_ha_compartment
 
     - name: Allocate ASG nic1 - Customer

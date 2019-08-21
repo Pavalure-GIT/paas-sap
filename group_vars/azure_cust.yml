@@ -3,7 +3,7 @@ azure: true
 #Options
 #define the parameters for the compartments by changing the options to 'yes' and 'no'
 #dr_compartment is set to yes if a DR compartment is required, this will create the compartment and peer it to the primary compartment?
-dr_compartment: no
+dr_compartment: yes
 #Setting ha as yes will create a second FDE and SAP Router server in AZ2?
 ha_compartment: yes
 #busaas is set to yes if BUaaS management servers are to be created, please note this requires the correct AMIs to be shared to the subscription in advance
@@ -17,7 +17,7 @@ vm_public_keys: "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAgKPo2E32TDYoeSsSJgqEVlShiAp
 
 #Standard
 #the resource group in which the build will reside
-st_resource_group: "P4S-Prototype-Automation-SP-HA"
+st_resource_group: "P4S-Prototype-Automation-SP4-HA"
 #Name to be given to Customer Primary VPC
 st_virtual_network_name: "VNET-ESO4SAP3-azureProtoSP"
 #region for the Primary VPC
@@ -43,7 +43,7 @@ availability_set_name_sapr: "SP-SAPR"
 
 #DR
 #the DR resource group in which the build will reside
-dr_resource_group: "P4S-Prototype-AutomationDR"
+dr_resource_group: "P4S-Prototype-Automation-SP4-DR-HA"
 #Name to be given to DR VPC
 dr_virtual_network_name: "VNET-ESO4SAP3-azureProtoDR"
 #Region for DR to be build, note this should be in a seperate region from the primary VPC. Also, the image for VM's are specific to each region so ensure they are correct for the desired regions.
