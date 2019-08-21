@@ -41,7 +41,7 @@
 - name: configure siem server
   include_role:
     name: siem
-    tasks_from: configure-siem-server.yml
+    tasks_from: aws-cloud-watch.yml
   when: aws is defined
 
 - name: start the crowdstrike service
