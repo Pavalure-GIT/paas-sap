@@ -1,11 +1,6 @@
 - debug:
     msg: " sybase instance "
  
-- name: Status of the SYB DB system
-  become: yes
-  command: /usr/sap/hostctrl/exe/saphostctrl -function ListDatabases 
-  with_items: "{{ sid_user.stdout_lines[1] }}"
-
 - name: Sybase - {{ db_function }}
   become: yes
   command: /usr/sap/hostctrl/exe/saphostctrl -function "{{ db_function }}" -dbname "{{  sid_user.stdout_lines[1][:3]|upper }}" -dbtype syb -dbuser sapsa -dbpass "{{ dbpass }}" -force
@@ -14,9 +9,4 @@
 - name: Sybase - {{ sys_function }}
   become: yes
   command: /usr/sap/hostctrl/exe/sapcontrol -nr 00 -function "{{ sys_function }}"  
-  with_items: "{{ sid_user.stdout_lines[1] }}"
-
-- name: Status the SYB DB system
-  become: yes
-  command: /usr/sap/hostctrl/exe/saphostctrl -function ListDatabases 
   with_items: "{{ sid_user.stdout_lines[1] }}"
