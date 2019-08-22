@@ -59,3 +59,9 @@
     resource_group: "{{ resource_group }}"
     name: "{{ customer_reverse_dns }}"
   when: customer_reverse_dns != ""
+
+- set_fact:
+    as_sapr: ""
+    as_fde: ""
+- include_tasks: availableset.yml
+  when: az_compartment

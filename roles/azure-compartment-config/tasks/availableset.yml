@@ -1,0 +1,23 @@
+  #Create an availability set 1 to provision the FDE & FDE HA machine into
+- name: Create availability sets
+  azure_rm_availabilityset:
+    name: "{{ availability_set_name_fde }}"
+    location: "{{ region }}"
+    resource_group: "{{ resource_group }}"
+    platform_update_domain_count: 10
+    platform_fault_domain_count: 2
+
+- set_fact:
+    as_fde: "{{ availability_set_name_fde }}"
+     
+  #Create an availability set 1 to provision the SAPRouter & SAprouter HA machine into
+- name: Create availability sets
+  azure_rm_availabilityset:
+    name: "{{ availability_set_name_sapr }}"
+    location: "{{ region }}"
+    resource_group: "{{ resource_group }}"
+    platform_update_domain_count: 10
+    platform_fault_domain_count: 2
+ 
+- set_fact:
+    as_sapr: "{{ availability_set_name_sapr }}"

@@ -3,9 +3,9 @@ azure: true
 #Options
 #define the parameters for the compartments by changing the options to 'yes' and 'no'
 #dr_compartment is set to yes if a DR compartment is required, this will create the compartment and peer it to the primary compartment?
-dr_compartment: no
+dr_compartment: yes
 #Setting ha as yes will create a second FDE and SAP Router server in AZ2?
-ha_compartment: no
+ha_compartment: yes
 #busaas is set to yes if BUaaS management servers are to be created, please note this requires the correct AMIs to be shared to the subscription in advance
 buaas: no
 #Setting ha to yes will create a second FDE and SAP Router server in AZ2? for the DR compartment
@@ -17,9 +17,9 @@ vm_public_keys: "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAgKPo2E32TDYoeSsSJgqEVlShiAp
 
 #Standard
 #the resource group in which the build will reside
-st_resource_group: "P4S-Prototype-AutomationDO"
+st_resource_group: "P4S-Prototype-Automation-SP4-HA"
 #Name to be given to Customer Primary VPC
-st_virtual_network_name: "VNET-ESO4SAP3-azureProto"
+st_virtual_network_name: "VNET-ESO4SAP3-azureProtoSP"
 #region for the Primary VPC
 st_region: "UK South"
 #specify the address space to be used for the VPC
@@ -31,18 +31,19 @@ st_customer_subnet: "172.64.0.0/22"
 st_management_subnet: "172.65.24.0/23"
 st_gateway_subnet: "172.79.0.0/28"
 #this is the management dns
-st_management_dns: proto.azure.paas4sap.svcs.entsvcs.com
+st_management_dns: protoKA.azure.paas4sap.svcs.entsvcs.com
 #this is the customer dns
-st_customer_dns: proto-customer.paas4sap.svcs.entsvcs.com
+st_customer_dns: proto-customerKA.paas4sap.svcs.entsvcs.com
 st_management_reverse_dns: 24.65.172.in-addr.arpa
 st_customer_reverse_dns: 0.64.172.in-addr.arpa
 
 #Name to be given to the availability set
-availability_set_name: "P4S-Prototype-AS"
+availability_set_name_fde: "SP-FDE"
+availability_set_name_sapr: "SP-SAPR"
 
 #DR
 #the DR resource group in which the build will reside
-dr_resource_group: "P4S-Prototype-AutomationDR"
+dr_resource_group: "P4S-Prototype-Automation-SP4-DR-HA"
 #Name to be given to DR VPC
 dr_virtual_network_name: "VNET-ESO4SAP3-azureProtoDR"
 #Region for DR to be build, note this should be in a seperate region from the primary VPC. Also, the image for VM's are specific to each region so ensure they are correct for the desired regions.
@@ -60,7 +61,7 @@ dr_management_reverse_dns: 24.65.100.in-addr.arpa
 
 #SIEM
 #VM type/size
-siem: true
+siem: false
 siem_size: "Standard_B2s"
 #the image for VM's are specific to each region so ensure they are correct for the desired regions
 siem_image_offer: "RHEL"
@@ -88,7 +89,7 @@ saprouter_publisher: "SUSE"
 saprouter_sku: "12-SP4"
 
 #SUMA
-suma: true
+suma: false
 suma_size: "Standard_F8s"
 #the image for VM's are specific to each region so ensure they are correct for the desired regions
 suma_image_offer: "SUSE-Manager-Server-BYOS"
