@@ -7,13 +7,28 @@
         cidr_ip: "{{ rule_cidr_ip }}"
   when: rule_cidr_ip != ""
 
+- name: get group facts        
+  ec2_group_facts:
+    filters:
+      group-name: "{{ rule_group_name }}"
+      vpc_id: "{{ vpc }}"
+    region: "{{ vpc_region }}"
+  register: group_facts
+  when: rule_group_name != ""
+
+
+- debug:
+    var: group_facts.security_groups[0].group_id
+  when: rule_group_name != ""
+
 - name: Create new rule - group
   set_fact:
     list_new_item:
       - proto: "{{ rule_protocol }}"
         ports: "{{ rule_ports }}"
-        group_name: "{{ rule_group_name }}"
+        group_id: "{{ group_facts.security_groups[0].group_id }}"
   when: rule_group_name != ""
+
 
 - name: Add new rule
   set_fact:
