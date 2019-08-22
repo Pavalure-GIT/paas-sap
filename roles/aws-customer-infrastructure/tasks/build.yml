@@ -41,7 +41,7 @@
 #Set Facts for DR Peering when dr_compartment is true
 #Set facts when creating a non DR compartment
 - include_tasks: set-facts-non-dr.yml
-  when: dr_compartment and not dr
+  when: not dr
 #Set facts when creating a DR compartment
 - include_tasks: set-facts-dr.yml
   when: dr_compartment and dr

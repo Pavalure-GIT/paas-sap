@@ -5,9 +5,9 @@ single_availability_zone: true
 #busaas is set to true if BUaaS management servers are to be created, please note this requires the correct AMIs to be shared to the subscription in advance
 buaas: false
 #dr_compartment is set to true if a DR compartment is required, this will create the compartment and peer it to the primary compartment
-dr_compartment: true
+dr_compartment: false
 #dr_single_availability_zone is set to true if only a single AZ is required for the DR compartment
-dr_single_availability_zone: true
+dr_single_availability_zone: false
 #Setting ha to true will create a second FDE and SAP Router server in AZ2
 ha: false
 #Setting ha to true will create a second FDE and SAP Router server in AZ2 for the DR compartment
@@ -17,9 +17,9 @@ suma: false
 
 #Non-DR Vars
 #CIDR ranges for the Customer Primary VPC
-vpc_cidr: 172.17.160.0/21, 172.16.0.0/20, 172.16.16.0/22, 172.16.20.0/23
+vpc_cidr: 172.17.176.0/21, 172.16.0.0/20, 172.16.16.0/22, 172.16.20.0/23
 #Name to be given to Customer Primary VPC
-vpc_env_name: "Dev-Alex"
+vpc_env_name: "Dev-Kav"
 #Region for Customer Primary VPC
 vpc_region: us-east-1
 #Public Subnet CIDR ranges for each AZ
@@ -27,9 +27,9 @@ pubaz1_cidr: 172.16.16.0/25
 pubaz2_cidr: 172.16.16.128/25
 pubaz3_cidr: 172.16.17.0/25
 #Management Subnet CIDR ranges for each AZ
-manaz1_cidr: 172.17.160.0/23
-manaz2_cidr: 172.17.162.0/23
-manaz3_cidr: 172.17.164.0/23
+manaz1_cidr: 172.17.176.0/23
+manaz2_cidr: 172.17.178.0/23
+manaz3_cidr: 172.17.180.0/23
 #Customer Subnet CIDR ranges for each AZ
 custaz1_cidr: 172.16.0.0/22
 custaz2_cidr: 172.16.4.0/22
@@ -41,9 +41,9 @@ clustaz3_cidr: 172.16.20.0/24
 #Managemnt VPC CIDR range, this is required to setup security groups correctly
 vpc_management_cidr: 10.4.0.0/22
 #This is the management DNS zone name, or shortname
-vpc_shortname: ac.aws.paas4sap.svcs.entsvcs.com
+vpc_shortname: ka.aws.paas4sap.svcs.entsvcs.com
 #This is the customer DNS zone name, or longname
-vpc_longname: testac.paas4sap.svcs.entsvcs.com
+vpc_longname: testka.paas4sap.svcs.entsvcs.com
 #Key to be used for the provisioned machines, this must exist on the subscription and also the machine the automation is ran from, so it can be used for machine configuration
 key_name: SystemTeamAutomation
 
@@ -103,8 +103,8 @@ vgw_owner: "System Team"
 key_alias: sandbox-csr-automation-key
 key_arn: arn:aws:kms:eu-central-1:000987835229:key/240704ea-5c16-4075-9fd0-3aeaef52e94d
 bucket_name: sandbox-csr-automation-vpnconfigs3bucket-1ul5mfqbrghku
-stack_name: ac-csr-stack
-vgw_name: ac-csr-vgw
+stack_name: ka-csr-stack
+vgw_name: ka-csr-vgw
 csr_tag: dev
 
 #DR CSR
