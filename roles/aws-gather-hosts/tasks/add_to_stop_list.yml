@@ -1,0 +1,32 @@
+---
+- debug: 
+    msg: " add to list "
+
+- ec2_instance_facts:
+    region: "{{ instance_region }}"
+    instance_ids:
+      - "{{ instance }}"
+  register: facts
+
+- name: set interface 0
+  set_fact:
+    skip_machine: false
+    machine_interfaces: "{{ facts.instances[0].network_interfaces[0] }}"
+
+- include: add_to_group.yml 
+  vars:
+    machine_interface: "{{ item }}"
+  with_items: "{{ machine_interfaces.network_interface_id }}"
+  when: (not skip_machine) and (facts.instances[0].tags.SystemId is defined)
+
+- name: set interface 1
+  set_fact:
+    skip_machine: false
+    machine_interfaces: "{{ facts.instances[0].network_interfaces[1] }}"
+  when: facts.instances[0].tags.SystemId is defined
+
+- include: add_to_group.yml
+  vars:
+    machine_interface: "{{ item }}"
+  with_items: "{{ machine_interfaces.network_interface_id }}"
+  when: (not skip_machine) and (facts.instances[0].tags.SystemId is defined)

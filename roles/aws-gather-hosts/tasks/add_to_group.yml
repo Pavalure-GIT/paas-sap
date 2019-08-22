@@ -1,22 +1,17 @@
 ---
-- ec2_instance_facts:
-    region: "{{ instance_region }}"
-    instance_ids:
-      - "{{ instance }}" 
-  register: facts
+- debug: 
+    msg: " gather host group "
 
-
-- set_fact:
-    ip: "{{ facts.instances[0].network_interfaces[0].private_ip_addresses[0].private_ip_address }}" 
-  when: facts.instances[0].network_interfaces[0].private_ip_addresses[0].private_ip_address | match("172.17.")
-
-- set_fact:
-    ip: "{{ facts.instances[0].network_interfaces[1].private_ip_addresses[0].private_ip_address }}" 
-  when: facts.instances[0].network_interfaces[1].private_ip_addresses[0].private_ip_address | match("172.17.")
+- ec2_eni_facts:
+    filters:
+      network-interface-id: "{{machine_interface}}"
+  register: interface_facts
+  when: (not skip_machine) and (facts.instances[0].tags.SystemId is defined)
 
 - name: Add to group
   add_host:
-    name: "{{ ip }}" 
+    name: "{{ interface_facts.network_interfaces[0].private_ip_addresses[0].private_ip_address }}" 
     groups: instances
+  when:  (not skip_machine ) and (interface_facts.network_interfaces[0].private_ip_addresses[0].private_ip_address | match("172.17."))
 
     

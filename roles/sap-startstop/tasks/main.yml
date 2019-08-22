@@ -1,16 +1,12 @@
 ---
 - include_tasks: start.yml
-  become: yes
   vars:
     sys_function: StartSystem
     db_function: StartDatabase  
-   
   when: action == 'start' 
 
 - include_tasks: stop.yml
-  become: yes
   vars:
     sys_function: StopSystem
     db_function: StopDatabase
-    
   when: action == 'stop'

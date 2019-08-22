@@ -10,3 +10,4 @@
   become: yes
   command: /usr/sap/hostctrl/exe/sapcontrol -nr 00 -function "{{ sys_function }}"  
   with_items: "{{ sid_user.stdout_lines[1] }}"
+
