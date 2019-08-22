@@ -1,11 +1,6 @@
 - debug:
     msg: "hana instance"
 
-- name: Status of the HANA DB system
-  become: yes
-  command: /usr/sap/hostctrl/exe/saphostctrl -function ListDatabases 
-  with_items: "{{ sid_user.stdout_lines[1] }}"
-
 - name: HANA - {{ db_function }}
   become: yes
   command: /usr/sap/hostctrl/exe/saphostctrl -function "{{ db_function }}" -dbname "{{  db_sid.stdout }}" -dbtype hdb -force
@@ -14,9 +9,4 @@
 - name: HANA - {{ sys_function }}
   become: yes
   command: /usr/sap/hostctrl/exe/sapcontrol -nr 00 -function "{{ sys_function }}"  
-  with_items: "{{ sid_user.stdout_lines[1] }}"
-
-- name: Status of the HANA DB system
-  become: yes
-  command: /usr/sap/hostctrl/exe/saphostctrl -function ListDatabases 
   with_items: "{{ sid_user.stdout_lines[1] }}"

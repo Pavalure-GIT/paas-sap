@@ -1,0 +1,11 @@
+---
+- azure_rm_networkinterface_facts:
+    resource_group: "{{ machine_rg }}"
+    name: "{{ machine_interface }}"
+  register: interface_facts
+
+- name: Add to group
+  add_host:
+    name: "{{ interface_facts.ansible_facts.azure_networkinterfaces[0].properties.ipConfigurations[0].properties.privateIPAddress }}" 
+    groups: sap_list
+  when: interface_facts.ansible_facts.azure_networkinterfaces[0].properties.ipConfigurations[0].properties.privateIPAddress | match("172.17.")

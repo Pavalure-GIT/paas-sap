@@ -1,0 +1,46 @@
+---
+- name: Setup hosts for start 
+  hosts: localhost
+  tasks:
+    - name: Read in approved list
+      set_fact:
+        json_in: "{{ lookup('file',json_file) | from_json }}"
+
+    - set_fact:
+        machine_list: []
+
+    - include_role:
+       name: azure-gather-hosts
+      vars:
+        action: 'start'
+        rg: "{{ item.resource_group }}"
+        machines: "{{ item.virtual_machines }}"
+      with_items: "{{ json_in.approved }}" 
+   
+    - debug:
+        var=machine_list
+
+    - debug:
+        var=groups.sap_list
+
+- name: Start mahcines
+  hosts: localhost
+  tasks:
+    - name: Power On machines
+      azure_rm_virtualmachine:
+        resource_group: "{{ item.rg }}"
+        name: "{{ item.name }}"
+        started: yes
+      with_items: "{{ machine_list }}"
+    - pause:
+        minutes: 2
+
+- name: Start/Stop SAP Service
+  hosts: sap_list
+  become: yes
+  tasks:
+    - name: Call Start Stop
+      include_role:
+        name: sap-startstop
+      vars:
+        action: start

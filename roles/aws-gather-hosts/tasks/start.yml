@@ -1,0 +1,20 @@
+---
+- debug:
+    msg: "start gather host"
+
+- set_fact:
+    instance_list:  "{{ lookup('file', approved).splitlines() }}"
+  
+- include_tasks: add_to_start_list.yml
+  vars:
+    instance: "{{ item }}"
+    instance_region: "{{ aws_region }}"
+  with_items: "{{ instance_list }}"
+
+# start all instance which is stopped before call SAP System
+
+- include_tasks: start_instance.yml
+  vars:
+    instance: "{{ item }}"
+    instance_region: "{{ aws_region }}"
+  when: facts.instances[0].state.name | match("stopped")

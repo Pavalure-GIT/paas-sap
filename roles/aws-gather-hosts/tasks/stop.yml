@@ -1,0 +1,23 @@
+---
+- debug:
+    msg: "stop gather host"
+
+- ec2_instance_facts:
+    filters:
+      instance-state-name:  "running"
+  register: instance_ids
+
+- set_fact:
+    approved:  "{{ instance_ids.instances | map(attribute='instance_id') | list }}"
+
+- set_fact:
+    exceptions:  "{{ lookup('file', exception ).splitlines() }}"
+
+- set_fact:
+    instance_list: "{{ approved | difference(exceptions) }}"
+
+- include_tasks: add_to_stop_list.yml
+  vars:
+    instance: "{{ item }}"
+    instance_region: "{{ aws_region }}"
+  with_items: "{{ instance_list }}"
