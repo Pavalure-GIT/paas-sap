@@ -1,14 +1,14 @@
 - ec2_group:
-    name: SAP-mgt
+    name: sap-mgt
     description: The interfaces of any SAP servers on any management networks must be assigned to this security group
     vpc_id: "{{ sgvpcid }}"
     region: "{{ aws_customer_vpc_region }}"
     tags:
-      Name: SAP-mgt
+      Name: sap-mgt
     rules:
       - proto: tcp
         ports: 3900 - 3999
-        group_name: SAP-mgt
+        group_name: sap-mgt
       - proto: tcp
         ports: 1128
         cidr_ip: "{{ aws_customer_vpc_management_cidr  }}"
@@ -17,7 +17,7 @@
         cidr_ip: "{{ aws_customer_vpc_management_cidr  }}"
       - proto: tcp
         ports: 3600 - 3699
-        group_name: SAP-mgt
+        group_name: sap-mgt
       - proto: tcp
         ports: 3260
         cidr_ip: "{{ aws_customer_vpc_management_cidr  }}"
@@ -30,7 +30,7 @@
       - proto: tcp
         ports: 3200-3299
         cidr_ip: "{{ aws_customer_vpc_management_cidr  }}"
-  register: SAP_mgt
+  register: sap_mgt
 
 - ec2_group:
     name: buaas-mgt
@@ -230,17 +230,17 @@
   register: saprtr_mgt
 
 - ec2_group:
-    name: SAP-cst
+    name: sap-cst
     description: The interfaces of any SAP servers on any customer networks must be assigned to this security group
     vpc_id: "{{ sgvpcid }}"
     region: "{{ aws_customer_vpc_region }}"
     tags:
-      Name: SAP-cst
+      Name: sap-cst
     rules:
       - proto: tcp
         ports: 6001
         group_name: proxy-dns-cst
-  register: SAP_cst
+  register: sap_cst
 
 - ec2_group:
     name: suma-mgt
