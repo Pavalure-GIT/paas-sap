@@ -15,6 +15,9 @@ dr_ha: false
 #suma is set to true if Suse Manager servers are to be created.
 suma: false
 
+#FDE config option
+configure_fde: false
+
 #Non-DR Vars
 #CIDR ranges for the Customer Primary VPC
 vpc_cidr: 172.17.160.0/21, 172.16.0.0/20, 172.16.16.0/22, 172.16.20.0/23

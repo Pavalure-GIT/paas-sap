@@ -1064,6 +1064,7 @@
         #Set saprouter proxy address
         proxy_domain: "{{ 'proxy' if ansible_default_ipv4.address | match('172.') else 'proxydr' }}.{{ vpc_shortname }}"
         fde_virualhostname: "{{ 'fde' if ansible_default_ipv4.address | match('172.') else 'fdedr' }}.{{ vpc_shortname }}"
+      when: configure_fde
 
 #SUMA configuration ran on SUMA host
 - name: SUMA Server Configuration
