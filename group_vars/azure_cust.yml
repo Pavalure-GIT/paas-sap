@@ -9,7 +9,7 @@ ha_compartment: yes
 #busaas is set to yes if BUaaS management servers are to be created, please note this requires the correct AMIs to be shared to the subscription in advance
 buaas: no
 #Setting ha to yes will create a second FDE and SAP Router server in AZ2? for the DR compartment
-dr_ha_compartment: no 
+dr_ha_compartment: yes 
 #specify the username to be added on provision
 username: "ec2-user"
 #Key to be used for the provisioned machines, this must exist on the subscription and also the machine the automation is ran from, so it can be used for machine configuration
@@ -17,7 +17,7 @@ vm_public_keys: "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAgKPo2E32TDYoeSsSJgqEVlShiAp
 
 #Standard
 #the resource group in which the build will reside
-st_resource_group: "P4S-Prototype-Automation-SP4-HA"
+st_resource_group: "P4S-Prototype-Automation-SP2"
 #Name to be given to Customer Primary VPC
 st_virtual_network_name: "VNET-ESO4SAP3-azureProtoSP"
 #region for the Primary VPC
@@ -43,7 +43,7 @@ availability_set_name_sapr: "SP-SAPR"
 
 #DR
 #the DR resource group in which the build will reside
-dr_resource_group: "P4S-Prototype-Automation-SP4-DR-HA"
+dr_resource_group: "P4S-Prototype-Automation-SP2-DR"
 #Name to be given to DR VPC
 dr_virtual_network_name: "VNET-ESO4SAP3-azureProtoDR"
 #Region for DR to be build, note this should be in a seperate region from the primary VPC. Also, the image for VM's are specific to each region so ensure they are correct for the desired regions.
