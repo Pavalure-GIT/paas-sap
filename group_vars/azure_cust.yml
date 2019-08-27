@@ -3,13 +3,13 @@ azure: true
 #Options
 #define the parameters for the compartments by changing the options to 'yes' and 'no'
 #dr_compartment is set to yes if a DR compartment is required, this will create the compartment and peer it to the primary compartment?
-dr_compartment: yes
+dr_compartment: no
 #Setting ha as yes will create a second FDE and SAP Router server in AZ2?
-ha_compartment: yes
+ha_compartment: no
 #busaas is set to yes if BUaaS management servers are to be created, please note this requires the correct AMIs to be shared to the subscription in advance
 buaas: no
 #Setting ha to yes will create a second FDE and SAP Router server in AZ2? for the DR compartment
-dr_ha_compartment: yes 
+dr_ha_compartment: no
 #specify the username to be added on provision
 username: "ec2-user"
 #Key to be used for the provisioned machines, this must exist on the subscription and also the machine the automation is ran from, so it can be used for machine configuration
