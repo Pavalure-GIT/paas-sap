@@ -41,4 +41,6 @@
     ssh_public_keys:
       - path: /home/{{ username }}/.ssh/authorized_keys
         key_data: "{{azure_vm_public_ssh}}"
+    tags: 
+     "{'type' : '{{ azure_vm_tags }}'}"
     state: present

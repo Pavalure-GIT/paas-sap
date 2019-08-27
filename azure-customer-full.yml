@@ -59,6 +59,7 @@
         data_disk_size: 200
         lun: 0
         azure_vm_availability_set_name: ""
+        azure_vm_tags: "suma"
       when: suma
 
     #This will Allocate the ASG's to the VM
@@ -101,6 +102,7 @@
         azure_vm_nic2_reverse_dns: ""
         azure_vm_add_dns: true
         azure_vm_availability_set_name: ""
+        azure_vm_tags: "siem"
       when: siem
 
     #This will Allocate the ASG's to the VM
@@ -150,6 +152,7 @@
         azure_vm_nic2_reverse_dns: ""
         azure_vm_add_dns: true
         azure_vm_availability_set_name: ""
+        azure_vm_tags: "buaas"
       when: buaas
 
     #This will Allocate the ASG's to the VM
@@ -187,6 +190,7 @@
         azure_vm_nic2_reverse_dns: ""
         azure_vm_add_dns: true
         azure_vm_availability_set_name: ""
+        azure_vm_tags: "buaas"
       when: buaas
 
     #This will Allocate the ASG's to the VM
@@ -224,6 +228,7 @@
         azure_vm_nic2_reverse_dns: ""
         azure_vm_add_dns: true
         azure_vm_availability_set_name: ""
+        azure_vm_tags: "buaas"
       when: buaas
 
     #This will Allocate the ASG's to the VM
@@ -262,6 +267,7 @@
         azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_add_dns: true
         azure_vm_availability_set_name: "{{ as_sapr }}"
+        azure_vm_tags: "SAPRouter"
 
     #This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Public
@@ -306,6 +312,8 @@
         azure_vm_nic2_reverse_dns: ""
         azure_vm_add_dns: true
         azure_vm_availability_set_name: ""
+        azure_vm_tags: "Mids"
+
     #This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Management
       include_role: 
@@ -340,6 +348,7 @@
         azure_vm_nic2_reverse_dns: ""
         azure_vm_add_dns: true
         azure_vm_availability_set_name: ""
+        azure_vm_tags: "Mids"
 
     #This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Management
@@ -376,6 +385,7 @@
         azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_add_dns: true
         azure_vm_availability_set_name: "{{ as_fde }}"
+        azure_vm_tags: "FDE"
 
     #This will Allocate the ASG's to the VM
     - name: Allocate ASG nic1 - Customer
@@ -421,6 +431,7 @@
         azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_add_dns: false
         azure_vm_availability_set_name: "{{ as_sapr }}"
+        azure_vm_tags: "SAPRouter"
       when: ha_compartment   
 
     #This will Allocate the ASG's to the VM
@@ -469,6 +480,7 @@
         azure_vm_nic2_reverse_dns: "{{ st_management_reverse_dns }}"
         azure_vm_add_dns: false
         azure_vm_availability_set_name: "{{ as_fde }}"
+        azure_vm_tags: "FDE"
       when: ha_compartment  
 
     - name: Allocate ASG nic1 - Customer
@@ -546,6 +558,7 @@
         azure_vm_nic2_reverse_dns: "{{ dr_management_reverse_dns }}"
         azure_vm_add_dns: true
         azure_vm_availability_set_name: "{{ as_sapr }}"
+        azure_vm_tags: "SAPRouter"
       when: dr_compartment
 
     #This machine has 2 nics
@@ -593,6 +606,7 @@
         azure_vm_nic2_reverse_dns: ""
         azure_vm_add_dns: true
         azure_vm_availability_set_name: ""
+        azure_vm_tags: "Mids"
       when: dr_compartment
 
     - name: Allocate ASG nic1 - Management
@@ -629,6 +643,7 @@
         azure_vm_nic2_reverse_dns: ""
         azure_vm_add_dns: true
         azure_vm_availability_set_name: ""
+        azure_vm_tags: "Mids"
       when: dr_compartment
 
     - name: Allocate ASG nic1 - Management
@@ -666,6 +681,7 @@
         azure_vm_nic2_reverse_dns: "{{ dr_management_reverse_dns }}"
         azure_vm_add_dns: true
         azure_vm_availability_set_name: "{{ as_fde }}"
+        azure_vm_tags: "FDE"
       when: dr_compartment
 
     - name: Allocate ASG nic1 - Customer
@@ -713,6 +729,7 @@
         azure_vm_nic2_reverse_dns: "{{ dr_management_reverse_dns }}"
         azure_vm_add_dns: false
         azure_vm_availability_set_name: "{{ as_sapr }}"
+        azure_vm_tags: "SAPRouter"
       when: dr_compartment and dr_ha_compartment
 
     - name: Allocate ASG nic1 - Public
@@ -759,6 +776,7 @@
         azure_vm_nic2_reverse_dns: "{{ dr_management_reverse_dns }}"
         azure_vm_add_dns: false
         azure_vm_availability_set_name: "{{ as_fde }}"
+        azure_vm_tags: "FDE"
       when: dr_compartment and dr_ha_compartment
 
     - name: Allocate ASG nic1 - Customer

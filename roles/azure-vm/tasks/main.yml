@@ -39,6 +39,8 @@
       - path: /home/{{ username }}/.ssh/authorized_keys
         key_data: "{{azure_vm_public_ssh}}"
     availability_set: "{{azure_vm_availability_set_name}}"
+    tags: 
+      "{'type' : '{{ azure_vm_tags }}'}"
     state: present
   when: 
     - nic2.state is not defined and azure_vm_name != "suma" 
@@ -62,6 +64,8 @@
       - path: /home/{{ username }}/.ssh/authorized_keys
         key_data: "{{azure_vm_public_ssh}}"
     availability_set: "{{azure_vm_availability_set_name}}"
+    tags:
+      "{'type' : '{{ azure_vm_tags }}'}"
     state: present
   when:
        - nic2.state is defined and azure_vm_name != "suma" 
