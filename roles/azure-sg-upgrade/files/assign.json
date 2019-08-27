@@ -1,0 +1,15 @@
+{
+        "assign_groups": [
+                      {
+                        "vm_name": "testvm",
+                        "nic0": [ "mgmt-net-all", "saprtr-pub" ],
+                        "nic1": [ "cust-net-all" ]
+                      },
+                      {
+                        "vm_name": "testvm",
+                        "nic0": [ "mgmt-net-all", "saprtr-pub" ],
+                        "nic1": [ "cust-net-all" ]
+                      }
+                        
+        ]
+}

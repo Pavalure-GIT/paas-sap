@@ -1,0 +1,9 @@
+---
+- name: Azure Security Groups
+  hosts: localhost
+  tasks:
+    - name: Azure upgrade security groups
+      include_role:
+        name: azure-sg-upgrade
+      vars:
+        resource_group: P4S-Prototype-Automation-CB

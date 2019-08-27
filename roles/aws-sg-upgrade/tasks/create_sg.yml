@@ -1,0 +1,21 @@
+---
+- set_fact:
+    list: []
+
+- include: create_rules.yml
+  vars:
+    rule_protocol: "{{ item.protocol }}"
+    rule_ports: "{{ item.ports }}"
+    rule_cidr_ip: "{{ item.cidr_ip }}"
+    rule_group_name: "{{ item.group_name }}"
+  with_items: "{{ sgtest.rules }}"
+
+- name: Create "{{ sgtest.name }}" group
+  ec2_group:
+    name: "{{ sgtest.name }}"
+    description: "{{ sgtest.description }}"
+    vpc_id: "{{ vpc }}"
+    region: "{{ vpc_region }}"
+    state: present
+    rules: "{{ list }}"
+

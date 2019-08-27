@@ -1,0 +1,41 @@
+{
+        "application_security_groups": [
+                        {
+                        "name": "asg-buaas-mgmt"
+                        },
+                         {
+                        "name": "asg-mgmt"
+                        },{
+                        "name": "asg-saprtr-pub"
+                        },
+                         {
+                        "name": "asg-pub"
+                        },{
+                        "name": "asg-saprtr-mgmt"
+                        },{
+                        "name": "asg-fde-cust"
+                        },{
+                        "name": "asg-cust"
+                        },{
+                        "name": "asg-fde-mgmt"
+                        },{
+                        "name": "asg-mid-mgmt"
+                        },{
+                        "name": "asg-suma-mgmt"
+                        },{
+                        "name": "asg-ad-mgmt"
+                        },{
+                        "name": "asg-sap-cust"
+                        },{
+                        "name": "asg-sap-mgmt"
+                        },{
+                        "name": "asg-hrs-sid-cust"
+                        },{
+                        "name": "asg-hrs-sid-mgmt"
+                        },{
+                        "name": "asg-cc-pub"
+                        },{
+                        "name": "asg-wd-pub"
+                        }
+        ]
+}

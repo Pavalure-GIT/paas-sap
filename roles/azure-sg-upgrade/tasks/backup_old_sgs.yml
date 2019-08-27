@@ -1,0 +1,40 @@
+---
+- name: Set Timestamp
+  set_fact:
+    timestamp: "{{ ansible_date_time.epoch }}"
+
+- name: Get ASG Facts 
+  azure_rm_resource_facts:
+    provider: network
+    resource_type: applicationSecurityGroups
+    api_version: "2019-06-01"
+    resource_group: "{{ resource_group }}"
+  register: asg
+
+- name: Get NSG Facts
+  azure_rm_securitygroup_facts:
+    resource_group: "{{ resource_group }}"
+  register: nsg
+
+- name: Get Inteface Facts
+  azure_rm_networkinterface_facts:
+    resource_group: "{{ resource_group }}"
+  register: interfaces
+
+- name: Write existing ASGs to File in JSON Format
+  copy:
+    content: "{{ asg | to_nice_json  }}"
+    dest: "/tmp/azure-sg-asg-{{ timestamp }}.json"
+
+- name: Write existing NSGs to File in JSON Format
+  copy:
+    content: "{{ nsg | to_nice_json  }}"
+    dest: "/tmp/azure-sg-nsg-{{ timestamp }}.json"
+
+- name: Write existing Interfaces to File in JSON Format
+  copy:
+    content: "{{ interfaces | to_nice_json  }}"
+    dest: "/tmp/azure-sg-interfaces-{{ timestamp }}.json"
+
+- debug:
+    msg: "Backup stored in /tmp with timestamp {{ timestamp }}"

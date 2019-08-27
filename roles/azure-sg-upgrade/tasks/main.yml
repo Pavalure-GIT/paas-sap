@@ -1,0 +1,36 @@
+---
+- include: backup_old_sgs.yml
+
+- name: Set the assignments file as a fact
+  set_fact:
+    assignments_input: "{{ lookup('file',assignments) | from_json }}"
+
+- name: Set the application security group file as a fact
+  set_fact:
+     asg: "{{ lookup('file',asgs) | from_json }}"
+
+- name: Set the security group file as a fact
+  set_fact:
+     sg: "{{ lookup('file',nsgs) | from_json }}"
+
+
+- include_tasks: application_security_groups.yml
+  vars:
+    asgtest: "{{ item }}"
+  with_items: "{{ asg.application_security_groups }}"
+
+- debug:
+    var=management_ip_range
+
+- include_tasks: security_groups.yml
+  vars:
+    sgtest: "{{ item }}"
+  with_items: "{{ sg.security_groups }}"
+
+
+- include: find_servers.yml
+  vars:
+    vm_type: "{{ item.vm_name }}"
+    type_asg_list: "{{ item.ASG }}"
+    type_nsg_list: "{{ item.NSG }}"
+  with_items: "{{ assignments_input.assign_groups }}"
