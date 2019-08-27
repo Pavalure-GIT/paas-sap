@@ -152,7 +152,7 @@
         azure_vm_nic2_reverse_dns: ""
         azure_vm_add_dns: true
         azure_vm_availability_set_name: ""
-        azure_vm_tags: "cloudboost"
+        azure_vm_tags: "buaas"
       when: buaas
 
     #This will Allocate the ASG's to the VM
@@ -190,7 +190,7 @@
         azure_vm_nic2_reverse_dns: ""
         azure_vm_add_dns: true
         azure_vm_availability_set_name: ""
-        azure_vm_tags: "networker"
+        azure_vm_tags: "buaas"
       when: buaas
 
     #This will Allocate the ASG's to the VM
@@ -228,7 +228,7 @@
         azure_vm_nic2_reverse_dns: ""
         azure_vm_add_dns: true
         azure_vm_availability_set_name: ""
-        azure_vm_tags: "nmc"
+        azure_vm_tags: "buaas"
       when: buaas
 
     #This will Allocate the ASG's to the VM
