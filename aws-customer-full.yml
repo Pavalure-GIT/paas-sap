@@ -58,6 +58,7 @@
         aws_eth0_security_groups: "{{ siem_eth0_security_groups }}"
         single_nic: true
         instance_profile_role: "{{ siem_instance_profile_name }}"
+        aws_ec2_vm_tag: SIEM
       when: siem
     #An entry is added to the management DNS zone
     - route53:
@@ -117,6 +118,7 @@
           - device_name: /dev/sdb
             volume_type: gp2
             volume_size: 50
+        aws_ec2_vm_tag: FDE
     #The created instance is added to the FDE hosts group, so it can later be configured.    
     - name: Add FDE to fde group
       add_host:
@@ -188,6 +190,7 @@
           - device_name: /dev/sdb
             volume_type: gp2
             volume_size: 50
+        aws_ec2_vm_tag: FDE
       when: ha
     #The created instance is added to the FDE hosts group, so it can later be configured.
     - name: Add FDE to fde-2 group
@@ -210,6 +213,7 @@
         aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
         aws_eth0_security_groups: "{{ mid_eth0_security_groups }}"
         single_nic: true
+        aws_ec2_vm_tag: Mid
     #A management entry is added to the management DNS zone
     - route53:
         state: present
@@ -251,6 +255,7 @@
         aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
         aws_eth0_security_groups: "{{ mid_eth0_security_groups }}"
         single_nic: true
+        aws_ec2_vm_tag: Mid
     #A management entry is added to the management DNS zon
     - route53:
         state: present
@@ -299,6 +304,7 @@
           - device_name: /dev/sdb
             volume_type: gp2
             volume_size: 500
+        aws_ec2_vm_tag: BUaaS
       when: buaas
     #An entry is added to the management DNS zone    
     - route53:
@@ -344,6 +350,7 @@
           - device_name: /dev/sdb
             volume_type: gp2
             volume_size: 40
+        aws_ec2_vm_tag: BUaaS
       when: buaas
     #An entry is added to the management DNS zone    
     - route53:
@@ -389,6 +396,7 @@
           - device_name: /dev/sdb
             volume_type: gp2
             volume_size: 500
+        aws_ec2_vm_tag: BUaaS
       when: buaas
     #An entry is added to the management DNS zone
     - route53:
@@ -430,6 +438,7 @@
         aws_eth0_security_groups: "{{ sap_eth0_security_groups }}"
         aws_eth1_security_groups: "{{ sap_eth1_security_groups }}"
         single_nic: false
+        aws_ec2_vm_tag: SAPRouter
     #The created sap router instance is added to the saprouter group, so it can later be configured.    
     - name: Add saprouter to saprouter group
       add_host:
@@ -475,6 +484,7 @@
         aws_eth0_security_groups: "{{ sap_eth0_security_groups }}"
         aws_eth1_security_groups: "{{ sap_eth1_security_groups }}"
         single_nic: false
+        aws_ec2_vm_tag: SAPRouter
       when: ha
     #Created SAP Router instance is added to sap router group, so it can later be configured.  
     - name: Add saprouter2 to saprouter group
@@ -542,6 +552,7 @@
           - device_name: /dev/sdb
             volume_type: gp2
             volume_size: 50
+        aws_ec2_vm_tag: FDE
       when: dr_compartment
     #The created instance is added to the FDE hosts group, so it can later be configured.  
     - name: Add dr fde to fde group
@@ -619,6 +630,7 @@
             volume_type: gp2
             volume_size: 50
         single_nic: false
+        aws_ec2_vm_tag: FDE
       when: dr_ha
     #The created instance is added to the FDE hosts group, so it can later be configured.  
     - name: Add dr fde2 to fde group
@@ -640,6 +652,7 @@
         aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
         aws_eth0_security_groups: "{{ mid_eth0_security_groups }}"
         single_nic: true
+        aws_ec2_vm_tag: Mid
       when: dr_compartment
     #A management entry is added to the management DNS zone
     - route53:
@@ -684,6 +697,7 @@
         aws_ec2_vm_eth0_subnet: "{{ managementaz1.subnet.id }}"
         aws_eth0_security_groups: "{{ mid_eth0_security_groups }}"
         single_nic: true
+        aws_ec2_vm_tag: Mid
       when: dr_compartment
     #A management entry is added to the management DNS zone
     - route53:
@@ -732,6 +746,7 @@
         aws_eth0_security_groups: "{{ sap_eth0_security_groups }}"
         aws_eth1_security_groups: "{{ sap_eth1_security_groups }}"
         single_nic: false
+        aws_ec2_vm_tag: SAPRouter
       when: dr_compartment
     #The created sap router instance is added to the saprouter group, so it can later be configured.  
     - name: Add dr saprouter to saprouter group
@@ -779,6 +794,7 @@
         aws_eth0_security_groups: "{{ sap_eth0_security_groups }}"
         aws_eth1_security_groups: "{{ sap_eth1_security_groups }}"
         single_nic: false
+        aws_ec2_vm_tag: SAPRouter
       when: dr_ha
     #The created sap router instance is added to the saprouter group, so it can later be configured.  
     - name: Add dr saprouter2 to saprouter group
@@ -949,6 +965,7 @@
           - device_name: /dev/sdc
             volume_type: gp2
             volume_size: 500
+        aws_ec2_vm_tag: SUMA
       when: suma
     #An entry is added to the management DNS zone
     - route53:
