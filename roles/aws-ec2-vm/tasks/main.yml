@@ -35,8 +35,10 @@
   ec2:
     image: "{{ aws_ec2_vm_image }}"
     instance_type: "{{ aws_ec2_vm_instance_type }}"
-    instance_tags:
-      Name: "{{ aws_ec2_vm_Name }} "
+    instance_tags: {
+      Name: "{{ aws_ec2_vm_Name }}",
+      Type: "{{ aws_ec2_vm_tag }}"
+    }
     network_interfaces: ["{{ eth0.interface.id }}"]
     key_name: "{{ aws_ec2_vm_key_name }}"
     region: "{{ aws_ec2_vm_region }}"
@@ -51,8 +53,10 @@
   ec2:
     image: "{{ aws_ec2_vm_image }}"
     instance_type: "{{ aws_ec2_vm_instance_type }}"
-    instance_tags:
-      Name: "{{ aws_ec2_vm_Name }} "
+    instance_tags: {
+      Name: "{{ aws_ec2_vm_Name }}",
+      Type: "{{ aws_ec2_vm_tag }}"
+    }
     network_interfaces: ["{{ eth0.interface.id }}" , "{{ eth1.interface.id }}"]
     key_name: "{{ aws_ec2_vm_key_name }}"
     region: "{{ aws_ec2_vm_region }}"
