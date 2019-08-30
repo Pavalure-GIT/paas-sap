@@ -100,7 +100,7 @@
   register: vpc_facts
 
 - pause:
-    minutes: 10
+    minutes: 5
 
 #Remove the VPC
 - name: Remove the VPC
@@ -117,7 +117,4 @@
   register: result
   until: result is succeeded
   with_items: "{{ vpc_facts.vpcs }}"
-  when: terminate
-
-
-
+  when: terminate and delete_vpc

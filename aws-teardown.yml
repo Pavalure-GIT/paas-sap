@@ -1,17 +1,27 @@
 ---
+- name: AWS Teardown - Peering Connection
+  hosts: localhost
+  tasks:
+    - name: Find Peer ID from Requester VPC
+      ec2_vpc_peering_facts:
+        region: "{{ st_region }}"
+        filters:
+          requester-vpc-info.vpc-id: "{{ st_vpc_id }}"
+      register: peering
+
+    - name: Delete VPC Peer
+      ec2_vpc_peer:
+        region: "{{ st_region }}"
+        peering_id: "{{ peering.result[0].vpc_peering_connection_id }}"
+        state: absent
+      when: peering.result != []
+
 - name: AWS Teardown
   hosts: localhost
   tasks:
-#    - name: Call Teardown Role
-#      include_role:
-#        name: aws-teardown
-  
-#    - pause:
-#        minutes: 10
-
-    - name: Call The VPC Teardown Role
+    - name: Call The Teardown Role for Primary
       include_role:
-        name: vpc-teardown
+        name: aws-teardown
       vars:
         vpc: "{{ st_vpc_id }}"
         vpc_name: "{{ st_vpc_name }}"
@@ -19,13 +29,13 @@
         list: "{{ st_list }}"
         terminate: "{{ st_terminate }}"
         requester: "{{ st_requester }}"
+        gateway_id: "{{ st_gateway_id }}"
+        vgw_name: "{{ st_vgw_name }}"
+        route53_zones: "{{ st_route53_zones }}"
 
-#    - pause:
-#        minutes: 10
-
-    - name: Call The VPC Teardown Role for DR
+    - name: Call The Teardown Role for DR
       include_role:
-        name: vpc-teardown
+        name: aws-teardown
       vars:
         vpc: "{{ dr_vpc_id }}"
         vpc_name: "{{ dr_vpc_name }}"
@@ -33,4 +43,7 @@
         list: "{{ dr_list }}"
         terminate: "{{ dr_terminate }}"
         requester: "{{ dr_requester }}"
-      when: dr == 'true'
+        gateway_id: "{{ dr_gateway_id }}"
+        vgw_name: "{{ dr_vgw_name }}"
+        route53_zones: []
+      when: dr

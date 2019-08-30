@@ -1,0 +1,24 @@
+---
+- hosts: localhost
+  tasks:
+    #Get VPC facts
+    - ec2_vpc_net_facts:
+        vpc_ids: "{{ st_vpc_id }}"
+        region: "{{ st_region }}"
+      register: vpc_facts
+
+    - name: Remove the VPC
+      ec2_vpc_net:
+        name: "{{ st_vpc_name }}"
+        state: absent
+        region: "{{ st_region }}"
+        cidr_block: "{{ item.cidr_block }}"
+        purge_cidrs: yes
+        tags:
+          Name: "{{ st_vpc_name }}"
+      retries: 4
+      delay: 20
+      register: result
+      until: result is succeeded
+      with_items: "{{ vpc_facts.vpcs }}"
+      when: st_terminate
