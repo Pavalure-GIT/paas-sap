@@ -5,6 +5,4 @@
     - name: Call role
       include_role:
         name: aws-sg-upgrade
-     ## vars:
-     ##   vpc_region: us-east-1
-     ##   vpc_id: vpc-03ced57f8dad36b27
+      

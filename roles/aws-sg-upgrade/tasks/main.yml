@@ -25,7 +25,7 @@
 
 - name: Read in SG/SG Rules from groups JSON file
   set_fact:
-    sg_input: "{{ lookup('file','groups.json') | from_json }}"
+    group_in: "{{ lookup('file',group_sg) | from_json }}"
 
 - name: Create the SGs based on Input from JSON File
   include_tasks: create_sg.yml
@@ -33,11 +33,11 @@
     sgtest: "{{ item }}"
     region: "{{ vpc_region }}"
     vpc: "{{ vpc_id }}"
-  with_items: "{{ sg_input.sg }}"
+  with_items: "{{ group_in.sg }}"
 
 - name: Read in Assignments from assignments JSON File
   set_fact:
-    assignments_input: "{{ lookup('file','assignments.json') | from_json }}"
+    assign_in: "{{ lookup('file',assign_sg) | from_json }}"
 
 - name: Assign SGs to VMs based on input from JSON File
   include: assign.yml
@@ -47,4 +47,4 @@
     eth0_groups: "{{ item.eth0 }}"
     eth1_groups: "{{ item.eth1 }}"
     vpc: "{{ vpc_id }}"
-  with_items: "{{ assignments_input.sg_assignments }}"
+  with_items: "{{ assign_in.sg_assignments }}"
