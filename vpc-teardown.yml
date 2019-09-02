@@ -1,5 +1,7 @@
 - name: AWS Teardown
   hosts: localhost
+  vars:
+    delete_vpc: false
   tasks:
     - name: Call The VPC Teardown Role for Primary
       include_role:
@@ -11,7 +13,6 @@
         list: "{{ st_list }}"
         terminate: "{{ st_terminate }}"
         requester: "{{ st_requester }}"
-        delete_vpc: false
 
     - name: Call The VPC Teardown Role for DR
       include_role:
@@ -23,6 +24,5 @@
         list: "{{ dr_list }}"
         terminate: "{{ dr_terminate }}"
         requester: "{{ dr_requester }}"
-        delete_vpc: false
       when: dr
 
