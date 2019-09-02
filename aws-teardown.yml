@@ -31,7 +31,7 @@
         requester: "{{ st_requester }}"
         gateway_id: "{{ st_gateway_id }}"
         vgw_name: "{{ st_vgw_name }}"
-        route53_zones: []
+        route53_zones: "{{ st_route53_zones }}"
 
     - name: Call The Teardown Role for DR
       include_role:

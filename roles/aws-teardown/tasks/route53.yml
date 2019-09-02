@@ -17,8 +17,8 @@
       state: get
       zone: "{{ zone_name }}"
       record: "{{ item.Name }}"
-      vpc_id: "{{ vpc }}"
       type: A
+      private_zone: True
   with_items: "{{ records.ResourceRecordSets }}"
 
 #Remove type A records from given zone
@@ -30,7 +30,7 @@
     type: A
     value: "{{ item.ResourceRecords[0].Value }}"
     ttl: "{{ item.TTL }}"
-    vpc_id: "{{ vpc }}"
+    private_zone: True
   with_items: "{{ records.ResourceRecordSets }}"
   when: terminate
 
@@ -40,8 +40,8 @@
       state: get
       zone: "{{ zone_name }}"
       record: "{{ item.Name }}"
-      vpc_id: "{{ vpc }}"
       type: PTR
+      private_zone: True
   with_items: "{{ records.ResourceRecordSets }}"
 
 #Remove PTR type records from given zone
@@ -53,7 +53,7 @@
     type: PTR
     value: "{{ item.ResourceRecords[0].Value }}"
     ttl: "{{ item.TTL }}"
-    vpc_id: "{{ vpc }}"
+    private_zone: True
   with_items: "{{ records.ResourceRecordSets }}"
   when: terminate
 

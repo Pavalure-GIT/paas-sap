@@ -1,12 +1,12 @@
-st_vpc_id: vpc-098e774aeb3f226e6
+st_vpc_id: vpc-0d5f52e8b07771f99
 st_region: us-east-1
 st_list: true
 st_terminate: true
 st_requester: false
 st_route53_zones:
-  sp.aws.paas4sap.svcs.entsvcs.com. : 'Z3E20TI3ZFKIJA'
-  testsp.paas4sap.svcs.entsvcs.com. : 'Z1I87MHLSO4KR2'
-  in-addr.arpa. : 'Z1TOQCTBMWW18'
+  ac2.aws.paas4sap.svcs.entsvcs.com. : 'Z02027753RZDKI7W01PJZ'
+  testac2.paas4sap.svcs.entsvcs.com. : 'Z02027651EFBVAI1GAEI8'
+  in-addr.arpa. : 'Z02028543N888UTQGHC6Q'
 st_vpc_name: Dev-SP
 st_gateway_id: vgw-0ed110086d12fe742
 st_vgw_name: sp-csr-vgw
