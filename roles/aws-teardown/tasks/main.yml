@@ -1,10 +1,10 @@
 ---
+- include: route53.yml
+  with_dict: "{{ route53_zones }}"
+  when: route53_zones != []
+
 - include: natgateways.yml
 
 - include: ec2.yml
 
 - include: csr.yml
-
-- include: route53.yml
-  with_dict: "{{ route53_zones }}"
-  when: route53_zones != []
