@@ -1,5 +1,3 @@
-- debug: var=region
-
 #Get List of NAT Gateways for given VPC
 - ec2_vpc_nat_gateway_facts:
     filters:
