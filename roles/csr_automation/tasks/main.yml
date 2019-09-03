@@ -9,4 +9,3 @@
 - name: Cisco CSR DR Customer Setup
   include_tasks: csr-dr.yml
   when: dr_compartment
-

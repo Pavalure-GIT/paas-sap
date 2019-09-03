@@ -1,26 +1,3 @@
-#When dr is set to true find the peering connection ID
-- name: Find Peer ID from Requester VPC
-  ec2_vpc_peering_facts:
-    region: "{{ region }}"
-    filters:
-      requester-vpc-info.vpc-id: "{{ vpc }}"
-  register: peering
-  when: dr == true
-
-#List the Peering connection to be removed
-- name: List VPC Peer  
-  debug:
-    msg: "{{ peering.result[0].vpc_peering_connection_id }}"
-  when: dr == true
-
-#Delete VPC Peering connection
-- name: Delete VPC Peer
-  ec2_vpc_peer:
-    region: "{{ region }}"
-    peering_id: "{{ peering.result[0].vpc_peering_connection_id }}"
-    state: absent
-  when: dr == true
-
 #Get list of subnets for given VPC/region
 - ec2_vpc_subnet_facts:
     filters:
@@ -38,6 +15,8 @@
   when: 
     - item.vpc_id == "{{ vpc }}"
     - terminate
+
+- debug: var=vpc
 
 #Get list of security groups for given VPC/region
 - ec2_group_facts:
@@ -100,6 +79,12 @@
   ignore_errors: yes
   when: terminate
 
+- debug: var=region
+- debug: var=vpc
+
+- pause:
+    minutes: 2
+
 #Get VPC facts
 - ec2_vpc_net_facts:
     region: "{{ region }}"
@@ -114,9 +99,9 @@
     region: "{{ region }}"
   register: vpc_facts
 
-#Wait for 3 minutes to ensure components have been removed
 - pause:
-    minutes: 1
+    minutes: 5
+  when: delete_vpc
 
 #Remove the VPC
 - name: Remove the VPC
@@ -128,9 +113,9 @@
     purge_cidrs: yes
     tags:
        Name: "{{ vpc_name }}"
+  retries: 4
+  delay: 20
+  register: result
+  until: result is succeeded
   with_items: "{{ vpc_facts.vpcs }}"
-  retries: 3  
-  delay: 5
-  when: terminate
-
-
+  when: delete_vpc

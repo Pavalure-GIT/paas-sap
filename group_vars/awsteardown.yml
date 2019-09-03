@@ -1,10 +1,23 @@
-vpc: vpc-051f0a4f0322394de
-region: us-east-1
-list: true
-terminate: true
-requester: false
-route53_zones:
-  ac.aws.paas4sap.svcs.entsvcs.com. : 'ZWJTWC89RFYJR'
-  alextest.paas4sap.svcs.entsvcs.com. : 'Z15N3BGZACK2AS'
-  in-addr.arpa. : 'Z2QEU1C435XJUK'
-vpc_name: Dev-Alex
+st_vpc_id: vpc-0061fe65db9d1efef
+st_region: us-east-1
+st_list: true
+st_terminate: true
+st_requester: false
+st_route53_zones:
+  ac2.aws.paas4sap.svcs.entsvcs.com. : 'Z02581892RYN6ICEEP2QY'
+  testac2.paas4sap.svcs.entsvcs.com. : 'Z02587781APJ5F9DIDZ45'
+  in-addr.arpa. : 'Z02589191N9G4E9SXMLNK'
+st_vpc_name: Dev-Alex2
+st_gateway_id: vgw-03db4ae56dd3b5a02
+st_vgw_name: ac2-csr-vgw
+
+dr_vpc_id: vpc-0a36271839dda930e
+dr_region: us-east-2
+dr_list: true
+dr_terminate: true
+dr_requester: false
+dr_vpc_name: DR-Dev-Test2
+dr_gateway_id: vgw-0aa4409713a60954e
+dr_vgw_name: ac2-dr-csr-vgw-dr
+
+dr: true
