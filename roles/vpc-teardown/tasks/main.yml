@@ -16,8 +16,6 @@
     - item.vpc_id == "{{ vpc }}"
     - terminate
 
-- debug: var=vpc
-
 #Get list of security groups for given VPC/region
 - ec2_group_facts:
     filters:
