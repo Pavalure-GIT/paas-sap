@@ -14,11 +14,6 @@
         state: present
       become: true
 
-    - name: Download AutomationAnsible repository from Nexus
-      shell: |
-        wget --user="{{ nexus_username }}" --password="{{ nexus_password }}" http://nexus.solutionplace.svcs.hpe.com:8081/nexus/service/local/repositories/spp/content/artifacts/"{{ package }}"/"{{ package_version }}"/"{{ package }}"-"{{ package_version }}".rar -P /tmp
-      args:
-        warn: false
     - stat:
         path: /tmp/deployment
       register: deployment
