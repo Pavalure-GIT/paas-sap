@@ -17,12 +17,12 @@
         name: wget
         state: present
 
-    - name: Download AutomationAnsible repository from Nexus
+    - name: Download AutomationAnsible package from Artifactory
       shell: |
-        wget --user="{{ nexus_username  }}" --password="{{ nexus_password }}" http://nexus.solutionplace.svcs.hpe.com:8081/nexus/service/local/repositories/spp/content/artifacts/automationansible/latest/automationansible-latest.rar -P /tmp
+        wget --user="{{ artifactory_username  }}" --password="{{ artifactory_password }}" https://artifactory.csc.com/artifactory/P4S-Automation/artifacts/automationansible/latest/automationansible-latest.rar -P /tmp
       args:
         warn: false
-    
+
     - name: Unrar AutomationAnsible package to /tmp
       shell: unar /tmp/automationansible-latest.rar -o /tmp
 

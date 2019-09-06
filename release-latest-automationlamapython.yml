@@ -12,9 +12,9 @@
         name: wget
         state: present
 
-    - name: Download AutomationLamaPython repository from Nexus
+    - name: Download AutomationLamaPython package from Artifactory
       shell: |
-        wget --user="{{ nexus_username  }}" --password="{{ nexus_password }}" http://nexus.solutionplace.svcs.hpe.com:8081/nexus/service/local/repositories/spp/content/artifacts/automationlamapython/latest/automationlamapython-latest.rar -P /tmp
+        wget --user="{{ artifactory_username  }}" --password="{{ artifactory_password }}"  https://artifactory.csc.com/artifactory/P4S-Automation/artifacts/automationlamapython/latest/automationlamapython-latest.rar -P /tmp
       args:
         warn: false
     
