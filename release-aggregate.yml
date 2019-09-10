@@ -66,12 +66,12 @@
         path: /tmp/release
         state: directory
 
-    - name: Download aggregate package from Nexus
+    - name: Pull Aggregate Package from Artifactory
       shell: |
-        wget --user="{{ nexus_username  }}" --password="{{ nexus_password }}" http://nexus.solutionplace.svcs.hpe.com:8081/nexus/service/local/repositories/spp/content/artifacts/aggregatepackage/"{{ AggregateVersion }}"/aggregatepackage-"{{ AggregateVersion }}".rar -P /tmp/release
+        wget --user="{{ artifactory_username  }}" --password="{{ artifactory_password }}" https://artifactory.csc.com/artifactory/P4S-Automation/artifacts/aggregatepackage/"{{ AggregateVersion }}"/aggregatepackage-"{{ AggregateVersion }}".rar -P /tmp/release
       args:
         warn: false
-    
+
     - name: Unrar aggregate package to /tmp
       shell: unar /tmp/release/aggregatepackage-"{{ AggregateVersion }}".rar -o /tmp/release
 
