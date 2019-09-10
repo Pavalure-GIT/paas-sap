@@ -6,12 +6,18 @@
 
 - set_fact:
     resource_group: "{{ rg }}"
-    exception_names: []
+    alwayson_names: []
+    scheduled_names: []
 
 - set_fact:
-    exception_names: "{{ item.virtual_machines }}"
+    alwayson_names: "{{ item.virtual_machines }}"
   when: item.resource_group == resource_group
-  with_items: "{{ exceptions }}"
+  with_items: "{{ alwayson }}"
+
+- set_fact:
+    scheduled_names: "{{ item.virtual_machines }}"
+  when: item.resource_group == resource_group
+  with_items: "{{ scheduled }}"
 
 - include: add_to_stop_list.yml
   vars:

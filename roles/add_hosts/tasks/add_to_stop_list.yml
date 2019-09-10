@@ -1,0 +1,37 @@
+---
+- name: Get facts by name
+  azure_rm_virtualmachine_facts:
+    resource_group: "{{ machine_rg }}"
+    name: "{{ machine_name }}"
+  register: machine_info
+
+- set_fact:
+    skip_machine: false
+    machine_network_interfaces: "{{ machine_info.vms[0].network_interface_names }}"
+    machine_tags: "{{ machine_info.vms[0].tags.Owner if machine_info.vms[0].tags.Owner is defined else 'Unknown' }}"
+
+- name: Check for Always-On machines and set skip boolean
+  set_fact:
+    skip_machine: true
+  with_items: "{{ alwayson_names }}"
+  when: item.name == machine_info.vms[0].name
+
+- name: Check for Schedule machines and set skip boolean
+  set_fact:
+    skip_machine: true
+  with_items: "{{ scheduled_names }}"
+  when: item.name == machine_info.vms[0].name
+
+- set_fact:
+    unverified: "{{ unverified  + [ {'name':machine_name, 'rg':machine_rg, 'owner':machine_tags} ] }}"
+  when: (not skip_machine) and (machine_info.vms[0].power_state == "running")
+
+#- set_fact:
+#    machine_list: "{{ machine_list  + [ {'name':machine_name, 'rg':machine_rg} ] }}"
+#  when: (skip_machine) and (machine_info.vms[0].power_state == "running")
+
+#- include: add_host.yml
+#  vars:
+#    machine_interface: "{{ item }}"
+#  with_items: "{{ machine_network_interfaces }}"
+#  when: (skip_machine) and (machine_info.vms[0].power_state == "running") and (machine_info.vms[0].tags.INSTANCEID is defined)

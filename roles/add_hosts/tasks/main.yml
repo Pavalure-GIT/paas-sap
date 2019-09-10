@@ -1,0 +1,18 @@
+---
+- set_fact:
+    rg: "{{ schedule_list.resource_group }}"
+
+- name: Get facts for "{{ schedule_list.resource_group }}"
+  azure_rm_resourcegroup_facts:
+    name: "{{ schedule_list.resource_group }}"
+  register: rg_info
+
+- include_tasks: azure.yml
+  vars:
+    machine_rg: "{{ rg }}"
+    machine: "{{ item.name }}"
+  with_items: "{{ schedule_list.virtual_machines }}"
+  when: cloud == 'Azure' and rg_info.ansible_facts.azure_resourcegroups != []
+
+- include_tasks: aws.yml
+  when: cloud == 'AWS'

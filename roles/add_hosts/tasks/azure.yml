@@ -1,0 +1,25 @@
+---
+- set_fact:
+    machine_exists: true
+    desired_state: "{{ 'running' if action == 'stop' else 'stopped' }}"
+
+- name: Add "{{ machine }}" if it exists
+  block:
+    - azure_rm_virtualmachine_facts:
+        resource_group: "{{ machine_rg }}"
+        name: "{{ machine }}"
+      register: machine_info
+
+    - set_fact:
+        power_list: "{{ power_list  + [ {'name':machine, 'rg':machine_rg} ] }}"
+      when: machine_info.vms[0].power_state == desired_state
+
+    - include: add_host.yml
+      vars:
+        machine_interface: "{{ item }}"
+      with_items: "{{ machine_info.vms[0].network_interface_names }}"
+      when: machine_info.vms[0].tags.INSTANCEID is defined and machine_info.vms[0].power_state == desired_state
+  rescue:
+    - debug:
+        msg: "{{ machine }} does not exist. Skipping"
+

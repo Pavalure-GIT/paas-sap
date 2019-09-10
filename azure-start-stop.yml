@@ -1,0 +1,74 @@
+---
+- name: Compare VMs in a subscription
+  hosts: localhost
+  tasks:
+    - name: Read in exceptions
+      set_fact:
+        always_on_json: "{{ lookup('file',always_on) | from_json }}"
+        schedule_json: "{{ lookup('file',schedule) | from_json }}"
+        power_list: []
+        unverified: []
+
+    - name: Get facts for given subscription
+      azure_rm_resourcegroup_facts:
+      register: all
+      when: mode == 'stop'
+
+    - set_fact:
+        resource_groups: "{{ resource_groups|default([]) + [item.name] }}"
+      with_items: "{{ all.ansible_facts.azure_resourcegroups }}"
+      when: mode == 'stop'
+    
+    - include_role:
+        name: azure-schedule-compare
+      vars:
+        rg: "{{ item }}"
+        alwayson: "{{ always_on_json.entries }}"
+        scheduled: "{{ schedule_json.entries }}"
+      with_items: "{{ resource_groups }}"
+      when: mode == 'stop'
+
+    - include_role:
+        name: add_hosts
+      vars:
+        cloud: 'Azure'
+        action: "{{ mode }}"
+        schedule_list: "{{ item }}"
+      with_items: "{{ schedule_json.entries }}"
+
+    - debug: var=unverified
+
+- name: Start machines when mode is start
+  hosts: localhost
+  tasks:
+    - name: Power On machines
+      azure_rm_virtualmachine:
+        resource_group: "{{ item.rg }}"
+        name: "{{ item.name }}"
+        started: yes
+      with_items: "{{ power_list }}"
+      when: mode == 'start'
+    - pause:
+        minutes: 3
+      when: mode == 'start'
+
+- name: Start/Stop SAP Service
+  hosts: sap_list
+  become: yes
+  tasks:
+    - name: Call Start Stop
+      include_role:
+        name: sap-startstop
+      vars:
+        action: "{{ mode }}"
+
+- name: Power Off Machines whne mode is stop
+  hosts: localhost
+  tasks:
+    - name: Power Off
+      azure_rm_virtualmachine:
+        resource_group: "{{ item.rg }}"
+        name: "{{ item.name }}"
+        started: no
+      with_items: "{{ power_list }}"
+      when: mode == 'stop'
