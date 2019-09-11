@@ -36,7 +36,10 @@
         schedule_list: "{{ item }}"
       with_items: "{{ schedule_json.entries }}"
 
-    - debug: var=unverified
+    - name: Write unverified list to file
+      copy:
+        content: "{{ unverified }}"
+        dest: "unverified.txt"
 
 - name: Start machines when mode is start
   hosts: localhost
