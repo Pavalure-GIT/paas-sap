@@ -38,7 +38,7 @@
 
     - name: Write unverified list to file
       copy:
-        content: "{{ unverified }}"
+        content: "{{ unverified | to_nice_json }}"
         dest: "unverified.txt"
 
 - name: Start machines when mode is start
