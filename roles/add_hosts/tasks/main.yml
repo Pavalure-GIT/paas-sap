@@ -1,11 +1,13 @@
 ---
 - set_fact:
     rg: "{{ schedule_list.resource_group }}"
+  when: cloud == 'Azure'
 
 - name: Get facts for "{{ schedule_list.resource_group }}"
   azure_rm_resourcegroup_facts:
     name: "{{ schedule_list.resource_group }}"
   register: rg_info
+  when: cloud == 'Azure'
 
 - include_tasks: azure.yml
   vars:
@@ -14,5 +16,19 @@
   with_items: "{{ schedule_list.virtual_machines }}"
   when: cloud == 'Azure' and rg_info.ansible_facts.azure_resourcegroups != []
 
-- include_tasks: aws.yml
+- set_fact:
+    aws_region: "{{ schedule_list.region }}"
   when: cloud == 'AWS'
+
+- name: Get facts for "{{ schedule_list.region }}"
+  ec2_instance_facts:
+    region: "{{ schedule_list.region }}"
+  register: region_instances
+  when: cloud == 'AWS'
+
+- include_tasks: aws.yml
+  vars:
+    instance_id: "{{ item.id }}"
+    instance_region: "{{ aws_region }}"
+  with_items: "{{ schedule_list.instances }}"
+  when: cloud == 'AWS' and region_instances.instances != []

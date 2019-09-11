@@ -1,6 +1,5 @@
 ---
 - set_fact:
-    machine_exists: true
     desired_state: "{{ 'running' if action == 'stop' else 'stopped' }}"
 
 - name: Add "{{ machine }}" if it exists

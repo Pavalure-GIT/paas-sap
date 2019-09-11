@@ -3,9 +3,18 @@
     resource_group: "{{ machine_rg }}"
     name: "{{ machine_interface }}"
   register: interface_facts
+  when: cloud =='Azure'
+
+- set_fact:
+    ip: "{{ interface_facts.ansible_facts.azure_networkinterfaces[0].properties.ipConfigurations[0].properties.privateIPAddress }}"
+  when: cloud =='Azure'
+
+- set_fact:
+    ip: "{{ machine_interface.private_ip_address }}" 
+  when: cloud == 'AWS'
 
 - name: Add to group
   add_host:
-    name: "{{ interface_facts.ansible_facts.azure_networkinterfaces[0].properties.ipConfigurations[0].properties.privateIPAddress }}" 
+    name: "{{ ip }}" 
     groups: sap_list
-  when: interface_facts.ansible_facts.azure_networkinterfaces[0].properties.ipConfigurations[0].properties.privateIPAddress | match("172.17.")
+  when: ip | match("172.17.")
