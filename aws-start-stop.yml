@@ -4,10 +4,29 @@
   vars:
     mode: 'stop'
     power_list: []
+    unverified: []
   tasks:
     - name: Read in exceptions
       set_fact:
         schedule_json: "{{ lookup('file',schedule) | from_json }}"
+        always_on_json: "{{ lookup('file',always_on) | from_json }}"
+
+    - aws_region_facts:
+        region: us-east-1
+      register: region_list
+
+    - set_fact:
+        available_regions: "{{ region_list.regions | map(attribute='region_name') | list }}"
+
+    - include_role:
+        name: find-unverified
+      vars:
+        group: "{{ item }}"
+        alwayson: "{{ always_on_json.entries }}"
+        scheduled: "{{ schedule_json.entries }}"
+        cloud: 'AWS'
+      with_items: "{{ available_regions }}"
+      when: mode == 'stop'
 
     - include_role:
         name: add_hosts
@@ -17,26 +36,45 @@
         schedule_list: "{{ item }}"
       with_items: "{{ schedule_json.entries }}"
 
-    - debug: var=groups.sap_list
+    - name: Write unverified list to file
+      copy:
+        content: "{{ unverified | to_nice_json }}"
+        dest: "unverified.txt"
 
-#- name: Start/Stop SAP Service
-#  hosts: instances
-#  become: yes
-#  tasks:
-#    - name: Call Start Stop
-#      include_role:
-#        name: sap-startstop
-#      vars:
-#        action: stop
+- name: Start machines when mode is start
+  hosts: localhost
+  tasks:
+    - name: Power On machines
+      ec2_instance:
+        region: "{{ item.region }}"
+        state: started
+        filters:
+          instance_id: "{{ item.id }}"
+      with_items: "{{ power_list }}"
+      when: mode == 'start'
+    - pause:
+        minutes: 3
+      when: mode == 'start'
+
+- name: Start/Stop SAP Service
+  hosts: sap_list
+  become: yes
+  tasks:
+    - name: Call Start Stop
+      include_role:
+        name: sap-startstop
+      vars:
+        action: "{{ mode }}"
                
-#- name: Run Start/Stop Instances
-#  hosts: localhost
-#  tasks:
-#   - name: Start/Stop Instance
-#     include_role:
-#       name: aws-startstop
-#     vars:
-#       action: stop
-#       aws_region: us-east-1
-  
+- name: Stop machines when mode is stop
+  hosts: localhost
+  tasks:
+    - name: Shutdown machines
+      ec2_instance:
+        region: "{{ item.region }}"
+        state: stopped
+        filters:
+          instance_id: "{{ item.id }}"
+      with_items: "{{ power_list }}"
+      when: mode == 'stop'
 

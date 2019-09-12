@@ -20,11 +20,12 @@
       when: mode == 'stop'
     
     - include_role:
-        name: azure-schedule-compare
+        name: find-unverified
       vars:
-        rg: "{{ item }}"
+        group: "{{ item }}"
         alwayson: "{{ always_on_json.entries }}"
         scheduled: "{{ schedule_json.entries }}"
+        cloud: 'Azure'
       with_items: "{{ resource_groups }}"
       when: mode == 'stop'
 
