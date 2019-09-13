@@ -15,6 +15,14 @@
   when: cloud == 'AWS'
 
 - set_fact:
+    report_name: "{{ vm_name }} {{ aws_vm_info.instances[0].tags.Name if aws_vm_info.instances[0].tags.Name is defined else '' }}"
+  when: cloud == 'AWS'
+
+- set_fact:
+    report_name: "{{ vm_name }}"
+  when: cloud == 'Azure'
+
+- set_fact:
     skip_machine: false
     vm_tags: "{{ azure_vm_info.vms[0].tags.Owner if azure_vm_info.vms[0].tags.Owner is defined else 'Unknown' }}"
   when: cloud == 'Azure'
@@ -37,5 +45,5 @@
   when: ("{{ item.name if cloud == 'Azure' else item.id }}" == "{{ azure_vm_info.vms[0].name if cloud == 'Azure' else aws_vm_info.instances[0].instance_id }}")
 
 - set_fact:
-    unverified: "{{ unverified  + [ {'name':vm_name, 'group':vm_group, 'owner':vm_tags} ] }}"
+    unverified: "{{ unverified  + [ {'name':report_name, 'group':vm_group, 'owner':vm_tags} ] }}"
   when: (not skip_machine) and ("{{ azure_vm_info.vms[0].power_state if cloud == 'Azure' else aws_vm_info.instances[0].state.name }}" == "running")
