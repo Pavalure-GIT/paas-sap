@@ -11,6 +11,11 @@
     path: /hana/shared
   register: dir_exist
 
+- name: Check sybase is installed or not
+  stat:
+    path: /sybase
+  register: dir_sybase_exist
+
 - name: find sid
   shell: ls
   args:
@@ -21,4 +26,5 @@
 - include: "{{ 'hana_db_instance.yml' if dir_exist.stat.exists else 'syb_db_instance.yml' }}"
   vars:
     dbpass: "{{ lookup('env','DBPASS') }}"
+  
   

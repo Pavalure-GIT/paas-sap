@@ -5,6 +5,11 @@
   shell: cat /etc/passwd | sed -n '/adm/p' | awk -F ':' '{print $1}' | cut -c1-3 
   register: sid_user
 
+- name: Check sybase is installed or not
+  stat:
+    path: /sybase
+  register: dir_sybase_exist
+  
 - name: Check HANA is installed or not
   stat:
     path: /hana/shared
