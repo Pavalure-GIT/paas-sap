@@ -1,9 +1,21 @@
 - debug: 
-    msg: "Start SAP"
+    msg: "Stop SAP"
 
 - name: retrieve the <sid>adm users
   shell: cat /etc/passwd | sed -n '/adm/p' | awk -F ':' '{print $1}' | cut -c1-3 
   register: sid_user
+
+- name: skip if element 1 is not found
+  set_fact:
+    skip_machine: true
+  with_items: "{{ sid_user.stdout_lines }}"
+  when: sid_user.stdout_lines[1] is not defined
+
+- name: set true if element 1 is found
+  set_fact:
+    skip_machine: false
+  with_items: "{{ sid_user.stdout_lines }}"
+  when: sid_user.stdout_lines[1] is defined
 
 - name: Check sybase is installed or not
   stat:
@@ -20,6 +32,11 @@
   args:
     chdir: /hana/shared
   register: db_sid
+  when: dir_exist.stat.exists and dir_exist.stat.isdir
+
+- name: check the db user 
+  debug: 
+    msg: "{{ db_sid.stdout }}"
   when: dir_exist.stat.exists and dir_exist.stat.isdir
 
 - include: "{{ 'hana_db_instance.yml' if dir_exist.stat.exists else 'syb_db_instance.yml' }}"

@@ -5,12 +5,12 @@
   become: yes
   command: /usr/sap/hostctrl/exe/saphostctrl -function "{{ db_function }}" -dbname "{{  sid_user.stdout_lines[1][:3]|upper }}" -dbtype syb -dbuser sapsa -dbpass "{{ dbpass }}" -force
   with_items: "{{ sid_user.stdout_lines[1] }}"
-  when: dir_sybase_exist.stat.exists and sid_user.stdout_lines[1] != ''
+  when: (not skip_machine) and dir_sybase_exist.stat.exists 
 
 - name: Sybase - {{ sys_function }}
   become: yes
   command: /usr/sap/hostctrl/exe/sapcontrol -nr 00 -function "{{ sys_function }}"  
   with_items: "{{ sid_user.stdout_lines[1] }}"
-  when: dir_sybase_exist.stat.exists and sid_user.stdout_lines[1] != ''
+  when: (not skip_machine) and dir_sybase_exist.stat.exists 
 
 

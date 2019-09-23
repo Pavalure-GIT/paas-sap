@@ -1,15 +1,17 @@
 - debug:
     msg: "hana instance"
 
+
+
 - name: HANA - {{ db_function }}
   become: yes
   command: /usr/sap/hostctrl/exe/saphostctrl -function "{{ db_function }}" -dbname "{{  db_sid.stdout }}" -dbtype hdb -force
   with_items: "{{ sid_user.stdout_lines[1] }}"
-  when: db_sid.stdout != '' and sid_user.stdout_lines[1] != '' 
+  when: db_sid.stdout != '' 
 
 - name: HANA - {{ sys_function }}
   become: yes
   command: /usr/sap/hostctrl/exe/sapcontrol -nr 00 -function "{{ sys_function }}"  
   with_items: "{{ sid_user.stdout_lines[1] }}"
-  when: db_sid.stdout != '' and sid_user.stdout_lines[1] != ''
+  when: db_sid.stdout != '' 
 
