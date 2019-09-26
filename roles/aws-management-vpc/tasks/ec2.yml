@@ -1,0 +1,46 @@
+#Create eth0 - Network Interface
+- ec2_eni:
+    security_groups: "{{ aws_default_security_group }}"
+    subnet_id: "{{ aws_management_vpc_ec2_eth0_subnet }}"
+    region: "{{ aws_management_vpc_region }}"
+    state: present
+  register: eth0
+
+- set_fact:
+    interfaces: ["{{ eth0.interface.id }}"]
+
+#Create eth1 - Network Interface
+- ec2_eni:
+    security_groups: "{{ aws_default_security_group }}"
+    subnet_id: "{{ aws_management_vpc_ec2_eth1_subnet }}"
+    region: "{{ aws_management_vpc_region }}"
+    state: present
+  register: eth1
+  when: aws_management_vpc_ec2_eth1_subnet != ""
+
+- set_fact:
+    interfaces: ["{{ eth0.interface.id }}","{{ eth1.interface.id }}"]
+  when: aws_management_vpc_ec2_eth1_subnet != ""
+
+- name: Add EIP when public
+  ec2_eip:
+    device_id: "{{ eth0.interface.id }}"
+    region: "{{ aws_management_vpc_region }}"
+    in_vpc: yes
+  when: aws_management_vpc_ec2_eth0_subnet == public.subnet.id
+
+#Create VM with Single NIC when single_nic is true
+- name: create vm
+  ec2:
+    image: "{{ aws_ec2_vm_image }}"
+    instance_type: "{{ aws_management_vpc_ec2_instance_type }}"
+    instance_tags: {
+      Name: "{{ aws_management_vpc_env_shortname  }}-{{ aws_management_vpc_ec2_name }}",
+      Environment: "{{ aws_management_vpc_env_name }}"
+    }
+    network_interfaces: "{{ interfaces }}"
+    key_name: "{{ aws_ec2_vm_key_name }}"
+    region: "{{ aws_management_vpc_region }}"
+    volumes: "{{ aws_ec2_vm_volumes }}"
+    state: present
+  register: ec2_vm

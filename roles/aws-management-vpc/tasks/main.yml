@@ -18,7 +18,30 @@
 
 - include_tasks: nat-gateways.yml
 
-- include_tasks: security-groups.yml
+- ec2_group:
+    name: "{{ aws_default_security_group }}"
+    description: temporary
+    vpc_id: "{{ management_network.vpc.id }}"
+    region: "{{ aws_management_vpc_region }}"
+    tags:
+      Name: "{{ aws_default_security_group }}"
+    rules:
+      - proto: tcp
+        ports: 22
+        cidr_ip: 0.0.0.0/0
 
 - include_tasks: route-tables.yml
 
+- include_tasks: ec2.yml
+  vars:
+    aws_management_vpc_ec2_name: "Jump"
+    aws_management_vpc_ec2_instance_type: "t2.micro"
+    aws_management_vpc_ec2_eth0_subnet: "{{ public.subnet.id }}"
+    aws_management_vpc_ec2_eth1_subnet: ""
+
+- include_tasks: ec2.yml
+  vars:
+    aws_management_vpc_ec2_name: "Test"
+    aws_management_vpc_ec2_instance_type: "t2.micro"
+    aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
+    aws_management_vpc_ec2_eth1_subnet: ""

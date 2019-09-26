@@ -7,8 +7,9 @@
         name: aws-management-vpc
       vars:
         aws_management_vpc_cidr: 10.6.0.0/22, 10.208.0.0/26
-        aws_management_vpc_env_name: "Example"
-        aws_management_vpc_region: eu-west-1
+        aws_management_vpc_env_name: "Spike"
+        aws_management_vpc_env_shortname: "S"
+        aws_management_vpc_region: us-east-1
         aws_management_vpc_public_subnet: 10.6.1.64/26
         aws_management_vpc_private_subnet: 10.6.0.0/24
         aws_management_vpc_private_subnet2: 10.6.3.0/24
