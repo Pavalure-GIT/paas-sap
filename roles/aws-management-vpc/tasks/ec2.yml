@@ -36,6 +36,7 @@
     instance_type: "{{ aws_management_vpc_ec2_instance_type }}"
     instance_tags: {
       Name: "{{ aws_management_vpc_env_shortname  }}-{{ aws_management_vpc_ec2_name }}",
+      Type: "{{ aws_management_vpc_ec2_name }}",
       Environment: "{{ aws_management_vpc_env_name }}"
     }
     network_interfaces: "{{ interfaces }}"
