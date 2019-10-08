@@ -6,10 +6,27 @@
   shell: cat /etc/passwd | sed -n '/adm/p' | awk -F ':' '{print $1}' | cut -c1-3 
   register: sid_user
 
+- name: skip false if element 1 is not found
+  set_fact:
+    skip_machine: true
+  with_items: "{{ sid_user.stdout_lines }}"
+  when: sid_user.stdout_lines[1] is not defined
+
+- name: set true if element 1 is found
+  set_fact:
+    skip_machine: false
+  with_items: "{{ sid_user.stdout_lines }}"
+  when: sid_user.stdout_lines[1] is defined
+
 - name: Check HANA is installed or not
   stat:
     path: /hana/shared
   register: dir_exist
+
+- name: Check sybase is installed or not
+  stat:
+    path: /sybase
+  register: dir_sybase_exist
 
 - name: find sid
   shell: ls
@@ -18,7 +35,13 @@
   register: db_sid
   when: dir_exist.stat.exists and dir_exist.stat.isdir
 
+- name: check the db user 
+  debug: 
+    msg: "{{ db_sid.stdout }}"
+  when: dir_exist.stat.exists and dir_exist.stat.isdir
+
 - include: "{{ 'hana_db_instance.yml' if dir_exist.stat.exists else 'syb_db_instance.yml' }}"
   vars:
     dbpass: "{{ lookup('env','DBPASS') }}"
+  
   

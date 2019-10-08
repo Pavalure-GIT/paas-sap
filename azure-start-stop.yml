@@ -1,37 +1,38 @@
 ---
-- name: Gather Hosts for Shutdown
+- name: Compare VMs in a subscription
   hosts: localhost
-  vars:
-    mode: 'stop'
-    power_list: []
-    unverified: []
   tasks:
     - name: Read in exceptions
       set_fact:
-        schedule_json: "{{ lookup('file',schedule) | from_json }}"
         always_on_json: "{{ lookup('file',always_on) | from_json }}"
+        schedule_json: "{{ lookup('file',schedule) | from_json }}"
+        power_list: []
+        unverified: []
 
-    - aws_region_facts:
-        region: us-east-1
-      register: region_list
+    - name: Get facts for given subscription
+      azure_rm_resourcegroup_facts:
+      register: all
+      when: mode == 'stop'
 
     - set_fact:
-        available_regions: "{{ region_list.regions | map(attribute='region_name') | list }}"
-
+        resource_groups: "{{ resource_groups|default([]) + [item.name] }}"
+      with_items: "{{ all.ansible_facts.azure_resourcegroups }}"
+      when: mode == 'stop'
+    
     - include_role:
         name: find-unverified
       vars:
         group: "{{ item }}"
         alwayson: "{{ always_on_json.entries }}"
         scheduled: "{{ schedule_json.entries }}"
-        cloud: 'AWS'
-      with_items: "{{ available_regions }}"
+        cloud: 'Azure'
+      with_items: "{{ resource_groups }}"
       when: mode == 'stop'
 
     - include_role:
         name: add_hosts
       vars:
-        cloud: 'AWS'
+        cloud: 'Azure'
         action: "{{ mode }}"
         schedule_list: "{{ item }}"
       with_items: "{{ schedule_json.entries }}"
@@ -45,11 +46,10 @@
   hosts: localhost
   tasks:
     - name: Power On machines
-      ec2_instance:
-        region: "{{ item.region }}"
-        state: started
-        filters:
-          instance_id: "{{ item.id }}"
+      azure_rm_virtualmachine:
+        resource_group: "{{ item.rg }}"
+        name: "{{ item.name }}"
+        started: yes
       with_items: "{{ power_list }}"
       when: mode == 'start'
     - pause:
@@ -65,16 +65,14 @@
         name: sap-startstop
       vars:
         action: "{{ mode }}"
-               
-- name: Stop machines when mode is stop
+
+- name: Power Off Machines whne mode is stop
   hosts: localhost
   tasks:
-    - name: Shutdown machines
-      ec2_instance:
-        region: "{{ item.region }}"
-        state: stopped
-        filters:
-          instance_id: "{{ item.id }}"
+    - name: Power Off
+      azure_rm_virtualmachine:
+        resource_group: "{{ item.rg }}"
+        name: "{{ item.name }}"
+        started: no
       with_items: "{{ power_list }}"
       when: mode == 'stop'
-

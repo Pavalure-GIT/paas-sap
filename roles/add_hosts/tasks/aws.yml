@@ -1,0 +1,25 @@
+---
+- set_fact:
+    desired_state: "{{ 'running' if action == 'stop' else 'stopped' }}"
+
+- name: Add "{{ instance_id }}" if it exists
+  block:
+    - ec2_instance_facts:
+        region: "{{ instance_region }}"
+        instance_ids:
+          - "{{ instance_id }}"
+      register: instance_info
+
+    - set_fact:
+        power_list: "{{ power_list  + [ {'id':instance_id, 'region':instance_region} ] }}"
+      when: instance_info.instances[0].state.name == desired_state
+
+    - include: add_host.yml
+      vars:
+        machine_interface: "{{ item }}"
+      with_items: "{{ instance_info.instances[0].network_interfaces }}"
+      when: instance_info.instances[0].tags.INSTANCEID is defined and instance_info.instances[0].state.name == desired_state
+  rescue:
+    - debug:
+        msg: "{{ instance_id }} does not exist. Skipping"
+

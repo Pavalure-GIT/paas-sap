@@ -1,0 +1,35 @@
+---
+- name: Get facts for one resource group
+  azure_rm_virtualmachine_facts:
+    resource_group: "{{ group }}"
+  register: azure_vms
+  when: cloud == 'Azure'
+
+- name: Get facts for region "{{ group }}"
+  ec2_instance_facts:
+    region: "{{ group }}"
+  register: aws_vms
+  when: cloud == 'AWS'
+
+- set_fact:
+    identifier: "{{ group }}"
+    alwayson_names: []
+    scheduled_names: []
+
+- set_fact:
+    alwayson_names: "{{ item.virtual_machines if cloud == 'Azure' else item.instances }}"
+  when: ("{{ item.resource_group if cloud == 'Azure' else item.region }}"  == identifier)
+  with_items: "{{ alwayson }}"
+
+- set_fact:
+    scheduled_names: "{{ item.virtual_machines if cloud == 'Azure' else item.instances }}"
+  when: ("{{ item.resource_group if cloud == 'Azure' else item.region }}"  == identifier)
+  with_items: "{{ scheduled }}"
+
+- include: add_to_list.yml
+  vars:
+    vm_name: "{{ vm.name if cloud == 'Azure' else vm.instance_id }}"
+    vm_group: "{{ identifier }}"
+  with_items: "{{ azure_vms.vms if cloud == 'Azure' else aws_vms.instances }}"
+  loop_control:
+    loop_var: vm
