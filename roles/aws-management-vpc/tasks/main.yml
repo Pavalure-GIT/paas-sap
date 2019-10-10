@@ -18,7 +18,130 @@
 
 - include_tasks: nat-gateways.yml
 
-- include_tasks: security-groups.yml
+- ec2_group:
+    name: "{{ aws_default_security_group }}"
+    description: temporary
+    vpc_id: "{{ management_network.vpc.id }}"
+    region: "{{ aws_management_vpc_region }}"
+    tags:
+      Name: "{{ aws_default_security_group }}"
+    rules:
+      - proto: tcp
+        ports: 22
+        cidr_ip: 0.0.0.0/0
 
 - include_tasks: route-tables.yml
+
+- include_tasks: ec2.yml
+  vars:
+    aws_management_vpc_ec2_name: "Jump"
+    aws_management_vpc_ec2_instance_type: "t2.micro"
+    aws_management_vpc_ec2_eth0_subnet: "{{ public.subnet.id }}"
+    aws_management_vpc_ec2_eth1_subnet: ""
+
+- include_tasks: ec2.yml
+  vars:
+    aws_management_vpc_ec2_name: "Test"
+    aws_management_vpc_ec2_instance_type: "t2.micro"
+    aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
+    aws_management_vpc_ec2_eth1_subnet: ""
+
+- include_tasks: ec2.yml
+  vars:
+    aws_management_vpc_ec2_name: "DNSForwarder"
+    aws_management_vpc_ec2_instance_type: "t2.small"
+    aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
+    aws_management_vpc_ec2_eth1_subnet: ""
+
+
+- include_tasks: ec2.yml
+  vars:
+    aws_management_vpc_ec2_name: "MidServerA"
+    aws_management_vpc_ec2_instance_type: "t2.micro"
+    aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
+    aws_management_vpc_ec2_eth1_subnet: ""
+
+- include_tasks: ec2.yml
+  vars:
+    aws_management_vpc_ec2_name: "MidServerB"
+    aws_management_vpc_ec2_instance_type: "t2.micro"
+    aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
+    aws_management_vpc_ec2_eth1_subnet: ""
+
+- include_tasks: ec2.yml
+  vars:
+    aws_management_vpc_ec2_name: "SAPRouter"
+    aws_management_vpc_ec2_instance_type: "t2.small"
+    aws_management_vpc_ec2_eth0_subnet: "{{ public.subnet.id }}"
+    aws_management_vpc_ec2_eth1_subnet: ""
+
+- include_tasks: ec2.yml
+  vars:
+    aws_management_vpc_ec2_name: "ReverseProxy"
+    aws_management_vpc_ec2_instance_type: "t2.micro"
+    aws_management_vpc_ec2_eth0_subnet: "{{ public.subnet.id }}"
+    aws_management_vpc_ec2_eth1_subnet: ""
+
+- include_tasks: ec2.yml
+  vars:
+    aws_management_vpc_ec2_name: "Vault"
+    aws_management_vpc_ec2_instance_type: "t2.micro"
+    aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
+    aws_management_vpc_ec2_eth1_subnet: ""
+
+- include_tasks: ec2.yml
+  vars:
+    aws_management_vpc_ec2_name: "Jenkins"
+    aws_management_vpc_ec2_instance_type: "t2.medium"
+    aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
+    aws_management_vpc_ec2_eth1_subnet: ""
+
+- include_tasks: ec2.yml
+  vars:
+    aws_management_vpc_ec2_name: "AutomationEngine"
+    aws_management_vpc_ec2_instance_type: "t2.medium"
+    aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
+    aws_management_vpc_ec2_eth1_subnet: ""
+
+- include_tasks: ec2.yml
+  vars:
+    aws_management_vpc_ec2_name: "LaMa"
+    aws_management_vpc_ec2_instance_type: "r4.xlarge"
+    aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
+    aws_management_vpc_ec2_eth1_subnet: ""
+
+- include_tasks: ec2.yml
+  vars:
+    aws_management_vpc_ec2_name: "ServiceDB"
+    aws_management_vpc_ec2_instance_type: "t2.small"
+    aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
+    aws_management_vpc_ec2_eth1_subnet: ""
+
+- include_tasks: ec2.yml
+  vars:
+    aws_management_vpc_ec2_name: "API"
+    aws_management_vpc_ec2_instance_type: "t2.micro"
+    aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
+    aws_management_vpc_ec2_eth1_subnet: ""
+
+- include_tasks: ec2.yml
+  vars:
+    aws_management_vpc_ec2_name: "FRUN"
+    aws_management_vpc_ec2_instance_type: "t2.medium"
+    aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
+    aws_management_vpc_ec2_eth1_subnet: ""
+
+- include_tasks: ec2.yml
+  vars:
+    aws_management_vpc_ec2_name: "BuildServer"
+    aws_management_vpc_ec2_instance_type: "t2.medium"
+    aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
+    aws_management_vpc_ec2_eth1_subnet: ""
+
+- include_tasks: ec2.yml
+  vars:
+    aws_management_vpc_ec2_name: "LinuxJump"
+    aws_management_vpc_ec2_instance_type: "t2.micro"
+    aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
+    aws_management_vpc_ec2_eth1_subnet: "{{ dxc_private.subnet.id }}"
 
