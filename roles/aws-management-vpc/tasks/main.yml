@@ -142,6 +142,5 @@
     aws_management_vpc_ec2_instance_type: "t2.micro"
     aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
     aws_management_vpc_ec2_eth1_subnet: "{{ dxc_private.subnet.id }}"
-    aws_management_vpc_ec2_private_ip: "
     aws_management_vpc_ec2_private_ip_eth0: "10.4.0.211"
     aws_management_vpc_ec2_private_ip_eth1: "10.208.0.4"
