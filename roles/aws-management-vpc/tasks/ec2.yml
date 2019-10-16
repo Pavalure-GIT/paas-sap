@@ -37,7 +37,8 @@
     instance_tags: {
       Name: "{{ aws_management_vpc_env_shortname  }}-{{ aws_management_vpc_ec2_name }}",
       Type: "{{ aws_management_vpc_ec2_name }}",
-      Environment: "{{ aws_management_vpc_env_name }}"
+      Environment: "{{ aws_management_vpc_env_name }}",
+      Schedule: "p4s-office-hours"
     }
     network_interfaces: "{{ interfaces }}"
     key_name: "{{ aws_ec2_vm_key_name }}"
