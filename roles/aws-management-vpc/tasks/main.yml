@@ -38,13 +38,15 @@
     aws_management_vpc_ec2_instance_type: "t2.micro"
     aws_management_vpc_ec2_eth0_subnet: "{{ public.subnet.id }}"
     aws_management_vpc_ec2_eth1_subnet: ""
+    aws_management_vpc_ec2_private_ip_eth0: "10.4.1.75"
 
 - include_tasks: ec2.yml
   vars:
-    aws_management_vpc_ec2_name: "Test"
+    aws_management_vpc_ec2_name: "Ansible"
     aws_management_vpc_ec2_instance_type: "t2.micro"
     aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
     aws_management_vpc_ec2_eth1_subnet: ""
+    aws_management_vpc_ec2_private_ip_eth0: "10.4.0.20"
 
 - include_tasks: ec2.yml
   vars:
@@ -52,7 +54,7 @@
     aws_management_vpc_ec2_instance_type: "t2.small"
     aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
     aws_management_vpc_ec2_eth1_subnet: ""
-
+    aws_management_vpc_ec2_private_ip_eth0: "10.4.0.5"
 
 - include_tasks: ec2.yml
   vars:
@@ -60,6 +62,7 @@
     aws_management_vpc_ec2_instance_type: "t2.micro"
     aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
     aws_management_vpc_ec2_eth1_subnet: ""
+    aws_management_vpc_ec2_private_ip_eth0: "10.4.0.7"
 
 - include_tasks: ec2.yml
   vars:
@@ -67,13 +70,7 @@
     aws_management_vpc_ec2_instance_type: "t2.micro"
     aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
     aws_management_vpc_ec2_eth1_subnet: ""
-
-- include_tasks: ec2.yml
-  vars:
-    aws_management_vpc_ec2_name: "SAPRouter"
-    aws_management_vpc_ec2_instance_type: "t2.small"
-    aws_management_vpc_ec2_eth0_subnet: "{{ public.subnet.id }}"
-    aws_management_vpc_ec2_eth1_subnet: ""
+    aws_management_vpc_ec2_private_ip_eth0: "10.4.0.8"
 
 - include_tasks: ec2.yml
   vars:
@@ -81,6 +78,7 @@
     aws_management_vpc_ec2_instance_type: "t2.micro"
     aws_management_vpc_ec2_eth0_subnet: "{{ public.subnet.id }}"
     aws_management_vpc_ec2_eth1_subnet: ""
+    aws_management_vpc_ec2_private_ip_eth0: "10.4.1.68"
 
 - include_tasks: ec2.yml
   vars:
@@ -88,6 +86,7 @@
     aws_management_vpc_ec2_instance_type: "t2.micro"
     aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
     aws_management_vpc_ec2_eth1_subnet: ""
+    aws_management_vpc_ec2_private_ip_eth0: "10.4.0.11"
 
 - include_tasks: ec2.yml
   vars:
@@ -95,6 +94,7 @@
     aws_management_vpc_ec2_instance_type: "t2.medium"
     aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
     aws_management_vpc_ec2_eth1_subnet: ""
+    aws_management_vpc_ec2_private_ip_eth0: "10.4.0.215"
 
 - include_tasks: ec2.yml
   vars:
@@ -102,6 +102,7 @@
     aws_management_vpc_ec2_instance_type: "t2.medium"
     aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
     aws_management_vpc_ec2_eth1_subnet: ""
+    aws_management_vpc_ec2_private_ip_eth0: "10.4.0.4"
 
 - include_tasks: ec2.yml
   vars:
@@ -109,6 +110,7 @@
     aws_management_vpc_ec2_instance_type: "r4.xlarge"
     aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
     aws_management_vpc_ec2_eth1_subnet: ""
+    aws_management_vpc_ec2_private_ip_eth0: "10.4.0.41"
 
 - include_tasks: ec2.yml
   vars:
@@ -116,6 +118,7 @@
     aws_management_vpc_ec2_instance_type: "t2.small"
     aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
     aws_management_vpc_ec2_eth1_subnet: ""
+    aws_management_vpc_ec2_private_ip_eth0: "10.4.0.9"
 
 - include_tasks: ec2.yml
   vars:
@@ -123,13 +126,7 @@
     aws_management_vpc_ec2_instance_type: "t2.micro"
     aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
     aws_management_vpc_ec2_eth1_subnet: ""
-
-- include_tasks: ec2.yml
-  vars:
-    aws_management_vpc_ec2_name: "FRUN"
-    aws_management_vpc_ec2_instance_type: "t2.medium"
-    aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
-    aws_management_vpc_ec2_eth1_subnet: ""
+    aws_management_vpc_ec2_private_ip_eth0: "10.4.0.114"
 
 - include_tasks: ec2.yml
   vars:
@@ -137,6 +134,7 @@
     aws_management_vpc_ec2_instance_type: "t2.medium"
     aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
     aws_management_vpc_ec2_eth1_subnet: ""
+    aws_management_vpc_ec2_private_ip_eth0: "10.4.0.12"
 
 - include_tasks: ec2.yml
   vars:
@@ -144,4 +142,6 @@
     aws_management_vpc_ec2_instance_type: "t2.micro"
     aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
     aws_management_vpc_ec2_eth1_subnet: "{{ dxc_private.subnet.id }}"
-
+    aws_management_vpc_ec2_private_ip: "
+    aws_management_vpc_ec2_private_ip_eth0: "10.4.0.211"
+    aws_management_vpc_ec2_private_ip_eth1: "10.208.0.4"

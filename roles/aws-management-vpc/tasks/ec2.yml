@@ -3,6 +3,7 @@
     security_groups: "{{ aws_default_security_group }}"
     subnet_id: "{{ aws_management_vpc_ec2_eth0_subnet }}"
     region: "{{ aws_management_vpc_region }}"
+    private_ip_address: "{{ aws_management_vpc_ec2_private_ip_eth0 }}"
     state: present
   register: eth0
 
@@ -14,6 +15,7 @@
     security_groups: "{{ aws_default_security_group }}"
     subnet_id: "{{ aws_management_vpc_ec2_eth1_subnet }}"
     region: "{{ aws_management_vpc_region }}"
+    private_ip_address: "{{ aws_management_vpc_ec2_private_ip_eth1 }}"
     state: present
   register: eth1
   when: aws_management_vpc_ec2_eth1_subnet != ""
