@@ -38,7 +38,7 @@
     aws_management_vpc_ec2_instance_type: "t2.micro"
     aws_management_vpc_ec2_eth0_subnet: "{{ public.subnet.id }}"
     aws_management_vpc_ec2_eth1_subnet: ""
-    aws_management_vpc_ec2_private_ip_eth0: "10.4.1.75"
+    aws_management_vpc_ec2_private_ip_eth0: "{{ jump_eth0 }}"
 
 - include_tasks: ec2.yml
   vars:
@@ -46,7 +46,7 @@
     aws_management_vpc_ec2_instance_type: "t2.micro"
     aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
     aws_management_vpc_ec2_eth1_subnet: ""
-    aws_management_vpc_ec2_private_ip_eth0: "10.4.0.20"
+    aws_management_vpc_ec2_private_ip_eth0: "{{ ansible_eth0 }}"
 
 - include_tasks: ec2.yml
   vars:
@@ -54,7 +54,7 @@
     aws_management_vpc_ec2_instance_type: "t2.small"
     aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
     aws_management_vpc_ec2_eth1_subnet: ""
-    aws_management_vpc_ec2_private_ip_eth0: "10.4.0.5"
+    aws_management_vpc_ec2_private_ip_eth0: "{{ dns_forwarder_eth0 }}"
 
 - include_tasks: ec2.yml
   vars:
@@ -62,7 +62,7 @@
     aws_management_vpc_ec2_instance_type: "t2.micro"
     aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
     aws_management_vpc_ec2_eth1_subnet: ""
-    aws_management_vpc_ec2_private_ip_eth0: "10.4.0.7"
+    aws_management_vpc_ec2_private_ip_eth0: "{{ mid_server_a_eth0 }}"
 
 - include_tasks: ec2.yml
   vars:
@@ -70,7 +70,7 @@
     aws_management_vpc_ec2_instance_type: "t2.micro"
     aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
     aws_management_vpc_ec2_eth1_subnet: ""
-    aws_management_vpc_ec2_private_ip_eth0: "10.4.0.8"
+    aws_management_vpc_ec2_private_ip_eth0: "{{ mid_server_b_eth0 }}"
 
 - include_tasks: ec2.yml
   vars:
@@ -78,7 +78,7 @@
     aws_management_vpc_ec2_instance_type: "t2.micro"
     aws_management_vpc_ec2_eth0_subnet: "{{ public.subnet.id }}"
     aws_management_vpc_ec2_eth1_subnet: ""
-    aws_management_vpc_ec2_private_ip_eth0: "10.4.1.68"
+    aws_management_vpc_ec2_private_ip_eth0: "{{ reverse_proxy_eth0 }}"
 
 - include_tasks: ec2.yml
   vars:
@@ -86,7 +86,7 @@
     aws_management_vpc_ec2_instance_type: "t2.micro"
     aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
     aws_management_vpc_ec2_eth1_subnet: ""
-    aws_management_vpc_ec2_private_ip_eth0: "10.4.0.11"
+    aws_management_vpc_ec2_private_ip_eth0: "{{ vault_eth0 }}"
 
 - include_tasks: ec2.yml
   vars:
@@ -94,7 +94,7 @@
     aws_management_vpc_ec2_instance_type: "t2.medium"
     aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
     aws_management_vpc_ec2_eth1_subnet: ""
-    aws_management_vpc_ec2_private_ip_eth0: "10.4.0.215"
+    aws_management_vpc_ec2_private_ip_eth0: "{{ jenkins_eth0 }}"
 
 - include_tasks: ec2.yml
   vars:
@@ -102,7 +102,7 @@
     aws_management_vpc_ec2_instance_type: "t2.medium"
     aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
     aws_management_vpc_ec2_eth1_subnet: ""
-    aws_management_vpc_ec2_private_ip_eth0: "10.4.0.4"
+    aws_management_vpc_ec2_private_ip_eth0: "{{ automation_engine_eth0 }}"
 
 - include_tasks: ec2.yml
   vars:
@@ -110,7 +110,7 @@
     aws_management_vpc_ec2_instance_type: "r4.xlarge"
     aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
     aws_management_vpc_ec2_eth1_subnet: ""
-    aws_management_vpc_ec2_private_ip_eth0: "10.4.0.41"
+    aws_management_vpc_ec2_private_ip_eth0: "{{ lama_eth0 }}"
 
 - include_tasks: ec2.yml
   vars:
@@ -118,7 +118,7 @@
     aws_management_vpc_ec2_instance_type: "t2.small"
     aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
     aws_management_vpc_ec2_eth1_subnet: ""
-    aws_management_vpc_ec2_private_ip_eth0: "10.4.0.9"
+    aws_management_vpc_ec2_private_ip_eth0: "{{ servicedb_eth0 }}"
 
 - include_tasks: ec2.yml
   vars:
@@ -126,7 +126,7 @@
     aws_management_vpc_ec2_instance_type: "t2.micro"
     aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
     aws_management_vpc_ec2_eth1_subnet: ""
-    aws_management_vpc_ec2_private_ip_eth0: "10.4.0.114"
+    aws_management_vpc_ec2_private_ip_eth0: "{{ api_eth0 }}"
 
 - include_tasks: ec2.yml
   vars:
@@ -134,7 +134,7 @@
     aws_management_vpc_ec2_instance_type: "t2.medium"
     aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
     aws_management_vpc_ec2_eth1_subnet: ""
-    aws_management_vpc_ec2_private_ip_eth0: "10.4.0.12"
+    aws_management_vpc_ec2_private_ip_eth0: "{{ build_server_eth0 }}"
 
 - include_tasks: ec2.yml
   vars:
@@ -142,5 +142,5 @@
     aws_management_vpc_ec2_instance_type: "t2.micro"
     aws_management_vpc_ec2_eth0_subnet: "{{ private.subnet.id }}"
     aws_management_vpc_ec2_eth1_subnet: "{{ dxc_private.subnet.id }}"
-    aws_management_vpc_ec2_private_ip_eth0: "10.4.0.211"
-    aws_management_vpc_ec2_private_ip_eth1: "10.208.0.4"
+    aws_management_vpc_ec2_private_ip_eth0: "{{ linux_jump_eth0 }}"
+    aws_management_vpc_ec2_private_ip_eth1: "{{ linux_jump_eth1 }}"
