@@ -27,6 +27,14 @@
   set_fact:
     group_in: "{{ lookup('file',group_sg) | from_json }}"
 
+- ec2_group:
+    name: "{{ item.name }}"
+    description: "{{ item.description }}"
+    vpc_id: "{{ vpc_id }}"
+    region: "{{ vpc_region }}"
+    state: present
+  with_items: "{{ group_in.sg }}"
+
 - name: Create the SGs based on Input from JSON File
   include_tasks: create_sg.yml
   vars:

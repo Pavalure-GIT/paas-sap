@@ -16,6 +16,8 @@
   register: group_facts
   when: rule_group_name != ""
 
+- debug:
+    var: rule_group_name
 
 - debug:
     var: group_facts.security_groups[0].group_id
